@@ -2,7 +2,7 @@
 2. pada role gudang, bagian monitoring stok, di fitur stok awalnya itu sebaiknya di hapus (kata pak tigor) 
 3. master data buat user yang terdaftar di veridex apa aja (ini saran dari lu pas hari selasa, dibikin master data tentang user user yang terdaftar juga)
 4. master vendor
-5.
+5. master user
 6.
 7.
 8.
