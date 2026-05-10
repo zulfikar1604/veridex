@@ -19,6 +19,10 @@
                 <a href="approval_procurement.php" class="w-full p-3 text-left flex items-center transition-all <?= ($active == 'approval') ? 'bg-red-500 text-white rounded-lg font-bold shadow-lg shadow-red-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800' ?>">
                     <i class="fa-solid fa-user-check mr-3"></i> Approval Manager
                 </a>
+
+                <a href="master_user.php" class="w-full p-3 text-left flex items-center transition-all <?= ($active == 'master_user') ? 'bg-red-500 text-white rounded-lg font-bold shadow-lg shadow-red-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800' ?>">
+                    <i class="fa-solid fa-users mr-3"></i> Master User
+                </a>
                 
                 <div class="my-4 border-t border-slate-800"></div>
             <?php endif; ?>
