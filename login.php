@@ -148,7 +148,7 @@ if (isset($_SESSION['role'])) {
             
             <?php if(isset($_SESSION['error'])): ?>
                 <div class="bg-red-500/10 border border-red-500/30 text-red-200 p-4 mb-6 rounded-xl text-sm font-medium flex items-center shadow-lg">
-                    <i class="fa-solid fa-triangle-exclamation mr-3 text-red-400"></i> <?= $_SESSION['error']; ?>
+                    <i class="fa-solid fa-triangle-exclamation mr-3 text-red-400"></i> <?= htmlspecialchars($_SESSION['error'], ENT_QUOTES, 'UTF-8') ?>
                 </div>
                 <?php unset($_SESSION['error']); ?>
             <?php endif; ?>

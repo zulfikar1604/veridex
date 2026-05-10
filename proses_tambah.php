@@ -1,6 +1,7 @@
 <?php
 session_start();
 require 'database.php'; // Pastikan file koneksi mysqli kamu namanya benar
+require 'functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nama_barang = mysqli_real_escape_string($conn, $_POST['nama_barang']);
@@ -18,13 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sku_baru = "SKU-" . str_pad($next_id, 3, "0", STR_PAD_LEFT);
 
     // 2. TENTUKAN STATUS LABEL OTOMATIS
-    if ($stok_awal < $stok_kritis) {
-        $status_label = 'Kritis';
-    } elseif ($stok_awal <= ($stok_kritis + 3)) { // Jarak 3 angka dari kritis masuk Warning
-        $status_label = 'Warning';
-    } else {
-        $status_label = 'Aman';
-    }
+    $status_label = calculateStatusLabel($stok_awal, $stok_kritis);
 
     // 3. INPUT KE DATABASE
     $query_insert = "INSERT INTO inventory (sku, nama_barang, unit, stok_saat_ini, stok_kritis, status_label) 

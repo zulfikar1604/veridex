@@ -49,7 +49,7 @@ $query_kinerja = mysqli_query($conn, "
                 <div class="flex items-center gap-4">
                     <div class="text-right">
                         <p class="text-xs font-black text-slate-400 uppercase">Logged in as:</p>
-                        <p class="text-sm font-bold text-red-600"><?= $_SESSION['username'] ?></p>
+                        <p class="text-sm font-bold text-red-600"><?= htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8') ?></p>
                     </div>
                     <div class="w-12 h-12 rounded-2xl bg-red-500 text-white flex items-center justify-center shadow-lg shadow-red-500/20">
                         <i class="fa-solid fa-user-tie text-xl"></i>

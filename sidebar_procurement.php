@@ -2,7 +2,7 @@
     <div class="p-6 border-b border-slate-800">
         <h1 class="text-2xl font-black text-red-500">VERIDEX</h1>
         <!-- Menampilkan Role Dinamis sesuai Login[cite: 1] -->
-        <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">ROLE: <?= $_SESSION['role'] ?></p>
+        <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">ROLE: <?= htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8') ?></p>
     </div>
     
     <nav class="flex-1 p-4 space-y-2 overflow-y-auto">

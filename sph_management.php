@@ -18,7 +18,7 @@ $query_sph = mysqli_query($conn, "
     JOIN vendors v ON s.vendor_id = v.id
     JOIN inventory i ON s.inventory_id = i.id
     ORDER BY s.created_at DESC
-") or die(mysqli_error($conn));
+") or handle_db_error($conn);
 ?>
 
 <!DOCTYPE html>

@@ -24,7 +24,7 @@ $query_arsip = mysqli_query($conn, "
     JOIN users u ON p.procurement_id = u.id
     WHERE p.status = 'Approved'
     ORDER BY p.created_at DESC
-") or die(mysqli_error($conn)); // Biar muncul pesan error kalau ada yang salah lagi
+") or handle_db_error($conn);
 ?>
 <!DOCTYPE html>
 <html lang="id">

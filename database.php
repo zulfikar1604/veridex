@@ -12,6 +12,15 @@ $conn = mysqli_connect($hostname, $username, $password, $database);
 
 // Cek apakah koneksi berhasil
 if (!$conn) {
-    die("Koneksi gagal: " . mysqli_connect_error());
+    error_log("Koneksi gagal: " . mysqli_connect_error());
+    die("Maaf, koneksi ke database gagal. Silakan coba beberapa saat lagi.");
+}
+
+/**
+ * Menangani kesalahan database dengan logging dan pesan user-friendly.
+ */
+function handle_db_error($conn) {
+    error_log("Database Error: " . mysqli_error($conn));
+    die("Maaf, terjadi kesalahan pada sistem. Silakan coba beberapa saat lagi.");
 }
 ?>

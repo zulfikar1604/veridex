@@ -15,7 +15,7 @@ $query_items = mysqli_query($conn, "
     SELECT * FROM inventory 
     WHERE stok_kritis > stok_saat_ini 
     ORDER BY stok_saat_ini ASC
-") or die(mysqli_error($conn));
+") or handle_db_error($conn);
 
 // 3. Ambil List Vendor untuk Assignment
 $vendors = mysqli_fetch_all(mysqli_query($conn, "SELECT id, nama_perusahaan FROM vendors"), MYSQLI_ASSOC);

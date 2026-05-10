@@ -17,7 +17,7 @@ $query_invoice = mysqli_query($conn, "
     JOIN vendors v ON i.vendor_id = v.id
     JOIN purchase_orders p ON i.po_id = p.id
     ORDER BY i.tanggal_invoice DESC
-") or die(mysqli_error($conn));
+") or handle_db_error($conn);
 ?>
 
 <!DOCTYPE html>

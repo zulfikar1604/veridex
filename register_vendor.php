@@ -72,14 +72,14 @@ session_start();
 
                 <?php if(isset($_SESSION['success'])): ?>
                     <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-xl text-sm font-bold">
-                        <i class="fa-solid fa-circle-check mr-2"></i> <?= $_SESSION['success']; ?>
+                        <i class="fa-solid fa-circle-check mr-2"></i> <?= htmlspecialchars($_SESSION['success'], ENT_QUOTES, 'UTF-8') ?>
                     </div>
                     <?php unset($_SESSION['success']); ?>
                 <?php endif; ?>
 
                 <?php if(isset($_SESSION['error'])): ?>
                     <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-xl text-sm font-bold">
-                        <i class="fa-solid fa-triangle-exclamation mr-2"></i> <?= $_SESSION['error']; ?>
+                        <i class="fa-solid fa-triangle-exclamation mr-2"></i> <?= htmlspecialchars($_SESSION['error'], ENT_QUOTES, 'UTF-8') ?>
                     </div>
                     <?php unset($_SESSION['error']); ?>
                 <?php endif; ?>

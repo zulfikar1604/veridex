@@ -18,7 +18,7 @@ $query_pending = mysqli_query($conn, "
     JOIN inventory i ON p.inventory_id = i.id
     WHERE p.status = 'Pending Approval'
     ORDER BY p.created_at DESC
-") or die(mysqli_error($conn));
+") or handle_db_error($conn);
 ?>
 
 <!DOCTYPE html>

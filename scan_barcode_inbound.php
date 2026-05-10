@@ -80,7 +80,7 @@ if (isset($_POST['sku_scan'])) {
                 <div class="flex items-center gap-4">
                     <span class="text-sm font-bold text-slate-400"><?= $hari_ini ?></span>
                     <div class="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center font-black text-lg shadow-md">
-                        <?= strtoupper(substr($_SESSION['role'], 0, 1)) ?>
+                        <?= htmlspecialchars(strtoupper(substr($_SESSION['role'], 0, 1)), ENT_QUOTES, 'UTF-8') ?>
                     </div>
                 </div>
             </div>

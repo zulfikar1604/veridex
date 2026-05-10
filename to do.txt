@@ -1,0 +1,14 @@
+1. tambahin master data di vendor/jadi ada master vendornya, (nama vendor sama spesialisasi barangnya apa saja) 
+2. pada role gudang, bagian monitoring stok, di fitur stok awalnya itu sebaiknya di hapus (kata pak tigor) 
+3. master data buat user yang terdaftar di veridex apa aja (ini saran dari lu pas hari selasa, dibikin master data tentang user user yang terdaftar juga)
+4.
+5.
+6.
+7.
+8.
+9.
+10.
+11.
+12.
+13.
+14.

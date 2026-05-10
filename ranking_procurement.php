@@ -15,7 +15,7 @@ $query_items = mysqli_query($conn, "
     SELECT * FROM inventory 
     WHERE stok_kritis > stok_saat_ini 
     ORDER BY stok_saat_ini ASC
-") or die("SQL Error: " . mysqli_error($conn));
+") or handle_db_error($conn);
 
 // 3. Ambil data vendor untuk dropdown
 $query_vendors = mysqli_query($conn, "SELECT id, nama_perusahaan FROM vendors ORDER BY nama_perusahaan ASC");
