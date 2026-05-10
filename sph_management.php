@@ -1,0 +1,113 @@
+<?php
+session_start();
+require 'database.php';
+
+// 1. Proteksi Internal
+if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['Manager Procurement', 'Procurement'])) {
+    header("Location: login.php");
+    exit;
+}
+
+$active = 'sph';
+
+// 2. Query mengambil rekap penawaran masuk
+// Kita join dengan tabel vendors dan inventory agar informasinya lengkap
+$query_sph = mysqli_query($conn, "
+    SELECT s.*, v.nama_perusahaan, i.nama_barang 
+    FROM sph_submissions s
+    JOIN vendors v ON s.vendor_id = v.id
+    JOIN inventory i ON s.inventory_id = i.id
+    ORDER BY s.created_at DESC
+") or die(mysqli_error($conn));
+?>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>SPH Management | Veridex</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 flex h-screen overflow-hidden">
+
+    <?php include 'sidebar_procurement.php'; ?>
+
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <div class="p-8 pb-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 class="text-3xl font-black text-slate-800 uppercase tracking-tighter">SPH Management</h2>
+                    <p class="text-sm text-slate-400 font-bold uppercase tracking-widest mt-1">Incoming Vendor Quotations</p>
+                </div>
+                <button class="bg-slate-900 text-white px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-red-600 transition shadow-lg">
+                    <i class="fa-solid fa-file-import mr-2"></i> Import SPH Data
+                </button>
+            </div>
+        </div>
+
+        <!-- Rekap Penawaran -->
+        <div class="flex-1 overflow-y-auto px-8 pb-8">
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 border-b border-slate-100">
+                        <tr class="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                            <th class="p-6">Date Received</th>
+                            <th class="p-6">Vendor Name</th>
+                            <th class="p-6">Item Subject</th>
+                            <th class="p-6 text-center">TBE (Tech)</th>
+                            <th class="p-6 text-center">CBE (Comm)</th>
+                            <th class="p-6 text-right">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        <?php while($row = mysqli_fetch_assoc($query_sph)): ?>
+                        <tr class="hover:bg-slate-50/50 transition-colors">
+                            <td class="p-6 text-xs font-bold text-slate-400">
+                                <?= date('d M Y', strtotime($row['created_at'])) ?>
+                            </td>
+                            <td class="p-6">
+                                <div class="font-black text-slate-800 uppercase text-sm"><?= $row['nama_perusahaan'] ?></div>
+                                <div class="text-[9px] text-slate-400 font-bold">DOC ID: <?= $row['nomor_sph'] ?></div>
+                            </td>
+                            <td class="p-6 text-xs font-medium text-slate-600">
+                                <?= $row['nama_barang'] ?>
+                            </td>
+                            <td class="p-6 text-center">
+                                <span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black"><?= $row['tbe_score'] ?></span>
+                            </td>
+                            <td class="p-6 text-center">
+                                <span class="bg-green-50 text-green-600 px-3 py-1 rounded-full text-[10px] font-black"><?= $row['cbe_score'] ?></span>
+                            </td>
+                            <td class="p-6 text-right">
+                                <span class="px-3 py-1 bg-yellow-50 text-yellow-600 border border-yellow-100 rounded-lg text-[9px] font-black uppercase">
+                                    Under Review
+                                </span>
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Dashboard Info -->
+            <div class="mt-6 p-6 bg-slate-900 rounded-3xl text-white flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center text-xl shadow-lg shadow-red-600/40">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Ready for Analysis</p>
+                        <h4 class="text-sm font-bold uppercase">Data dari SPH ini akan otomatis diproses di halaman Strategic Procurement</h4>
+                    </div>
+                </div>
+                <a href="strategic_procurement.php" class="bg-white/10 hover:bg-white/20 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition border border-white/10">
+                    Go to Strategic Analysis <i class="fa-solid fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
