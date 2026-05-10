@@ -18,7 +18,7 @@ $query_items = mysqli_query($conn, "
 ") or die(mysqli_error($conn));
 
 // 3. Ambil List Vendor untuk Assignment
-$vendors = mysqli_fetch_all(mysqli_query($conn, "SELECT id, nama_perusahaan FROM vendors"), MYSQLI_ASSOC);
+$vendors = mysqli_fetch_all(mysqli_query($conn, "SELECT id, nama_perusahaan, spesialisasi FROM vendors"), MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -148,7 +148,7 @@ $vendors = mysqli_fetch_all(mysqli_query($conn, "SELECT id, nama_perusahaan FROM
                                             <select name="vendor_1" class="flex-1 bg-slate-50 border-none text-xs font-bold text-slate-700 focus:ring-0 outline-none">
                                                 <option value="">Select Main Vendor...</option>
                                                 <?php foreach($vendors as $v): ?>
-                                                    <option value="<?= $v['id'] ?>"><?= $v['nama_perusahaan'] ?></option>
+                                                    <option value="<?= $v['id'] ?>"><?= $v['nama_perusahaan'] ?> - <?= $v['spesialisasi'] ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                             <div class="w-20 relative">
@@ -163,7 +163,7 @@ $vendors = mysqli_fetch_all(mysqli_query($conn, "SELECT id, nama_perusahaan FROM
                                             <select name="vendor_2" class="flex-1 bg-slate-50 border-none text-xs font-bold text-slate-700 outline-none">
                                                 <option value="">Select Secondary Vendor...</option>
                                                 <?php foreach($vendors as $v): ?>
-                                                    <option value="<?= $v['id'] ?>"><?= $v['nama_perusahaan'] ?></option>
+                                                    <option value="<?= $v['id'] ?>"><?= $v['nama_perusahaan'] ?> - <?= $v['spesialisasi'] ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                             <div class="w-20 relative">
