@@ -20,20 +20,14 @@ include 'header_meta.php';
                     <input type="text" name="nama_barang" required class="w-full border border-slate-300 p-3 rounded-lg focus:outline-red-500">
                 </div>
                 
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Unit / Satuan</label>
-                        <select name="unit" class="w-full border border-slate-300 p-3 rounded-lg focus:outline-red-500">
-                            <option value="Pcs">Pcs</option>
-                            <option value="Rim">Rim</option>
-                            <option value="Botol">Botol</option>
-                            <option value="Box">Box</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Stok Awal</label>
-                        <input type="number" name="stok_awal" required class="w-full border border-slate-300 p-3 rounded-lg focus:outline-red-500">
-                    </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Unit / Satuan</label>
+                    <select name="unit" class="w-full border border-slate-300 p-3 rounded-lg focus:outline-red-500">
+                        <option value="Pcs">Pcs</option>
+                        <option value="Rim">Rim</option>
+                        <option value="Botol">Botol</option>
+                        <option value="Box">Box</option>
+                    </select>
                 </div>
 
                 <div>

@@ -5,6 +5,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Gudang') {
     exit;
 }
 
+require 'database.php';
 date_default_timezone_set('Asia/Jakarta');
 $hari_array = array('Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu');
 $bulan_array = array(1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
@@ -42,25 +43,52 @@ $hari_ini = $hari_array[date('w')] . ', ' . date('j') . ' ' . $bulan_array[date(
         </div>
 
         <div class="flex-1 overflow-y-auto p-6">
+            <?php
+                $query_kritis = mysqli_query($conn, "SELECT * FROM inventory WHERE status_label = 'Kritis' ORDER BY stok_saat_ini ASC");
+                $total_kritis = mysqli_num_rows($query_kritis);
+            ?>
+
             <div class="space-y-4 max-w-4xl mx-auto">
-                
-                <div class="bg-red-600 p-6 rounded-2xl text-white shadow-xl flex items-center justify-between border-4 border-red-200 animate-pulse">
+
+                <!-- Header ringkasan -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
                     <div>
-                        <h4 class="text-xl font-bold uppercase tracking-tighter">PERINGATAN STOK MINIMAL!</h4>
-                        <p class="text-red-100 mt-1">Barang: <span class="font-bold">Toner Printer HP 101</span> mencapai titik pengadaan ulang (Sisa 2 Pcs).</p>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Barang Butuh Pengadaan</span>
+                        <p class="text-3xl font-black text-red-600 mt-1">
+                            <?= str_pad($total_kritis, 2, '0', STR_PAD_LEFT) ?>
+                            <span class="text-sm font-medium text-slate-400">SKU</span>
+                        </p>
                     </div>
-                    <i class="fa-solid fa-bell text-5xl opacity-80"></i>
-                </div>
-                
-                <div class="bg-white p-6 rounded-2xl border flex items-center justify-between shadow-sm">
-                    <span class="font-bold text-slate-700 uppercase tracking-widest text-sm">Log Sistem Notifikasi ROP</span>
-                    <button class="text-xs bg-slate-100 hover:bg-slate-200 transition-colors px-4 py-2 font-bold text-slate-600 rounded-lg">Bersihkan Log</button>
+                    <i class="fa-solid fa-triangle-exclamation text-5xl text-red-100"></i>
                 </div>
 
-                <div class="bg-white p-8 rounded-2xl border shadow-sm text-center">
-                    <i class="fa-solid fa-check-double text-4xl text-slate-200 mb-3"></i>
-                    <p class="text-slate-400 text-sm font-medium">Tidak ada log notifikasi ROP yang tertunda hari ini.</p>
-                </div>
+                <!-- List barang kritis -->
+                <?php if ($total_kritis > 0): ?>
+                    <?php while ($row = mysqli_fetch_assoc($query_kritis)): ?>
+                        <div class="bg-red-600 p-6 rounded-2xl text-white shadow-xl flex items-center justify-between border-4 border-red-400 animate-pulse">
+                            <div>
+                                <span class="text-xs font-bold bg-red-800/40 px-2 py-1 rounded-full uppercase tracking-widest"><?= htmlspecialchars($row['sku']) ?></span>
+                                <h4 class="text-lg font-black uppercase tracking-tight mt-2"><?= htmlspecialchars($row['nama_barang']) ?></h4>
+                                <p class="text-red-100 text-sm mt-1">
+                                    Sisa stok: <span class="font-black text-white"><?= $row['stok_saat_ini'] ?> <?= htmlspecialchars($row['unit']) ?></span>
+                                    &nbsp;·&nbsp; ROP: <span class="font-bold"><?= $row['stok_kritis'] ?> <?= htmlspecialchars($row['unit']) ?></span>
+                                </p>
+                            </div>
+                            <div class="text-center shrink-0 ml-6">
+                                <i class="fa-solid fa-bell text-4xl opacity-80 mb-2 block"></i>
+                                <span class="text-xs font-bold bg-red-800/40 px-3 py-1 rounded-full">KRITIS</span>
+                            </div>
+                        </div>
+                    <?php endwhile; ?>
+
+                <?php else: ?>
+                    <!-- Semua aman -->
+                    <div class="bg-white p-10 rounded-2xl border shadow-sm text-center">
+                        <i class="fa-solid fa-check-double text-5xl text-green-200 mb-4 block"></i>
+                        <p class="text-slate-500 font-bold">Semua stok dalam kondisi aman.</p>
+                        <p class="text-slate-400 text-sm mt-1">Tidak ada barang yang perlu pengadaan saat ini.</p>
+                    </div>
+                <?php endif; ?>
 
             </div>
         </div>

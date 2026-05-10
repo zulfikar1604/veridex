@@ -9,6 +9,10 @@
             <i class="fa-solid fa-download w-6 text-center mr-3 text-lg"></i> 
             <span>Scan Barcode Inbound</span>
         </a>
+        <a href="scan_barcode_outbound.php" class="flex items-center px-4 py-3.5 rounded-xl transition-all <?= ($active_menu == 'outbound') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' ?>">
+    <i class="fa-solid fa-upload w-6 text-center mr-3 text-lg"></i> 
+    <span>Scan Barcode Outbound</span>
+</a>
         <a href="riwayat_inbound.php" class="flex items-center px-4 py-3.5 rounded-xl transition-all <?= ($active_menu == 'riwayat_inbound') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' ?>">
             <i class="fa-solid fa-clock-rotate-left w-6 text-center mr-3 text-lg"></i> 
             <span>Riwayat Inbound</span>
