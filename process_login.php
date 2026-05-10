@@ -14,8 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($result && mysqli_num_rows($result) > 0) {
         $user = mysqli_fetch_assoc($result);
 
-        // 3. Verifikasi Password (Plaintext)
-        if ($password == $user['password']) {
+        // 3. Verifikasi Password (Hashed)
+        if (password_verify($password, $user['password'])) {
             // Set Session Data
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
