@@ -75,14 +75,33 @@ $query_sph = mysqli_query($conn, "
                                 <?= $row['nama_barang'] ?>
                             </td>
                             <td class="p-6 text-center">
-                                <span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black"><?= $row['tbe_score'] ?></span>
+                                <?php if ($row['tbe_score'] !== null): ?>
+                                    <span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black"><?= $row['tbe_score'] ?></span>
+                                <?php else: ?>
+                                    <span class="text-slate-300 text-xs">-</span>
+                                <?php endif; ?>
                             </td>
                             <td class="p-6 text-center">
-                                <span class="bg-green-50 text-green-600 px-3 py-1 rounded-full text-[10px] font-black"><?= $row['cbe_score'] ?></span>
+                                <?php if ($row['cbe_score'] !== null): ?>
+                                    <span class="bg-green-50 text-green-600 px-3 py-1 rounded-full text-[10px] font-black"><?= $row['cbe_score'] ?></span>
+                                <?php else: ?>
+                                    <span class="text-slate-300 text-xs">-</span>
+                                <?php endif; ?>
                             </td>
                             <td class="p-6 text-right">
-                                <span class="px-3 py-1 bg-yellow-50 text-yellow-600 border border-yellow-100 rounded-lg text-[9px] font-black uppercase">
-                                    Under Review
+                                <?php
+                                $status_colors = [
+                                    'Pending Review' => 'bg-slate-100 text-slate-500 border-slate-200',
+                                    'TBE Done' => 'bg-blue-50 text-blue-600 border-blue-200',
+                                    'CBE Done' => 'bg-purple-50 text-purple-600 border-purple-200',
+                                    'Evaluated' => 'bg-indigo-50 text-indigo-600 border-indigo-200',
+                                    'Selected' => 'bg-green-50 text-green-600 border-green-200',
+                                    'Rejected' => 'bg-red-50 text-red-600 border-red-200'
+                                ];
+                                $color = $status_colors[$row['status']] ?? 'bg-yellow-50 text-yellow-600 border-yellow-100';
+                                ?>
+                                <span class="px-3 py-1 border rounded-lg text-[9px] font-black uppercase <?= $color ?>">
+                                    <?= htmlspecialchars($row['status']) ?>
                                 </span>
                             </td>
                         </tr>
