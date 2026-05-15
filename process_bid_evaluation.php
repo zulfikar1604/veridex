@@ -140,6 +140,9 @@ switch ($action) {
             $reject_list = implode(',', $reject_ids);
             mysqli_query($conn, "UPDATE sph_submissions SET status = 'Rejected' WHERE inventory_id = $inventory_id AND vendor_id NOT IN ($reject_list) AND status = 'Evaluated'");
 
+            // Tutup RFQ yang sedang berjalan agar item ini bisa dipesan ulang di masa depan
+            mysqli_query($conn, "UPDATE rfq_requests SET status = 'Closed', closed_at = NOW() WHERE inventory_id = $inventory_id AND status = 'Open'");
+
             mysqli_commit($conn);
             echo json_encode(['success' => true, 'message' => 'Vendor berhasil dipilih. Silakan lanjut ke halaman Buat PO untuk men-generate Purchase Order.']);
         } catch (Exception $e) {

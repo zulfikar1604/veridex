@@ -122,7 +122,7 @@ $base_url = $protocol . $domainName . $path . '/konfirmasi_inbound.php';
                         </div>
 
                         <!-- Tombol Manual -->
-                        <a href="<?= htmlspecialchars($qr_url) ?>" class="mt-4 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-red-500 transition underline underline-offset-4">Proses di Layar Ini</a>
+                        <a href="konfirmasi_inbound.php?po=<?= urlencode($pending['po_number']) ?>" class="mt-4 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-red-500 transition underline underline-offset-4">Proses di Layar Ini</a>
 
                     </div>
                     <?php endwhile; ?>

@@ -146,15 +146,41 @@ if (isset($_POST['sku_scan'])) {
                     </div>
 
                 <?php else: ?>
-                    <i class="fa-solid fa-barcode text-6xl text-slate-200 mb-4"></i>
-                    <h3 class="text-2xl font-black mb-2 text-slate-800 uppercase tracking-widest">SCAN BARCODE OUTBOUND</h3>
-                    <p class="text-slate-500 mb-6 text-sm">Gunakan kamera untuk memindai SKU barang yang akan dikeluarkan.</p>
+                    <i class="fa-solid fa-boxes-stacked text-6xl text-slate-200 mb-4"></i>
+                    <h3 class="text-2xl font-black mb-2 text-slate-800 uppercase tracking-widest">OUTBOUND BARANG</h3>
+                    <p class="text-slate-500 mb-8 text-sm">Pilih metode pemilihan barang yang akan dikeluarkan.</p>
                     
-                    <div id="reader" class="mx-auto w-full max-w-sm bg-slate-100 rounded-2xl min-h-[250px] flex items-center justify-center border-2 border-dashed border-slate-300"></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto w-full text-left">
+                        
+                        <!-- Mode Manual -->
+                        <div class="border-2 border-slate-200 rounded-3xl p-8 bg-white relative flex flex-col justify-center shadow-sm hover:border-red-300 transition">
+                            <h4 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-2"><i class="fa-solid fa-keyboard text-red-500 mr-2"></i> Mode Manual</h4>
+                            <p class="text-xs text-slate-500 mb-6 font-medium">Ketik atau copy-paste kode SKU jika barcode fisik rusak atau sulit dibaca.</p>
+                            
+                            <form action="scan_barcode_outbound.php" method="POST" class="flex flex-col gap-4 mt-auto">
+                                <div>
+                                    <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block">Kode SKU / Barcode</label>
+                                    <input type="text" name="sku_scan" placeholder="Contoh: SKU-001" class="w-full border border-slate-300 p-4 rounded-xl outline-none focus:border-red-500 bg-slate-50 font-black text-center text-xl uppercase tracking-widest" required>
+                                </div>
+                                <button type="submit" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:bg-red-600 transition shadow-lg shadow-slate-900/20 flex justify-center items-center gap-2">
+                                    Cari Data Barang
+                                </button>
+                            </form>
+                        </div>
 
-                    <form id="scan_form" method="POST" class="hidden">
-                        <input type="text" name="sku_scan" id="sku_input">
-                    </form>
+                        <!-- Mode Scanner -->
+                        <div class="border-2 border-dashed border-slate-300 rounded-3xl p-8 bg-slate-50 relative flex flex-col items-center justify-center text-center">
+                            <h4 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-2"><i class="fa-solid fa-camera text-red-500 mr-2"></i> Mode Kamera</h4>
+                            <p class="text-xs text-slate-500 mb-6 font-medium">Arahkan barcode fisik barang ke kamera perangkat Anda.</p>
+                            
+                            <div id="reader" class="mx-auto w-full max-w-[280px] bg-white rounded-2xl min-h-[250px] flex items-center justify-center overflow-hidden border border-slate-200 shadow-inner"></div>
+
+                            <form id="scan_form" method="POST" class="hidden">
+                                <input type="text" name="sku_scan" id="sku_input">
+                            </form>
+                        </div>
+
+                    </div>
                 <?php endif; ?>
 
             </div>

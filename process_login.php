@@ -22,20 +22,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['role'] = $user['role'];
 
             // 4. Redirect Berdasarkan Role
-            if ($user['role'] === 'Manager Procurement') {
-                header("Location: kinerja_vendor.php");
-            } elseif ($user['role'] === 'Procurement') {
-                header("Location: dashboard_procurement.php");
-            } elseif ($user['role'] === 'Gudang') {
-                header("Location: dashboard_gudang.php");
-            } elseif ($user['role'] === 'Finance') {
-                header("Location: dashboard_finance.php");
-            } elseif ($user['role'] === 'Vendor') {
-                $_SESSION['vendor_id'] = $user['vendor_id'];
-                header("Location: dashboard_vendor.php");
+            if (isset($_SESSION['redirect_after_login'])) {
+                $redirect = $_SESSION['redirect_after_login'];
+                unset($_SESSION['redirect_after_login']);
+                header("Location: " . $redirect);
             } else {
-                $_SESSION['error'] = "Akses ditolak: Role tidak dikenali.";
-                header("Location: login.php");
+                if ($user['role'] === 'Manager Procurement') {
+                    header("Location: kinerja_vendor.php");
+                } elseif ($user['role'] === 'Procurement') {
+                    header("Location: dashboard_procurement.php");
+                } elseif ($user['role'] === 'Gudang') {
+                    header("Location: dashboard_gudang.php");
+                } elseif ($user['role'] === 'Finance') {
+                    header("Location: dashboard_finance.php");
+                } elseif ($user['role'] === 'Vendor') {
+                    $_SESSION['vendor_id'] = $user['vendor_id'];
+                    header("Location: dashboard_vendor.php");
+                } else {
+                    $_SESSION['error'] = "Akses ditolak: Role tidak dikenali.";
+                    header("Location: login.php");
+                }
             }
             exit; // WAJIB: Menghentikan script agar tidak buffering
 
