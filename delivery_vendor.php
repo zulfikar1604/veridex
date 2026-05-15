@@ -99,7 +99,17 @@ include 'header_meta.php';
                                 $sc = ['Shipped'=>'bg-purple-50 text-purple-600','Goods Received'=>'bg-green-50 text-green-600','Invoice Submitted'=>'bg-indigo-50 text-indigo-600','Payment Approved'=>'bg-amber-50 text-amber-600','Payment Completed'=>'bg-emerald-50 text-emerald-700'];
                                 $c = $sc[$po['status']] ?? 'bg-slate-100 text-slate-500';
                             ?>
-                            <tr class="hover:bg-slate-50 transition"><td class="p-4 font-bold text-slate-700"><?= htmlspecialchars($po['po_number']) ?></td><td class="p-4 text-slate-600"><?= htmlspecialchars($po['nama_barang']) ?></td><td class="p-4 text-slate-600"><?= htmlspecialchars($po['no_resi'] ?? '-') ?></td><td class="p-4 text-right"><span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase <?= $c ?>"><?= $po['status'] ?></span></td></tr>
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="p-4 font-bold text-slate-700"><?= htmlspecialchars($po['po_number']) ?></td>
+                                <td class="p-4 text-slate-600"><?= htmlspecialchars($po['nama_barang']) ?></td>
+                                <td class="p-4 text-slate-600"><?= htmlspecialchars($po['no_resi'] ?? '-') ?></td>
+                                <td class="p-4 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <a href="print_delivery_label.php?id=<?= $po['id'] ?>" target="_blank" class="px-3 py-1 bg-white border border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-200 rounded-lg text-[9px] font-black uppercase transition shadow-sm" title="Cetak Label Barcode"><i class="fa-solid fa-barcode"></i> Label</a>
+                                        <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase <?= $c ?>"><?= $po['status'] ?></span>
+                                    </div>
+                                </td>
+                            </tr>
                             <?php endwhile; ?>
                         </tbody>
                     </table>

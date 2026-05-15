@@ -118,21 +118,7 @@ switch ($action) {
             mysqli_stmt_bind_param($stmt1, "ii", $inventory_id, $vendor_1);
             mysqli_stmt_execute($stmt1);
 
-            // Generate PO untuk Vendor 1
-            $po_number_1 = 'PO-' . date('Ymd') . '-' . str_pad($inventory_id, 3, '0', STR_PAD_LEFT) . '-A';
-            $jumlah_pesan_1 = 0; // Akan di-set nanti berdasarkan kebutuhan
-            
-            // Ambil harga penawaran vendor 1
-            $harga1 = mysqli_fetch_assoc(mysqli_query($conn, "SELECT harga_penawaran FROM sph_submissions WHERE inventory_id = $inventory_id AND vendor_id = $vendor_1 LIMIT 1"));
-            $total_harga_1 = $harga1['harga_penawaran'] ?? 0;
-
-            $stmt_po1 = mysqli_prepare($conn, "INSERT INTO purchase_orders (po_number, procurement_id, vendor_id, inventory_id, total_harga, nilai_kontrak, jumlah_pesan, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending Manager', NOW())");
-            $procurement_id = $_SESSION['user_id'];
-            mysqli_stmt_bind_param($stmt_po1, "siiddii", $po_number_1, $procurement_id, $vendor_1, $inventory_id, $total_harga_1, $total_harga_1, $jumlah_pesan_1);
-            mysqli_stmt_execute($stmt_po1);
-
             // Simpan quota ke vendor_quotas
-            $po_id_1 = mysqli_insert_id($conn);
             $stmt_q1 = mysqli_prepare($conn, "INSERT INTO vendor_quotas (inventory_id, vendor_id, quota_percentage, rank_position) VALUES (?, ?, ?, 1) ON DUPLICATE KEY UPDATE quota_percentage = VALUES(quota_percentage), rank_position = VALUES(rank_position)");
             mysqli_stmt_bind_param($stmt_q1, "iii", $inventory_id, $vendor_1, $quota_1);
             mysqli_stmt_execute($stmt_q1);
@@ -142,15 +128,6 @@ switch ($action) {
                 $stmt2 = mysqli_prepare($conn, "UPDATE sph_submissions SET status = 'Selected' WHERE inventory_id = ? AND vendor_id = ?");
                 mysqli_stmt_bind_param($stmt2, "ii", $inventory_id, $vendor_2);
                 mysqli_stmt_execute($stmt2);
-
-                $po_number_2 = 'PO-' . date('Ymd') . '-' . str_pad($inventory_id, 3, '0', STR_PAD_LEFT) . '-B';
-                $harga2 = mysqli_fetch_assoc(mysqli_query($conn, "SELECT harga_penawaran FROM sph_submissions WHERE inventory_id = $inventory_id AND vendor_id = $vendor_2 LIMIT 1"));
-                $total_harga_2 = $harga2['harga_penawaran'] ?? 0;
-
-                $stmt_po2 = mysqli_prepare($conn, "INSERT INTO purchase_orders (po_number, procurement_id, vendor_id, inventory_id, total_harga, nilai_kontrak, jumlah_pesan, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending Manager', NOW())");
-                $jumlah_pesan_2 = 0;
-                mysqli_stmt_bind_param($stmt_po2, "siiddii", $po_number_2, $procurement_id, $vendor_2, $inventory_id, $total_harga_2, $total_harga_2, $jumlah_pesan_2);
-                mysqli_stmt_execute($stmt_po2);
 
                 $stmt_q2 = mysqli_prepare($conn, "INSERT INTO vendor_quotas (inventory_id, vendor_id, quota_percentage, rank_position) VALUES (?, ?, ?, 2) ON DUPLICATE KEY UPDATE quota_percentage = VALUES(quota_percentage), rank_position = VALUES(rank_position)");
                 mysqli_stmt_bind_param($stmt_q2, "iii", $inventory_id, $vendor_2, $quota_2);
@@ -164,7 +141,7 @@ switch ($action) {
             mysqli_query($conn, "UPDATE sph_submissions SET status = 'Rejected' WHERE inventory_id = $inventory_id AND vendor_id NOT IN ($reject_list) AND status = 'Evaluated'");
 
             mysqli_commit($conn);
-            echo json_encode(['success' => true, 'message' => 'Vendor berhasil dipilih dan PO telah di-generate. Menunggu approval Manager.']);
+            echo json_encode(['success' => true, 'message' => 'Vendor berhasil dipilih. Silakan lanjut ke halaman Buat PO untuk men-generate Purchase Order.']);
         } catch (Exception $e) {
             mysqli_rollback($conn);
             echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);

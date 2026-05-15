@@ -27,32 +27,67 @@ if (isset($_GET['error'])) {
     $pesan_error = $err_map[$_GET['error']] ?? 'Terjadi kesalahan';
 }
 
-// Jika kamera berhasil mendeteksi barcode dan mengirim data SKU
+// Jika kamera berhasil mendeteksi barcode atau dikirim dari list
 if (isset($_POST['sku_scan'])) {
-    $sku_mentah = trim($_POST['sku_scan']);
-    $sku_mentah = strtoupper($sku_mentah);
-    $sku_input = mysqli_real_escape_string($conn, $sku_mentah);
+    $scan = trim($_POST['sku_scan']);
+    $scan = strtoupper($scan);
+    $scan_safe = mysqli_real_escape_string($conn, $scan);
     
-    $query = mysqli_query($conn, "SELECT * FROM inventory WHERE sku = '$sku_input'");
-    
-    if (mysqli_num_rows($query) > 0) {
-        $barang = mysqli_fetch_assoc($query);
-        
-        // Cari PO yang statusnya 'Shipped' untuk barang ini
+    $po_found = null;
+
+    if (strpos($scan, 'PO-') === 0) {
         $query_po = mysqli_query($conn, "
-            SELECT p.*, v.nama_perusahaan 
+            SELECT p.*, i.nama_barang, i.sku, i.stok_saat_ini, i.unit, i.stok_kritis, v.nama_perusahaan 
             FROM purchase_orders p
+            JOIN inventory i ON p.inventory_id = i.id
             JOIN vendors v ON p.vendor_id = v.id
-            WHERE p.inventory_id = {$barang['id']} AND p.status = 'Shipped'
-            ORDER BY p.shipped_at DESC
+            WHERE p.po_number = '$scan_safe' AND p.status = 'Shipped'
         ");
-        while ($po = mysqli_fetch_assoc($query_po)) {
-            $po_list[] = $po;
+        if (mysqli_num_rows($query_po) > 0) {
+            $po_found = mysqli_fetch_assoc($query_po);
+            $barang = [
+               'id' => $po_found['inventory_id'],
+               'sku' => $po_found['sku'],
+               'nama_barang' => $po_found['nama_barang'],
+               'stok_saat_ini' => $po_found['stok_saat_ini'],
+               'unit' => $po_found['unit'],
+               'status_label' => '', // akan dihitung di proses_inbound
+            ];
+        } else {
+            $pesan_error = "PO '$scan' tidak ditemukan atau belum berstatus Shipped!";
         }
     } else {
-        $pesan_error = "Scanner membaca kode: <strong>'$sku_input'</strong>, tapi tidak ada di database!";
+        $query = mysqli_query($conn, "SELECT * FROM inventory WHERE sku = '$scan_safe'");
+        if (mysqli_num_rows($query) > 0) {
+            $barang = mysqli_fetch_assoc($query);
+            $query_po = mysqli_query($conn, "
+                SELECT p.*, v.nama_perusahaan 
+                FROM purchase_orders p
+                JOIN vendors v ON p.vendor_id = v.id
+                WHERE p.inventory_id = {$barang['id']} AND p.status = 'Shipped'
+                ORDER BY p.shipped_at ASC LIMIT 1
+            ");
+            if (mysqli_num_rows($query_po) > 0) {
+                $po_found = mysqli_fetch_assoc($query_po);
+            } else {
+                $pesan_error = "Barang '{$barang['nama_barang']}' ditemukan, tapi tidak ada pengiriman (PO) berstatus Shipped menuju gudang saat ini.";
+                $barang = null;
+            }
+        } else {
+            $pesan_error = "Scanner membaca kode: <strong>'$scan'</strong>, tapi tidak dikenali sebagai PO atau SKU!";
+        }
     }
 }
+
+// Ambil daftar PO yang sedang shipped (Menunggu Inbound)
+$query_pending = mysqli_query($conn, "
+    SELECT p.*, i.nama_barang, i.sku, v.nama_perusahaan 
+    FROM purchase_orders p
+    JOIN inventory i ON p.inventory_id = i.id
+    JOIN vendors v ON p.vendor_id = v.id
+    WHERE p.status = 'Shipped'
+    ORDER BY p.shipped_at ASC
+");
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -92,7 +127,7 @@ if (isset($_POST['sku_scan'])) {
             </div>
         </div>
 
-        <div class="flex-1 overflow-y-auto p-6 flex items-center justify-center">
+        <div class="flex-1 overflow-y-auto p-6 flex flex-col items-center">
             
             <div class="bg-white p-8 md:p-12 rounded-3xl border shadow-sm text-center w-full max-w-2xl">
                 
@@ -110,68 +145,32 @@ if (isset($_POST['sku_scan'])) {
                     </div>
                 <?php endif; ?>
 
-                <?php if ($barang): ?>
+                <?php if ($barang && $po_found): ?>
                     <div class="bg-green-50 border-2 border-green-500 p-8 rounded-2xl text-left relative overflow-hidden">
-                        <i class="fa-solid fa-circle-check text-9xl absolute -right-6 -bottom-6 text-green-200 opacity-50"></i>
-                        <h3 class="text-xs font-black text-green-600 uppercase tracking-widest mb-1">BARANG DITEMUKAN</h3>
-                        <p class="text-3xl font-black text-slate-800 mb-4"><?= $barang['nama_barang'] ?></p>
+                        <i class="fa-solid fa-truck-ramp-box text-9xl absolute -right-6 -bottom-6 text-green-200 opacity-50"></i>
+                        <h3 class="text-xs font-black text-green-600 uppercase tracking-widest mb-1">DATA PENGIRIMAN DITEMUKAN</h3>
+                        <p class="text-3xl font-black text-slate-800 mb-2"><?= htmlspecialchars($barang['nama_barang']) ?></p>
+                        <p class="text-sm font-bold text-slate-500 mb-6">Vendor: <?= htmlspecialchars($po_found['nama_perusahaan']) ?> | PO: <?= htmlspecialchars($po_found['po_number']) ?></p>
                         
-                        <div class="grid grid-cols-3 gap-4">
-                            <div class="bg-white p-4 rounded-xl border border-green-100 shadow-sm">
-                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Kode SKU</p>
-                                <p class="text-lg font-black text-slate-700"><?= $barang['sku'] ?></p>
+                        <div class="grid grid-cols-2 gap-4 mb-8">
+                            <div class="bg-white p-4 rounded-xl border border-green-100 shadow-sm text-center">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Jumlah Dikirim</p>
+                                <p class="text-3xl font-black text-blue-600"><?= $po_found['jumlah_pesan'] ?> <span class="text-sm font-normal text-slate-400"><?= $barang['unit'] ?></span></p>
                             </div>
-                            <div class="bg-white p-4 rounded-xl border border-green-100 shadow-sm">
+                            <div class="bg-white p-4 rounded-xl border border-green-100 shadow-sm text-center">
                                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Stok Saat Ini</p>
-                                <p class="text-lg font-black text-slate-700"><?= $barang['stok_saat_ini'] ?> <span class="text-sm font-normal text-slate-400"><?= $barang['unit'] ?></span></p>
-                            </div>
-                            <div class="bg-white p-4 rounded-xl border border-green-100 shadow-sm">
-                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Status</p>
-                                <p class="text-lg font-black text-slate-700"><?= $barang['status_label'] ?></p>
+                                <p class="text-3xl font-black text-slate-700"><?= $barang['stok_saat_ini'] ?> <span class="text-sm font-normal text-slate-400"><?= $barang['unit'] ?></span></p>
                             </div>
                         </div>
 
-                        <!-- PO Terkait -->
-                        <?php if (!empty($po_list)): ?>
-                        <div class="mt-6 bg-blue-50 border border-blue-200 p-4 rounded-xl">
-                            <h4 class="text-xs font-black text-blue-600 uppercase tracking-widest mb-3"><i class="fa-solid fa-truck mr-1"></i> PO Dalam Pengiriman</h4>
-                            <?php foreach($po_list as $po): ?>
-                            <div class="bg-white p-3 rounded-lg border border-blue-100 mb-2 flex items-center justify-between">
-                                <div>
-                                    <span class="font-bold text-slate-800 text-sm"><?= htmlspecialchars($po['po_number']) ?></span>
-                                    <span class="text-[10px] text-slate-400 ml-2"><?= htmlspecialchars($po['nama_perusahaan']) ?></span>
-                                    <?php if($po['no_resi']): ?>
-                                    <span class="text-[10px] text-blue-500 ml-2">Resi: <?= htmlspecialchars($po['no_resi']) ?></span>
-                                    <?php endif; ?>
-                                </div>
-                                <span class="text-xs font-bold text-purple-600">Shipped</span>
-                            </div>
-                            <?php endforeach; ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <form action="proses_inbound.php" method="POST" class="mt-8">
+                        <form action="proses_inbound.php" method="POST">
                             <input type="hidden" name="sku_inbound" value="<?= $barang['sku'] ?>">
+                            <input type="hidden" name="po_id" value="<?= $po_found['id'] ?>">
+                            <input type="hidden" name="jumlah_masuk" value="<?= $po_found['jumlah_pesan'] ?>">
                             
-                            <?php if (!empty($po_list)): ?>
-                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Pilih PO Terkait (Opsional):</label>
-                            <select name="po_id" class="w-full border border-slate-300 p-3 rounded-xl font-bold mb-4 outline-none focus:border-green-500">
-                                <option value="0">-- Tanpa PO (Inbound Manual) --</option>
-                                <?php foreach($po_list as $po): ?>
-                                <option value="<?= $po['id'] ?>"><?= htmlspecialchars($po['po_number']) ?> — <?= htmlspecialchars($po['nama_perusahaan']) ?> (Rp <?= number_format($po['total_harga'],0,',','.') ?>)</option>
-                                <?php endforeach; ?>
-                            </select>
-                            <?php else: ?>
-                            <input type="hidden" name="po_id" value="0">
-                            <?php endif; ?>
-
-                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Masukkan Jumlah Barang Masuk:</label>
-                            <div class="flex gap-4">
-                                <input type="number" name="jumlah_masuk" required min="1" placeholder="Misal: 50" class="flex-1 border border-slate-300 focus:outline-green-500 p-4 rounded-xl font-bold text-xl">
-                                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-black uppercase tracking-widest px-8 py-4 rounded-xl transition shadow-lg shadow-green-500/30">
-                                    Simpan Stok
-                                </button>
-                            </div>
+                            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-black uppercase tracking-widest py-4 rounded-xl transition shadow-lg shadow-green-500/30 flex justify-center items-center gap-2 text-lg">
+                                <i class="fa-solid fa-check-circle"></i> Konfirmasi Barang Masuk
+                            </button>
                         </form>
                     </div>
 
@@ -179,7 +178,7 @@ if (isset($_POST['sku_scan'])) {
                     <?php if(!$pesan_sukses): ?>
                     <i class="fa-solid fa-qrcode text-6xl text-slate-200 mb-4"></i>
                     <h3 class="text-2xl font-black mb-2 text-slate-800 uppercase tracking-widest">SCAN BARCODE INBOUND</h3>
-                    <p class="text-slate-500 mb-6 text-sm">Gunakan kamera perangkat ini untuk memindai SKU barang.</p>
+                    <p class="text-slate-500 mb-6 text-sm">Gunakan kamera untuk memindai Barcode PO (pada Surat Jalan) atau SKU Barang.</p>
                     
                     <div id="reader" class="mx-auto w-full max-w-sm bg-slate-100 rounded-2xl min-h-[250px] flex items-center justify-center border-2 border-dashed border-slate-300"></div>
 
@@ -188,6 +187,52 @@ if (isset($_POST['sku_scan'])) {
                     </form>
                     <?php endif; ?>
                 <?php endif; ?>
+
+            </div>
+
+            <!-- Daftar Menunggu Inbound -->
+            <?php if (!$barang): ?>
+            <div class="w-full max-w-2xl mt-8">
+                <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-4"><i class="fa-solid fa-truck-fast text-red-500 mr-2"></i> Daftar Menunggu Inbound</h3>
+                
+                <?php if(mysqli_num_rows($query_pending) > 0): ?>
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-900 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                            <tr>
+                                <th class="p-4">PO / Barang</th>
+                                <th class="p-4 text-center">Jumlah</th>
+                                <th class="p-4 text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            <?php while($pending = mysqli_fetch_assoc($query_pending)): ?>
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="p-4">
+                                    <div class="font-bold text-slate-800"><?= htmlspecialchars($pending['nama_barang']) ?></div>
+                                    <div class="text-[10px] text-slate-500 font-bold uppercase"><?= htmlspecialchars($pending['po_number']) ?></div>
+                                </td>
+                                <td class="p-4 text-center font-black text-blue-600">
+                                    <?= $pending['jumlah_pesan'] ?>
+                                </td>
+                                <td class="p-4 text-right">
+                                    <form method="POST">
+                                        <input type="hidden" name="sku_scan" value="<?= $pending['po_number'] ?>">
+                                        <button type="submit" class="bg-slate-100 hover:bg-red-500 hover:text-white text-slate-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase transition">Proses</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php else: ?>
+                <div class="bg-white p-8 rounded-2xl border border-slate-100 text-center shadow-sm">
+                    <p class="text-slate-400 font-bold text-sm">Tidak ada barang yang sedang dalam perjalanan.</p>
+                </div>
+                <?php endif; ?>
+            </div>
+            <?php endif; ?>
 
             </div>
         </div>
