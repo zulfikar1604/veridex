@@ -83,8 +83,8 @@ $query_rop = mysqli_query($conn, "SELECT * FROM inventory WHERE status_label='Kr
                                 </div>
                                 
                                 <?php if ($_SESSION['role'] === 'Procurement'): ?>
-                                    <a href="strategic_procurement.php?id_barang=<?= $item['id'] ?>" class="bg-slate-900 text-white px-8 py-3 rounded-xl font-black text-xs shadow-lg hover:bg-red-600 hover:-translate-y-1 transition uppercase tracking-widest">
-                                        <i class="fa-solid fa-bullhorn mr-2"></i> OPEN BIDDING
+                                    <a href="create_rfq.php?inventory_id=<?= $item['id'] ?>" class="bg-slate-900 text-white px-8 py-3 rounded-xl font-black text-xs shadow-lg hover:bg-red-600 hover:-translate-y-1 transition uppercase tracking-widest">
+                                        <i class="fa-solid fa-bullhorn mr-2"></i> BUAT RFQ
                                     </a>
                                 <?php else: ?>
                                     <div class="bg-slate-100 text-slate-400 px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest border border-slate-200">

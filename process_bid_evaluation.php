@@ -126,7 +126,7 @@ switch ($action) {
             $harga1 = mysqli_fetch_assoc(mysqli_query($conn, "SELECT harga_penawaran FROM sph_submissions WHERE inventory_id = $inventory_id AND vendor_id = $vendor_1 LIMIT 1"));
             $total_harga_1 = $harga1['harga_penawaran'] ?? 0;
 
-            $stmt_po1 = mysqli_prepare($conn, "INSERT INTO purchase_orders (po_number, procurement_id, vendor_id, inventory_id, total_harga, nilai_kontrak, jumlah_pesan, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'Waiting Approval', NOW())");
+            $stmt_po1 = mysqli_prepare($conn, "INSERT INTO purchase_orders (po_number, procurement_id, vendor_id, inventory_id, total_harga, nilai_kontrak, jumlah_pesan, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending Approval', NOW())");
             $procurement_id = $_SESSION['user_id'];
             mysqli_stmt_bind_param($stmt_po1, "siiddii", $po_number_1, $procurement_id, $vendor_1, $inventory_id, $total_harga_1, $total_harga_1, $jumlah_pesan_1);
             mysqli_stmt_execute($stmt_po1);
@@ -147,7 +147,7 @@ switch ($action) {
                 $harga2 = mysqli_fetch_assoc(mysqli_query($conn, "SELECT harga_penawaran FROM sph_submissions WHERE inventory_id = $inventory_id AND vendor_id = $vendor_2 LIMIT 1"));
                 $total_harga_2 = $harga2['harga_penawaran'] ?? 0;
 
-                $stmt_po2 = mysqli_prepare($conn, "INSERT INTO purchase_orders (po_number, procurement_id, vendor_id, inventory_id, total_harga, nilai_kontrak, jumlah_pesan, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'Waiting Approval', NOW())");
+                $stmt_po2 = mysqli_prepare($conn, "INSERT INTO purchase_orders (po_number, procurement_id, vendor_id, inventory_id, total_harga, nilai_kontrak, jumlah_pesan, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending Approval', NOW())");
                 $jumlah_pesan_2 = 0;
                 mysqli_stmt_bind_param($stmt_po2, "siiddii", $po_number_2, $procurement_id, $vendor_2, $inventory_id, $total_harga_2, $total_harga_2, $jumlah_pesan_2);
                 mysqli_stmt_execute($stmt_po2);

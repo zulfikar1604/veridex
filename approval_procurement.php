@@ -88,9 +88,9 @@ $query_pending = mysqli_query($conn, "
                                             <a href="process_approval.php?id=<?= $po['id'] ?>&status=Approved" class="px-4 py-2 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-green-600 transition shadow-lg shadow-slate-900/10">
                                                 Approve
                                             </a>
-                                            <button class="p-2 px-3 bg-white text-slate-400 border border-slate-100 rounded-xl hover:text-red-600 transition">
+                                            <a href="process_approval.php?id=<?= $po['id'] ?>&status=Rejected" onclick="return confirm('Yakin ingin menolak PO ini?')" class="p-2 px-3 bg-white text-slate-400 border border-slate-100 rounded-xl hover:text-red-600 hover:border-red-200 transition">
                                                 <i class="fa-solid fa-xmark"></i>
-                                            </button>
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>

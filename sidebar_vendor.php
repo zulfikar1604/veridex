@@ -1,3 +1,11 @@
+<?php
+// Hitung badge counters untuk sidebar vendor
+$_vendor_id = $_SESSION['vendor_id'] ?? 0;
+$_badge_rfq = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM rfq_vendors rv JOIN rfq_requests r ON rv.rfq_id = r.id WHERE rv.vendor_id = $_vendor_id AND r.status = 'Open' AND rv.has_submitted = 0"))['c'] ?? 0;
+$_badge_po = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM purchase_orders WHERE vendor_id = $_vendor_id AND status = 'Approved'"))['c'] ?? 0;
+$_badge_delivery = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM purchase_orders WHERE vendor_id = $_vendor_id AND status = 'Confirmed by Vendor'"))['c'] ?? 0;
+$_badge_invoice = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM purchase_orders WHERE vendor_id = $_vendor_id AND status = 'Goods Received'"))['c'] ?? 0;
+?>
 <aside class="w-[280px] bg-[#111827] text-white flex flex-col h-full shadow-2xl z-20 shrink-0">
     <div class="p-8 border-b border-slate-800">
         <h1 class="text-3xl font-black text-red-500 tracking-wider">VERIDEX</h1>
@@ -5,29 +13,29 @@
     </div>
     
     <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-        <a href="dashboard_vendor.php" class="flex items-center px-4 py-3.5 rounded-xl transition-all <?= ($active == 'bidding') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' ?>">
-            <i class="fa-solid fa-gavel w-6 text-center mr-3 text-lg"></i> 
-            <span>Bidding Area</span>
+        <a href="dashboard_vendor.php" class="flex items-center justify-between px-4 py-3.5 rounded-xl transition-all <?= ($active == 'bidding') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' ?>">
+            <span class="flex items-center"><i class="fa-solid fa-gavel w-6 text-center mr-3 text-lg"></i> Bidding Area</span>
+            <?php if($_badge_rfq > 0): ?><span class="bg-yellow-400 text-slate-900 text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center"><?= $_badge_rfq ?></span><?php endif; ?>
         </a>
         
-        <a href="po_vendor.php" class="flex items-center px-4 py-3.5 rounded-xl transition-all <?= ($active == 'po') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' ?>">
-            <i class="fa-solid fa-file-signature w-6 text-center mr-3 text-lg"></i> 
-            <span>Manajemen & Konfirmasi PO</span>
+        <a href="po_vendor.php" class="flex items-center justify-between px-4 py-3.5 rounded-xl transition-all <?= ($active == 'po') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' ?>">
+            <span class="flex items-center"><i class="fa-solid fa-file-signature w-6 text-center mr-3 text-lg"></i> Konfirmasi PO</span>
+            <?php if($_badge_po > 0): ?><span class="bg-red-600 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center"><?= $_badge_po ?></span><?php endif; ?>
         </a>
         
-        <a href="delivery_vendor.php" class="flex items-center px-4 py-3.5 rounded-xl transition-all <?= ($active == 'delivery') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' ?>">
-            <i class="fa-solid fa-truck-ramp-box w-6 text-center mr-3 text-lg"></i> 
-            <span>Delivery Management</span>
+        <a href="delivery_vendor.php" class="flex items-center justify-between px-4 py-3.5 rounded-xl transition-all <?= ($active == 'delivery') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' ?>">
+            <span class="flex items-center"><i class="fa-solid fa-truck-ramp-box w-6 text-center mr-3 text-lg"></i> Delivery</span>
+            <?php if($_badge_delivery > 0): ?><span class="bg-blue-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center"><?= $_badge_delivery ?></span><?php endif; ?>
         </a>
         
-        <a href="chat_vendor.php" class="flex items-center px-4 py-3.5 rounded-xl transition-all <?= ($active == 'chat') ? 'bg-red-500 text-white shadow-[0_4_15px_rgba(239,68,68,0.4)] font-bold' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' ?>">
+        <a href="chat_vendor.php" class="flex items-center px-4 py-3.5 rounded-xl transition-all <?= ($active == 'chat') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' ?>">
             <i class="fa-solid fa-comment-dots w-6 text-center mr-3 text-lg"></i> 
             <span>Messaging Center</span>
         </a>
 
-        <a href="invoice_vendor.php" class="flex items-center px-4 py-3.5 rounded-xl transition-all <?= ($active == 'invoice') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' ?>">
-            <i class="fa-solid fa-file-invoice w-6 text-center mr-3 text-lg"></i> 
-            <span>E-Invoicing</span>
+        <a href="invoice_vendor.php" class="flex items-center justify-between px-4 py-3.5 rounded-xl transition-all <?= ($active == 'invoice') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' ?>">
+            <span class="flex items-center"><i class="fa-solid fa-file-invoice w-6 text-center mr-3 text-lg"></i> E-Invoicing</span>
+            <?php if($_badge_invoice > 0): ?><span class="bg-green-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center"><?= $_badge_invoice ?></span><?php endif; ?>
         </a>
     </nav>
     

@@ -105,16 +105,20 @@ function get_sph_for_item($conn, $inventory_id) {
                     
                     <div x-data="{ 
                             step: <?= $all_evaluated ? 3 : 1 ?>,
-                            evaluatingSphId: null,
-                            tbeScore: '',
-                            cbeScore: '',
+                            scores: {},
+                            
+                            getTbe(id) { return this.scores['tbe_'+id] || ''; },
+                            setTbe(id, v) { this.scores['tbe_'+id] = v; },
+                            getCbe(id) { return this.scores['cbe_'+id] || ''; },
+                            setCbe(id, v) { this.scores['cbe_'+id] = v; },
                             
                             async submitTbe(sphId) {
-                                if(!this.tbeScore || this.tbeScore < 0 || this.tbeScore > 100) return alert('Score harus 0-100');
+                                let score = this.getTbe(sphId);
+                                if(!score || score < 0 || score > 100) return alert('Score harus 0-100');
                                 let fd = new FormData();
                                 fd.append('action', 'score_tbe');
                                 fd.append('sph_id', sphId);
-                                fd.append('tbe_score', this.tbeScore);
+                                fd.append('tbe_score', score);
                                 
                                 let res = await fetch('process_bid_evaluation.php', { method: 'POST', body: fd });
                                 let data = await res.json();
@@ -126,11 +130,12 @@ function get_sph_for_item($conn, $inventory_id) {
                             },
                             
                             async submitCbe(sphId) {
-                                if(!this.cbeScore || this.cbeScore < 0 || this.cbeScore > 100) return alert('Score harus 0-100');
+                                let score = this.getCbe(sphId);
+                                if(!score || score < 0 || score > 100) return alert('Score harus 0-100');
                                 let fd = new FormData();
                                 fd.append('action', 'score_cbe');
                                 fd.append('sph_id', sphId);
-                                fd.append('cbe_score', this.cbeScore);
+                                fd.append('cbe_score', score);
                                 
                                 let res = await fetch('process_bid_evaluation.php', { method: 'POST', body: fd });
                                 let data = await res.json();
@@ -229,26 +234,31 @@ function get_sph_for_item($conn, $inventory_id) {
                                             <!-- TBE -->
                                             <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex items-center justify-between">
                                                 <div class="font-bold text-xs text-slate-600">Technical (TBE)</div>
-                                                <?php if($s['tbe_score'] !== null): ?>
+                                                <?php if($s['tbe_score'] != null && $s['tbe_score'] !== ''): ?>
                                                     <span class="font-black text-lg text-slate-800"><?= $s['tbe_score'] ?></span>
                                                 <?php else: ?>
                                                     <div class="flex gap-2 w-32">
-                                                        <input type="number" x-model="tbeScore" @focus="evaluatingSphId = <?= $s['id'] ?>" class="w-full text-xs p-1 border rounded text-center outline-none focus:border-red-500" placeholder="0-100">
-                                                        <button @click="evaluatingSphId === <?= $s['id'] ?> && submitTbe(<?= $s['id'] ?>)" class="bg-slate-900 text-white px-2 rounded text-xs hover:bg-red-600 transition"><i class="fa-solid fa-check"></i></button>
+                                                        <input type="number" :value="getTbe(<?= $s['id'] ?>)" @input="setTbe(<?= $s['id'] ?>, $event.target.value)" class="w-full text-xs p-1 border rounded text-center outline-none focus:border-red-500" placeholder="0-100" min="0" max="100">
+                                                        <button @click="submitTbe(<?= $s['id'] ?>)" class="bg-slate-900 text-white px-2 rounded text-xs hover:bg-red-600 transition"><i class="fa-solid fa-check"></i></button>
                                                     </div>
                                                 <?php endif; ?>
                                             </div>
 
                                             <!-- CBE -->
-                                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex items-center justify-between" :class="<?= $s['tbe_score'] === null ? "'opacity-50 pointer-events-none'" : "''" ?>">
+                                            <?php 
+                                                $tbe_done = ($s['tbe_score'] != null && $s['tbe_score'] !== '');
+                                            ?>
+                                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex items-center justify-between <?= !$tbe_done ? 'opacity-50 pointer-events-none' : '' ?>">
                                                 <div class="font-bold text-xs text-slate-600">Commercial (CBE)</div>
-                                                <?php if($s['cbe_score'] !== null): ?>
+                                                <?php if($s['cbe_score'] != null && $s['cbe_score'] !== ''): ?>
                                                     <span class="font-black text-lg text-slate-800"><?= $s['cbe_score'] ?></span>
-                                                <?php else: ?>
+                                                <?php elseif($tbe_done): ?>
                                                     <div class="flex gap-2 w-32">
-                                                        <input type="number" x-model="cbeScore" @focus="evaluatingSphId = <?= $s['id'] ?>" class="w-full text-xs p-1 border rounded text-center outline-none focus:border-red-500" placeholder="0-100">
-                                                        <button @click="evaluatingSphId === <?= $s['id'] ?> && submitCbe(<?= $s['id'] ?>)" class="bg-slate-900 text-white px-2 rounded text-xs hover:bg-red-600 transition"><i class="fa-solid fa-check"></i></button>
+                                                        <input type="number" :value="getCbe(<?= $s['id'] ?>)" @input="setCbe(<?= $s['id'] ?>, $event.target.value)" class="w-full text-xs p-1 border rounded text-center outline-none focus:border-red-500" placeholder="0-100" min="0" max="100">
+                                                        <button @click="submitCbe(<?= $s['id'] ?>)" class="bg-slate-900 text-white px-2 rounded text-xs hover:bg-red-600 transition"><i class="fa-solid fa-check"></i></button>
                                                     </div>
+                                                <?php else: ?>
+                                                    <span class="text-xs text-slate-400 italic">Isi TBE dulu</span>
                                                 <?php endif; ?>
                                             </div>
                                         </div>
