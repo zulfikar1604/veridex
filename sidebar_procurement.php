@@ -45,6 +45,10 @@
              <i class="fa-solid fa-chess-knight w-6"></i> Strategic Procurement
             </a>
             
+            <a href="buat_po.php" class="w-full p-3 text-left flex items-center transition-all <?= ($active == 'buat_po') ? 'bg-red-500 text-white rounded-lg font-bold shadow-lg shadow-red-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800' ?>">
+             <i class="fa-solid fa-file-signature w-6"></i> Buat PO
+            </a>
+            
             <a href="chat_procurement.php" class="w-full p-3 text-left flex items-center transition-all <?= ($active == 'chat') ? 'bg-red-500 text-white rounded-lg font-bold shadow-lg shadow-red-500/30' : 'text-slate-300 hover:bg-slate-800' ?>">
                 <i class="fa-solid fa-comments w-6"></i> Messaging System
             </a>

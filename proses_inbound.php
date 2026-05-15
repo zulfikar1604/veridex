@@ -60,12 +60,23 @@ try {
 
     // 3. Update PO jika ada
     if ($po_id > 0) {
-        $po_check = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id, status FROM purchase_orders WHERE id = $po_id AND status = 'Shipped'"));
+        $po_check = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id, status, vendor_id, inventory_id, total_harga FROM purchase_orders WHERE id = $po_id AND status = 'Shipped'"));
         if ($po_check) {
             $user_id = $_SESSION['user_id'] ?? 0;
             $stmt_po = mysqli_prepare($conn, "UPDATE purchase_orders SET status = 'Goods Received', received_at = NOW(), received_by = ?, jumlah_diterima = ? WHERE id = ?");
             mysqli_stmt_bind_param($stmt_po, "iii", $user_id, $jumlah_masuk, $po_id);
             mysqli_stmt_execute($stmt_po);
+
+            // Auto-generate invoice ke tabel invoices untuk Finance
+            $inv_number = 'INV-' . date('Ymd') . '-' . str_pad($po_id, 4, '0', STR_PAD_LEFT);
+            $jatuh_tempo = date('Y-m-d', strtotime('+30 days'));
+            $vendor_id = $po_check['vendor_id'];
+            $inventory_id = $po_check['inventory_id'];
+            $total_tagihan = $po_check['total_harga'];
+
+            $stmt_inv = mysqli_prepare($conn, "INSERT INTO invoices (po_id, invoice_number, vendor_id, inventory_id, jumlah_barang, total_tagihan, tanggal_terima_gudang, tanggal_jatuh_tempo, status, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, 'Unpaid', NOW())");
+            mysqli_stmt_bind_param($stmt_inv, "isiiids", $po_id, $inv_number, $vendor_id, $inventory_id, $jumlah_masuk, $total_tagihan, $jatuh_tempo);
+            mysqli_stmt_execute($stmt_inv);
         }
     }
 

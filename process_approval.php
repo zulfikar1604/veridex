@@ -17,9 +17,9 @@ if ($po_id <= 0 || !in_array($status, ['Approved', 'Rejected'])) {
     exit;
 }
 
-// Pastikan PO masih berstatus 'Pending Approval'
+// Pastikan PO masih berstatus 'Pending Manager'
 $check = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id, status FROM purchase_orders WHERE id = $po_id"));
-if (!$check || $check['status'] !== 'Pending Approval') {
+if (!$check || $check['status'] !== 'Pending Manager') {
     header("Location: approval_procurement.php?error=already_processed");
     exit;
 }

@@ -68,6 +68,9 @@ while ($v = mysqli_fetch_assoc($query_vendors)) {
                     <p class="text-slate-500 mb-4">Barang <strong><?= htmlspecialchars($item['nama_barang']) ?></strong> sudah memiliki RFQ terbuka: <strong><?= $existing_rfq['rfq_number'] ?></strong></p>
                     <p class="text-sm text-slate-400 mb-6">Tunggu vendor mengirimkan penawaran, lalu lanjut ke evaluasi di Strategic Procurement.</p>
                     <div class="flex justify-center gap-4">
+                        <a href="print_rfq.php?id=<?= $existing_rfq['id'] ?>" target="_blank" class="bg-white text-slate-800 border border-slate-200 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:border-slate-400 transition">
+                            <i class="fa-solid fa-print mr-2"></i> Print RFQ
+                        </a>
                         <a href="strategic_procurement.php" class="bg-slate-900 text-white px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-red-600 transition">
                             <i class="fa-solid fa-chess-knight mr-2"></i> Ke Strategic Procurement
                         </a>

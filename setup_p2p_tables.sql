@@ -20,8 +20,8 @@ ALTER TABLE purchase_orders
   ADD COLUMN IF NOT EXISTS bukti_bayar_file VARCHAR(255) NULL AFTER payment_completed_at,
   ADD COLUMN IF NOT EXISTS payment_notes TEXT NULL AFTER bukti_bayar_file;
 
--- 2. Fix status mismatch: Standardisasi ke 'Pending Approval'
-UPDATE purchase_orders SET status = 'Pending Approval' WHERE status = 'Waiting Approval';
+-- 2. Fix status mismatch: Standardisasi ke 'Pending Manager'
+UPDATE purchase_orders SET status = 'Pending Manager' WHERE status = 'Waiting Approval';
 
 -- 3. Buat folder uploads (jalankan manual jika perlu)
 -- mkdir uploads/delivery

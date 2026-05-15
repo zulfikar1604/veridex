@@ -24,7 +24,7 @@ $query_history = mysqli_query($conn, "
     SELECT p.*, i.nama_barang, i.sku 
     FROM purchase_orders p
     JOIN inventory i ON p.inventory_id = i.id
-    WHERE p.vendor_id = $vendor_id AND p.status NOT IN ('Pending Approval', 'Approved', 'Rejected')
+    WHERE p.vendor_id = $vendor_id AND p.status NOT IN ('Pending Manager', 'Approved', 'Rejected')
     ORDER BY p.created_at DESC
 ") or handle_db_error($conn);
 
@@ -78,6 +78,9 @@ include 'header_meta.php';
                                 </p>
                             </div>
                             <div class="flex gap-2">
+                                <a href="print_po.php?id=<?= $po['id'] ?>" target="_blank" class="bg-slate-100 text-slate-500 px-4 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-200 transition-colors">
+                                    <i class="fa-solid fa-print"></i>
+                                </a>
                                 <button @click="confirming = true" x-show="!confirming"
                                     class="bg-slate-900 text-white px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-green-600 transition-colors shadow-lg">
                                     <i class="fa-solid fa-check mr-2"></i> Terima & Konfirmasi
@@ -139,9 +142,13 @@ include 'header_meta.php';
                                 <td class="p-4 text-slate-600"><?= htmlspecialchars($po['nama_barang']) ?></td>
                                 <td class="p-4 text-center font-bold text-slate-700">Rp <?= number_format($po['total_harga'], 0, ',', '.') ?></td>
                                 <td class="p-4 text-right">
-                                    <span class="px-3 py-1 border rounded-lg text-[9px] font-black uppercase <?= $color ?>"><?= $po['status'] ?></span>
+                                    <div class="flex justify-end items-center gap-2">
+                                        <span class="px-3 py-1 border rounded-lg text-[9px] font-black uppercase <?= $color ?>"><?= $po['status'] ?></span>
+                                        <a href="print_po.php?id=<?= $po['id'] ?>" target="_blank" class="text-slate-400 hover:text-red-500 transition"><i class="fa-solid fa-print"></i></a>
+                                    </div>
                                 </td>
                             </tr>
+
                             <?php endwhile; ?>
                         </tbody>
                     </table>

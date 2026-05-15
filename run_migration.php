@@ -103,6 +103,37 @@ $results[] = "✅ Fix status mismatch: $affected baris diperbarui";
 run_sql($conn, "ALTER TABLE inbound_history ADD COLUMN po_id INT NULL", "Kolom inbound_history.po_id", $results, $errors);
 
 // ============================================================
+// 7. Tabel Invoices (Hutang Dagang)
+// ============================================================
+run_sql($conn, "
+    CREATE TABLE IF NOT EXISTS invoices (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        po_id INT NOT NULL,
+        invoice_number VARCHAR(100) NOT NULL,
+        vendor_id INT NOT NULL,
+        inventory_id INT NOT NULL,
+        jumlah_barang INT NOT NULL DEFAULT 0,
+        total_tagihan DECIMAL(15,2) NOT NULL DEFAULT 0,
+        tanggal_terima_gudang DATETIME NOT NULL,
+        tanggal_jatuh_tempo DATE NOT NULL,
+        status ENUM('Unpaid', 'Paid') DEFAULT 'Unpaid',
+        paid_at DATETIME NULL,
+        paid_by INT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (po_id) REFERENCES purchase_orders(id),
+        FOREIGN KEY (vendor_id) REFERENCES vendors(id),
+        FOREIGN KEY (inventory_id) REFERENCES inventory(id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+", "Tabel invoices", $results, $errors);
+
+// ============================================================
+// 8. Fix status mismatch (Pending Manager)
+// ============================================================
+$fix2 = mysqli_query($conn, "UPDATE purchase_orders SET status = 'Pending Manager' WHERE status = 'Pending Approval'");
+$affected2 = mysqli_affected_rows($conn);
+$results[] = "✅ Rename status 'Pending Approval' to 'Pending Manager': $affected2 baris diperbarui";
+
+// ============================================================
 // Output Hasil
 // ============================================================
 ?>

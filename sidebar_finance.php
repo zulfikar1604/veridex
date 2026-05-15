@@ -20,6 +20,10 @@ $_badge_payment = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c F
             <?php if($_badge_payment > 0): ?><span class="bg-amber-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center"><?= $_badge_payment ?></span><?php endif; ?>
         </a>
         
+        <a href="hutang_dagang.php" class="flex items-center justify-between px-4 py-3.5 rounded-xl transition-all <?= ($active == 'hutang_dagang') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' ?>">
+            <span class="flex items-center"><i class="fa-solid fa-file-invoice-dollar w-6 text-center mr-3 text-lg"></i> Hutang Dagang (AP)</span>
+        </a>
+        
         <a href="upload_finance.php" class="flex items-center px-4 py-3.5 rounded-xl transition-all <?= ($active == 'upload') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' ?>">
             <i class="fa-solid fa-cloud-arrow-up w-6 text-center mr-3 text-lg"></i> 
             <span>Upload Bukti Bayar</span>
