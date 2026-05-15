@@ -41,7 +41,7 @@ $invoice_path = null;
 if (isset($_FILES['invoice_file']) && $_FILES['invoice_file']['error'] === UPLOAD_ERR_OK) {
     $upload_dir = __DIR__ . '/uploads/invoices/';
     if (!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0755, true);
+        mkdir($upload_dir, 0777, true);
     }
 
     $file_ext = strtolower(pathinfo($_FILES['invoice_file']['name'], PATHINFO_EXTENSION));
