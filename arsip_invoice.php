@@ -16,7 +16,7 @@ $query_invoice = mysqli_query($conn, "
     FROM invoices i
     JOIN vendors v ON i.vendor_id = v.id
     JOIN purchase_orders p ON i.po_id = p.id
-    ORDER BY i.tanggal_invoice DESC
+    ORDER BY i.created_at DESC
 ") or handle_db_error($conn);
 ?>
 
@@ -67,21 +67,21 @@ $query_invoice = mysqli_query($conn, "
                         <?php while($row = mysqli_fetch_assoc($query_invoice)): ?>
                         <tr class="hover:bg-slate-50 transition-colors">
                             <td class="p-6">
-                                <div class="font-black text-slate-800 uppercase text-sm">#<?= $row['nomor_invoice'] ?></div>
-                                <div class="text-[10px] text-slate-400 font-bold"><?= date('d/m/Y', strtotime($row['tanggal_invoice'])) ?></div>
+                                <div class="font-black text-slate-800 uppercase text-sm">#<?= $row['invoice_number'] ?></div>
+                                <div class="text-[10px] text-slate-400 font-bold"><?= date('d/m/Y', strtotime($row['created_at'])) ?></div>
                             </td>
                             <td class="p-6">
                                 <div class="font-bold text-slate-700 text-sm"><?= $row['nama_perusahaan'] ?></div>
                                 <span class="text-[9px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase font-black">Verified Vendor</span>
                             </td>
                             <td class="p-6 text-center">
-                                <span class="text-xs font-black text-slate-500 italic"><?= $row['nomor_po'] ?></span>
+                                <span class="text-xs font-black text-slate-500 italic"><?= $row['po_number'] ?></span>
                             </td>
                             <td class="p-6 text-right">
                                 <div class="font-black text-slate-800">Rp <?= number_format($row['total_tagihan'], 0, ',', '.') ?></div>
                             </td>
                             <td class="p-6 text-center">
-                                <?php if($row['status_pembayaran'] == 'Paid'): ?>
+                                <?php if($row['status'] == 'Paid'): ?>
                                     <span class="px-3 py-1 bg-green-50 text-green-600 border border-green-100 rounded-full text-[9px] font-black uppercase">Settled</span>
                                 <?php else: ?>
                                     <span class="px-3 py-1 bg-orange-50 text-orange-600 border border-orange-100 rounded-full text-[9px] font-black uppercase">Awaiting Payment</span>

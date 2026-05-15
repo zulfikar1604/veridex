@@ -88,7 +88,10 @@ $base_url = $protocol . $domainName . $path . '/konfirmasi_inbound.php';
                     <h3 class="text-lg font-black text-slate-800 uppercase tracking-widest">
                         <i class="fa-solid fa-truck-fast text-red-500 mr-2"></i> Daftar Pengiriman Tiba
                     </h3>
-                    <span class="bg-slate-200 text-slate-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Gunakan HP untuk Scan QR Code</span>
+                    <form action="konfirmasi_inbound.php" method="GET" class="flex gap-2">
+                        <input type="text" name="po" placeholder="Input No PO Manual..." class="border border-slate-200 rounded-lg px-3 py-1 text-xs focus:outline-red-500" required>
+                        <button type="submit" class="bg-slate-800 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-slate-700 transition">Cari</button>
+                    </form>
                 </div>
                 
                 <?php if(mysqli_num_rows($query_pending) > 0): ?>
