@@ -107,6 +107,7 @@ if ($_SESSION['role'] === 'Vendor' && $po['vendor_id'] != $_SESSION['vendor_id']
                     <th class="py-3 px-4 text-left text-xs font-black uppercase tracking-widest">Description</th>
                     <th class="py-3 px-4 text-center text-xs font-black uppercase tracking-widest">SKU</th>
                     <th class="py-3 px-4 text-center text-xs font-black uppercase tracking-widest">Qty</th>
+                    <th class="py-3 px-4 text-right text-xs font-black uppercase tracking-widest">Unit Price</th>
                     <th class="py-3 px-4 text-right text-xs font-black uppercase tracking-widest">Total Value</th>
                 </tr>
             </thead>
@@ -115,15 +116,17 @@ if ($_SESSION['role'] === 'Vendor' && $po['vendor_id'] != $_SESSION['vendor_id']
                     <td class="py-4 px-4 text-center font-bold">1</td>
                     <td class="py-4 px-4 font-bold text-slate-800"><?= htmlspecialchars($po['nama_barang']) ?></td>
                     <td class="py-4 px-4 text-center text-slate-500 font-mono"><?= htmlspecialchars($po['sku']) ?></td>
-                    <td class="py-4 px-4 text-center font-bold">1 <span class="text-xs text-slate-400">Lot</span></td>
+                    <td class="py-4 px-4 text-center font-bold"><?= $po['jumlah_pesan'] ?> <span class="text-xs text-slate-400"><?= htmlspecialchars($po['unit']) ?></span></td>
+                    <?php $unit_price = $po['jumlah_pesan'] > 0 ? $po['total_harga'] / $po['jumlah_pesan'] : 0; ?>
+                    <td class="py-4 px-4 text-right font-bold">Rp <?= number_format($unit_price, 0, ',', '.') ?></td>
                     <td class="py-4 px-4 text-right font-black">Rp <?= number_format($po['total_harga'], 0, ',', '.') ?></td>
                 </tr>
                 <!-- Spacer for layout -->
-                <tr class="h-32"><td colspan="5"></td></tr>
+                <tr class="h-32"><td colspan="6"></td></tr>
             </tbody>
             <tfoot class="bg-slate-50 border-t-2 border-slate-900">
                 <tr>
-                    <td colspan="4" class="py-4 px-4 text-right font-black uppercase tracking-widest text-slate-600">Grand Total</td>
+                    <td colspan="5" class="py-4 px-4 text-right font-black uppercase tracking-widest text-slate-600">Grand Total</td>
                     <td class="py-4 px-4 text-right font-black text-lg text-red-600">Rp <?= number_format($po['total_harga'], 0, ',', '.') ?></td>
                 </tr>
             </tfoot>

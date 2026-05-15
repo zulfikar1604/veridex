@@ -18,12 +18,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $inventory_id = intval($_POST['inventory_id'] ?? 0);
 $vendor_id = intval($_POST['vendor_id'] ?? 0);
 $jumlah_pesan = intval($_POST['jumlah_pesan'] ?? 0);
-$total_harga = floatval($_POST['total_harga'] ?? 0);
+$harga_satuan = floatval($_POST['harga_satuan'] ?? 0);
 
-if ($inventory_id <= 0 || $vendor_id <= 0 || $jumlah_pesan <= 0 || $total_harga <= 0) {
-    echo json_encode(['success' => false, 'message' => 'Input tidak valid. Pastikan jumlah pesan dan total harga lebih dari 0.']);
+if ($inventory_id <= 0 || $vendor_id <= 0 || $jumlah_pesan <= 0 || $harga_satuan <= 0) {
+    echo json_encode(['success' => false, 'message' => 'Input tidak valid. Pastikan jumlah pesan dan harga satuan lebih dari 0.']);
     exit;
 }
+
+$total_harga = $jumlah_pesan * $harga_satuan;
 
 // Cek apakah sudah ada PO untuk inventory dan vendor ini
 $check = mysqli_query($conn, "SELECT id FROM purchase_orders WHERE inventory_id = $inventory_id AND vendor_id = $vendor_id");

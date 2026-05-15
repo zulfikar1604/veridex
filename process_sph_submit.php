@@ -50,32 +50,8 @@ if (!empty($rfq['deadline']) && strtotime($rfq['deadline']) < time()) {
     exit;
 }
 
-// Handle file upload dokumen SPH
+// Handle file upload dokumen SPH dihapus (auto-generate SPH)
 $dokumen_path = null;
-if (isset($_FILES['dokumen_sph']) && $_FILES['dokumen_sph']['error'] === UPLOAD_ERR_OK) {
-    $upload_dir = __DIR__ . '/uploads/sph/';
-    if (!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0755, true);
-    }
-
-    $file_ext = strtolower(pathinfo($_FILES['dokumen_sph']['name'], PATHINFO_EXTENSION));
-    $allowed_ext = ['jpg', 'jpeg', 'png', 'pdf'];
-    
-    if (!in_array($file_ext, $allowed_ext)) {
-        echo json_encode(['success' => false, 'message' => 'Format file: JPG, PNG, atau PDF']);
-        exit;
-    }
-
-    if ($_FILES['dokumen_sph']['size'] > 5 * 1024 * 1024) {
-        echo json_encode(['success' => false, 'message' => 'Ukuran file maksimal 5MB']);
-        exit;
-    }
-
-    $filename = 'sph_' . $rfq_id . '_' . $vendor_id . '_' . time() . '.' . $file_ext;
-    if (move_uploaded_file($_FILES['dokumen_sph']['tmp_name'], $upload_dir . $filename)) {
-        $dokumen_path = 'uploads/sph/' . $filename;
-    }
-}
 
 mysqli_begin_transaction($conn);
 

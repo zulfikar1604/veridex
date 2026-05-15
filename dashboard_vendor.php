@@ -142,32 +142,11 @@ include 'header_meta.php';
                                         <input type="text" name="nomor_sph" required placeholder="SPH/2026/001" class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-red-500 bg-white font-bold text-sm">
                                     </div>
                                     <div>
-                                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Harga Penawaran (Rp) *</label>
+                                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Harga Penawaran (Per Satuan/Unit) *</label>
                                         <input type="number" name="harga_penawaran" required min="1" placeholder="5000000" class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-red-500 bg-white font-bold text-sm">
                                     </div>
                                 </div>
-                                <div x-data="{ fileName: '' }">
-                                    <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Dokumen SPH (PDF/JPG, opsional)</label>
-                                    <div class="border-2 border-dashed rounded-xl text-center transition cursor-pointer relative"
-                                         :class="fileName ? 'border-green-400 bg-green-50 p-3' : 'border-slate-200 p-4 hover:border-red-400'">
-                                        <template x-if="!fileName">
-                                            <div>
-                                                <i class="fa-solid fa-file-pdf text-xl mb-1 block text-slate-400"></i>
-                                                <span class="text-slate-400 text-xs font-medium">Klik untuk pilih file (Maks 5MB)</span>
-                                            </div>
-                                        </template>
-                                        <template x-if="fileName">
-                                            <div class="flex items-center gap-2 justify-center">
-                                                <i class="fa-solid fa-file-circle-check text-green-500 text-lg"></i>
-                                                <span class="text-green-700 text-xs font-bold truncate" x-text="fileName"></span>
-                                                <button type="button" @click.stop="fileName=''; $refs.fileInput.value=''" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-xmark"></i></button>
-                                            </div>
-                                        </template>
-                                        <input type="file" name="dokumen_sph" x-ref="fileInput" accept=".jpg,.jpeg,.png,.pdf" 
-                                               @change="fileName = $event.target.files.length ? $event.target.files[0].name : ''"
-                                               class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                                    </div>
-                                </div>
+                                <!-- File upload dokumen SPH dihapus, diganti generate otomatis -->
                                 <button type="submit" :disabled="submitting" class="w-full bg-red-600 text-white py-4 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-red-700 transition disabled:opacity-50 shadow-lg shadow-red-600/20">
                                     <span x-show="!submitting"><i class="fa-solid fa-paper-plane mr-2"></i> Kirim Penawaran</span>
                                     <span x-show="submitting"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Mengirim...</span>
@@ -214,9 +193,12 @@ include 'header_meta.php';
                                 <td class="p-4 font-bold text-slate-600 text-xs"><?= htmlspecialchars($row['rfq_number']) ?></td>
                                 <td class="p-4 font-bold text-slate-800"><?= htmlspecialchars($row['nama_barang']) ?></td>
                                 <td class="p-4 text-slate-600"><?= htmlspecialchars($row['nomor_sph'] ?? '-') ?></td>
-                                <td class="p-4 text-center font-bold text-slate-700">Rp <?= number_format($row['harga_penawaran'] ?? 0, 0, ',', '.') ?></td>
+                                <td class="p-4 text-center font-bold text-slate-700">Rp <?= number_format($row['harga_penawaran'] ?? 0, 0, ',', '.') ?> <span class="text-[9px] text-slate-400 font-normal">/unit</span></td>
                                 <td class="p-4 text-right">
-                                    <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase <?= $c ?>"><?= $row['sph_status'] ?? 'Submitted' ?></span>
+                                    <div class="flex items-center justify-end gap-2">
+                                        <a href="print_sph.php?rfq=<?= $row['id'] ?>&vendor=<?= $vendor_id ?>" target="_blank" class="px-3 py-1 bg-white border border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-200 rounded-lg text-[9px] font-black uppercase transition shadow-sm" title="Cetak SPH"><i class="fa-solid fa-print"></i> Cetak</a>
+                                        <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase <?= $c ?>"><?= $row['sph_status'] ?? 'Submitted' ?></span>
+                                    </div>
                                 </td>
                             </tr>
                             <?php endwhile; ?>

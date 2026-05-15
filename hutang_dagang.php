@@ -82,6 +82,7 @@ include 'header_meta.php';
                                 <th class="py-4 px-6 text-xs font-bold uppercase tracking-widest text-center">Jatuh Tempo</th>
                                 <th class="py-4 px-6 text-xs font-bold uppercase tracking-widest text-right">Nilai Tagihan</th>
                                 <th class="py-4 px-6 text-xs font-bold uppercase tracking-widest text-center">Status</th>
+                                <th class="py-4 px-6 text-xs font-bold uppercase tracking-widest text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="text-sm">
@@ -120,6 +121,11 @@ include 'header_meta.php';
                                                 <i class="fa-solid fa-clock"></i> Unpaid
                                             </span>
                                         <?php endif; ?>
+                                    </td>
+                                    <td class="py-5 px-6 text-right">
+                                        <a href="print_invoice.php?id=<?= $ap['id'] ?>" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
+                                            <i class="fa-solid fa-print"></i> Cetak
+                                        </a>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>

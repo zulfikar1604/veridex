@@ -65,7 +65,8 @@ include 'header_meta.php';
 
         <div class="flex-1 overflow-y-auto px-8 pb-8" x-data="{ 
             showModal: false, 
-            form: { inventory_id: 0, vendor_id: 0, vendor_name: '', item_name: '', jumlah_pesan: 0, total_harga: 0 },
+            form: { inventory_id: 0, vendor_id: 0, vendor_name: '', item_name: '', jumlah_pesan: 0, harga_satuan: 0 },
+            get totalHarga() { return this.form.jumlah_pesan * this.form.harga_satuan; },
             openModal(item) {
                 this.form.inventory_id = item.inventory_id;
                 this.form.vendor_id = item.vendor_id;
@@ -76,9 +77,8 @@ include 'header_meta.php';
                 let quota = parseInt(item.quota_percentage) || 100;
                 this.form.jumlah_pesan = Math.round(kebutuhan * (quota / 100));
                 
-                // Asumsi harga_penawaran dari vendor adalah total, kita prorata dengan kuota
-                let harga = parseFloat(item.harga_penawaran) || 0;
-                this.form.total_harga = Math.round(harga * (quota / 100));
+                // Harga penawaran adalah Harga Satuan
+                this.form.harga_satuan = parseFloat(item.harga_penawaran) || 0;
                 
                 this.showModal = true;
             },
@@ -87,7 +87,7 @@ include 'header_meta.php';
                 fd.append('inventory_id', this.form.inventory_id);
                 fd.append('vendor_id', this.form.vendor_id);
                 fd.append('jumlah_pesan', this.form.jumlah_pesan);
-                fd.append('total_harga', this.form.total_harga);
+                fd.append('harga_satuan', this.form.harga_satuan);
 
                 fetch('process_buat_po.php', { method: 'POST', body: fd })
                 .then(r => r.json())
@@ -122,7 +122,7 @@ include 'header_meta.php';
                                     </td>
                                     <td class="p-6">
                                         <div class="font-bold text-slate-700"><?= htmlspecialchars($ready['nama_perusahaan']) ?></div>
-                                        <div class="text-[10px] text-slate-400 font-bold uppercase">Penawaran: Rp <?= number_format($ready['harga_penawaran'], 0, ',', '.') ?></div>
+                                        <div class="text-[10px] text-slate-400 font-bold uppercase">Harga Satuan: Rp <span x-text="new Intl.NumberFormat('id-ID').format(<?= $ready['harga_penawaran'] ?>)"></span></div>
                                     </td>
                                     <td class="p-6 text-center">
                                         <span class="px-3 py-1 bg-blue-50 text-blue-600 border border-blue-100 rounded-full text-[10px] font-black uppercase">
@@ -217,8 +217,12 @@ include 'header_meta.php';
                             <input type="number" x-model="form.jumlah_pesan" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Harga (Rp)</label>
-                            <input type="number" x-model="form.total_harga" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500">
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Harga Satuan (Rp)</label>
+                            <input type="number" x-model="form.harga_satuan" disabled class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-600">
+                        </div>
+                        <div class="bg-red-50 p-4 rounded-xl border border-red-100 mt-2">
+                            <label class="block text-[10px] font-black text-red-400 uppercase tracking-widest mb-1">Total Harga PO</label>
+                            <div class="text-2xl font-black text-red-600">Rp <span x-text="new Intl.NumberFormat('id-ID').format(totalHarga)"></span></div>
                         </div>
                     </div>
 
