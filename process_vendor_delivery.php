@@ -41,7 +41,7 @@ $foto_path = null;
 if (isset($_FILES['foto_surat_jalan']) && $_FILES['foto_surat_jalan']['error'] === UPLOAD_ERR_OK) {
     $upload_dir = __DIR__ . '/uploads/delivery/';
     if (!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0755, true);
+        mkdir($upload_dir, 0777, true);
     }
 
     $file_ext = strtolower(pathinfo($_FILES['foto_surat_jalan']['name'], PATHINFO_EXTENSION));

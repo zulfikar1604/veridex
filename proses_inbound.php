@@ -42,6 +42,16 @@ if ($po_id > 0) {
 mysqli_begin_transaction($conn);
 
 try {
+    // 0. Double check PO Status dengan lock
+    if ($po_id > 0) {
+        $check_po_lock = mysqli_fetch_assoc(mysqli_query($conn, "SELECT status FROM purchase_orders WHERE id = $po_id FOR UPDATE"));
+        if (!$check_po_lock || $check_po_lock['status'] !== 'Shipped') {
+            mysqli_rollback($conn);
+            header("Location: scan_barcode_inbound.php?error=already_received");
+            exit;
+        }
+    }
+
     // 1. Update stok di inventory
     $stok_baru = $barang['stok_saat_ini'] + $jumlah_masuk;
     
@@ -87,6 +97,9 @@ try {
             $stmt_inv = mysqli_prepare($conn, "INSERT INTO invoices (po_id, invoice_number, vendor_id, inventory_id, jumlah_barang, total_tagihan, tanggal_terima_gudang, tanggal_jatuh_tempo, status, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, 'Unpaid', NOW())");
             mysqli_stmt_bind_param($stmt_inv, "isiiids", $po_id, $inv_number, $vendor_id, $inventory_id, $jumlah_masuk, $total_tagihan, $jatuh_tempo);
             mysqli_stmt_execute($stmt_inv);
+
+            // Sync invoice number ke purchase_orders agar 3-Way Matching Finance tidak 'WAITING'
+            mysqli_query($conn, "UPDATE purchase_orders SET invoice_number = '$inv_number', invoice_submitted_at = NOW() WHERE id = $po_id");
         }
     }
 

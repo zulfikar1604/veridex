@@ -78,10 +78,22 @@ $po = mysqli_fetch_assoc($query_po);
                 <input type="hidden" name="po_id" value="<?= $po['id'] ?>">
                 <input type="hidden" name="jumlah_masuk" value="<?= $po['jumlah_pesan'] ?>">
                 
-                <button type="button" onclick="this.disabled=true; this.innerHTML='<i class=\'fa-solid fa-spinner fa-spin\'></i> Memproses...'; document.getElementById('inboundForm').submit();" class="w-full bg-green-600 hover:bg-green-700 text-white font-black uppercase tracking-widest py-4 rounded-xl transition shadow-lg shadow-green-500/30 flex justify-center items-center gap-2 text-lg">
+                <button type="submit" id="btnKonfirmasi" class="w-full bg-green-600 hover:bg-green-700 text-white font-black uppercase tracking-widest py-4 rounded-xl transition shadow-lg shadow-green-500/30 flex justify-center items-center gap-2 text-lg">
                     <i class="fa-solid fa-check"></i> Konfirmasi Stok
                 </button>
             </form>
+
+            <script>
+            document.getElementById('inboundForm').addEventListener('submit', function(e) {
+                const btn = document.getElementById('btnKonfirmasi');
+                if (btn.disabled) {
+                    e.preventDefault();
+                    return;
+                }
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+            });
+            </script>
             
             <a href="scan_barcode_inbound.php" class="block text-center mt-4 text-xs font-bold text-slate-400 hover:text-slate-600">Batal & Kembali ke Dashboard</a>
 

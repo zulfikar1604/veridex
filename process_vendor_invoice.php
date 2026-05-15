@@ -77,6 +77,9 @@ $sql = "UPDATE purchase_orders SET
     WHERE id = $po_id";
 
 if (mysqli_query($conn, $sql)) {
+    // Sync invoice number ke tabel invoices untuk dashboard Finance
+    mysqli_query($conn, "UPDATE invoices SET invoice_number = '$inv_num_safe' WHERE po_id = $po_id");
+    
     echo json_encode(['success' => true, 'message' => 'Invoice berhasil disubmit. Menunggu verifikasi Finance.']);
 } else {
     echo json_encode(['success' => false, 'message' => 'Gagal menyimpan invoice: ' . mysqli_error($conn)]);

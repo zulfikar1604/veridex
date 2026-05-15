@@ -30,7 +30,7 @@ $po = mysqli_fetch_assoc(mysqli_query($conn, "
     FROM purchase_orders p
     JOIN inventory i ON p.inventory_id = i.id
     JOIN vendors v ON p.vendor_id = v.id
-    WHERE p.id = $po_id AND p.status = 'Invoice Submitted'
+    WHERE p.id = $po_id AND p.status IN ('Goods Received', 'Invoice Submitted')
 "));
 
 if (!$po) {
