@@ -31,6 +31,14 @@ if (!$barang) {
     exit;
 }
 
+if ($po_id > 0) {
+    $check_po = mysqli_fetch_assoc(mysqli_query($conn, "SELECT status FROM purchase_orders WHERE id = $po_id"));
+    if ($check_po && $check_po['status'] !== 'Shipped') {
+        header("Location: scan_barcode_inbound.php?error=already_received");
+        exit;
+    }
+}
+
 mysqli_begin_transaction($conn);
 
 try {

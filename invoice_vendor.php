@@ -32,9 +32,6 @@ include 'header_meta.php';
                     <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Penagihan Digital</p>
                 </div>
                 <div class="flex items-center gap-3">
-                    <?php if(mysqli_num_rows($query_ready) > 0): ?>
-                    <span class="bg-green-600 text-white text-xs font-black px-3 py-1 rounded-full animate-pulse"><?= mysqli_num_rows($query_ready) ?> Siap Invoice</span>
-                    <?php endif; ?>
                     <div class="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center font-black shadow-md">V</div>
                 </div>
             </div>

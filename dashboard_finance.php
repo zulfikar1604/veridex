@@ -16,7 +16,7 @@ $query_match = mysqli_query($conn, "
     FROM purchase_orders p
     JOIN inventory i ON p.inventory_id = i.id
     JOIN vendors v ON p.vendor_id = v.id
-    WHERE p.status = 'Invoice Submitted'
+    WHERE p.status IN ('Goods Received', 'Invoice Submitted')
     ORDER BY p.invoice_submitted_at DESC
 ") or handle_db_error($conn);
 

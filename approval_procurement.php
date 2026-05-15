@@ -88,6 +88,9 @@ $query_pending = mysqli_query($conn, "
                                             <a href="print_po.php?id=<?= $po['id'] ?>" target="_blank" class="p-2 px-3 bg-white text-slate-400 border border-slate-100 rounded-xl hover:text-blue-600 hover:border-blue-200 transition" title="Print PO">
                                                 <i class="fa-solid fa-print"></i>
                                             </a>
+                                            <a href="print_delivery_label.php?id=<?= $po['id'] ?>" target="_blank" class="p-2 px-3 bg-white text-slate-400 border border-slate-100 rounded-xl hover:text-blue-600 hover:border-blue-200 transition" title="Print Label Pengiriman">
+                                                <i class="fa-solid fa-tags"></i>
+                                            </a>
                                             <a href="process_approval.php?id=<?= $po['id'] ?>&status=Approved" class="px-4 py-2 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-green-600 transition shadow-lg shadow-slate-900/10">
                                                 Approve
                                             </a>
