@@ -1,80 +1,43 @@
 <?php
 session_start();
-require_once '../config/database.php';
+require 'database.php';
 
 // Pastikan request adalah POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $nama_perusahaan = trim($_POST['nama_perusahaan']);
     $spesialisasi = trim($_POST['spesialisasi']);
+    $alamat = trim($_POST['alamat']);
+    $email = trim($_POST['email']);
+    $pic_nama = trim($_POST['pic_nama']);
+    $pic_kontak = trim($_POST['pic_kontak']);
     
-    // --- PROSES UPLOAD FILE ---
-    $file_name = $_FILES['dokumen_legal']['name'];
-    $file_tmp = $_FILES['dokumen_legal']['tmp_name'];
-    $file_size = $_FILES['dokumen_legal']['size'];
-    $file_error = $_FILES['dokumen_legal']['error'];
+    // Tangkap data NIB & NPWP
+    $nib = trim($_POST['nib']);
+    $npwp = trim($_POST['npwp']);
     
-    // Ambil ekstensi file
-    $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-    
-    // Ekstensi yang diizinkan
-    $allowed_ext = ['pdf', 'jpg', 'jpeg', 'png'];
-    
-    // Validasi file
-    if (in_array($file_ext, $allowed_ext)) {
-        if ($file_error === 0) {
-            if ($file_size <= 2000000) { // Maksimal 2MB
-                
-                // Buat nama file unik agar tidak tertimpa
-                $file_name_new = uniqid('DOC_', true) . "." . $file_ext;
-                
-                // Tentukan folder tujuan (Pastikan folder 'uploads' ini ada di project kamu!)
-                // Path: veridex_app/uploads/vendors/
-                $upload_dir = '../uploads/vendors/';
-                
-                // Cek apakah folder ada, jika tidak, buat otomatis
-                if (!is_dir($upload_dir)) {
-                    mkdir($upload_dir, 0777, true);
-                }
-                
-                $file_destination = $upload_dir . $file_name_new;
-                
-                // Pindahkan file dari temp ke folder tujuan
-                if (move_uploaded_file($file_tmp, $file_destination)) {
-                    
-                    try {
-                        // Simpan data ke Database
-                        // Status default-nya adalah 'Pending' dari skema SQL kita
-                        $stmt = $pdo->prepare("INSERT INTO vendors (nama_perusahaan, spesialisasi, dokumen_legal) VALUES (?, ?, ?)");
-                        $stmt->execute([$nama_perusahaan, $spesialisasi, $file_name_new]);
-                        
-                        $_SESSION['success'] = "Pendaftaran berhasil! Tim kami akan meninjau dokumen Anda.";
-                        header("Location: register_vendor.php");
-                        exit;
-                        
-                    } catch(PDOException $e) {
-                        $_SESSION['error'] = "Terjadi kesalahan database: " . $e->getMessage();
-                        header("Location: register_vendor.php");
-                        exit;
-                    }
-                    
-                } else {
-                    $_SESSION['error'] = "Gagal mengunggah file. Silakan coba lagi.";
-                    header("Location: register_vendor.php");
-                    exit;
-                }
-            } else {
-                $_SESSION['error'] = "Ukuran file terlalu besar! Maksimal 2MB.";
-                header("Location: register_vendor.php");
-                exit;
-            }
-        } else {
-            $_SESSION['error'] = "Terjadi error saat mengunggah file.";
+    try {
+        $nama_safe = mysqli_real_escape_string($conn, $nama_perusahaan);
+        $spesialisasi_safe = mysqli_real_escape_string($conn, $spesialisasi);
+        $alamat_safe = mysqli_real_escape_string($conn, $alamat);
+        $email_safe = mysqli_real_escape_string($conn, $email);
+        $pic_nama_safe = mysqli_real_escape_string($conn, $pic_nama);
+        $pic_kontak_safe = mysqli_real_escape_string($conn, $pic_kontak);
+        $nib_safe = mysqli_real_escape_string($conn, $nib);
+        $npwp_safe = mysqli_real_escape_string($conn, $npwp);
+
+        $sql = "INSERT INTO vendors (nama_perusahaan, spesialisasi, alamat, email, pic_nama, pic_kontak, nib, npwp, status) 
+                VALUES ('$nama_safe', '$spesialisasi_safe', '$alamat_safe', '$email_safe', '$pic_nama_safe', '$pic_kontak_safe', '$nib_safe', '$npwp_safe', 'Pending')";
+        
+        if (mysqli_query($conn, $sql)) {
+            $_SESSION['success'] = "Pendaftaran berhasil! Tim kami akan meninjau profil Anda.";
             header("Location: register_vendor.php");
             exit;
+        } else {
+            throw new Exception(mysqli_error($conn));
         }
-    } else {
-        $_SESSION['error'] = "Format file tidak didukung! Gunakan PDF, JPG, atau PNG.";
+    } catch(Exception $e) {
+        $_SESSION['error'] = "Terjadi kesalahan database: " . $e->getMessage();
         header("Location: register_vendor.php");
         exit;
     }

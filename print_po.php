@@ -10,7 +10,7 @@ if (!isset($_SESSION['role'])) {
 $po_id = intval($_GET['id'] ?? 0);
 
 $query_po = mysqli_query($conn, "
-    SELECT p.*, i.nama_barang, i.sku, i.unit, v.nama_perusahaan, v.alamat, v.email, v.telepon,
+    SELECT p.*, i.nama_barang, i.sku, i.unit, v.nama_perusahaan, v.alamat, v.email, v.pic_kontak,
            u.username as creator_name
     FROM purchase_orders p
     JOIN inventory i ON p.inventory_id = i.id
@@ -88,7 +88,7 @@ if ($_SESSION['role'] === 'Vendor' && $po['vendor_id'] != $_SESSION['vendor_id']
                 <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-200 pb-1">Vendor To:</h3>
                 <h4 class="text-lg font-black text-slate-800 uppercase"><?= htmlspecialchars($po['nama_perusahaan']) ?></h4>
                 <p class="text-sm mt-1 text-slate-600"><?= nl2br(htmlspecialchars($po['alamat'] ?? '')) ?></p>
-                <p class="text-sm mt-2 text-slate-600 font-medium">T: <?= htmlspecialchars($po['telepon'] ?? '-') ?></p>
+                <p class="text-sm mt-2 text-slate-600 font-medium">T: <?= htmlspecialchars($po['pic_kontak'] ?? '-') ?></p>
                 <p class="text-sm text-slate-600 font-medium">E: <?= htmlspecialchars($po['email'] ?? '-') ?></p>
             </div>
             <div>

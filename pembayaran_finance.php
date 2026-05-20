@@ -70,6 +70,10 @@ include 'header_meta.php';
                                 <i class="fa-solid fa-file-invoice mr-1"></i> Invoice: <?= htmlspecialchars($po['invoice_number'] ?? '-') ?>
                                 <span class="mx-2">|</span>
                                 <i class="fa-solid fa-check-double mr-1 text-green-500"></i> Matched: <?= date('d M Y', strtotime($po['payment_matched_at'])) ?>
+                                <?php if(!empty($po['payment_term'])): ?>
+                                <span class="mx-2">|</span>
+                                <i class="fa-solid fa-clock mr-1 text-amber-500"></i> Term: <span class="text-amber-600 font-black"><?= htmlspecialchars($po['payment_term']) ?></span>
+                                <?php endif; ?>
                             </p>
                         </div>
                         <a href="upload_finance.php?po_id=<?= $po['id'] ?>" class="bg-slate-900 text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-red-600 transition-colors shadow-lg">

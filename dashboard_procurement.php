@@ -17,7 +17,7 @@ $warning = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM
 $aman = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM inventory WHERE status_label='Aman'"))['total'];
 
 // 3. QUERY UNTUK LIST ROP TRIGGER (Hanya ambil barang yang Kritis)
-$query_rop = mysqli_query($conn, "SELECT * FROM inventory WHERE status_label='Kritis' ORDER BY stok_saat_ini ASC");
+$query_rop = mysqli_query($conn, "SELECT * FROM inventory WHERE status_label='Kritis' AND id NOT IN (SELECT inventory_id FROM rfq_requests WHERE status = 'Open') ORDER BY stok_saat_ini ASC");
 ?>
 <!DOCTYPE html>
 <html lang="id">

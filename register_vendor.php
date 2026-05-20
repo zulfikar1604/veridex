@@ -93,33 +93,66 @@ session_start();
                                placeholder="Contoh: PT. Solusi Maju Bersama">
                     </div>
 
-                    <div>
+                    <div class="relative">
                         <label class="block text-sm font-bold text-slate-700 mb-2">Spesialisasi Pengadaan</label>
-                        <input type="text" name="spesialisasi" required 
+                        <select name="spesialisasi" required 
+                               class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700 appearance-none">
+                            <option value="" disabled selected>-- Pilih Kategori Spesialisasi --</option>
+                            <option value="Alat Tulis Kantor (ATK)">Alat Tulis Kantor (ATK)</option>
+                            <option value="Perangkat IT & Komputer">Perangkat IT & Komputer</option>
+                            <option value="Bahan Baku Pabrik">Bahan Baku Pabrik</option>
+                            <option value="Konstruksi & Material Bangunan">Konstruksi & Material Bangunan</option>
+                            <option value="Jasa Kebersihan (Cleaning Service)">Jasa Kebersihan (Cleaning Service)</option>
+                            <option value="Jasa Keamanan (Security)">Jasa Keamanan (Security)</option>
+                            <option value="Perabotan & Mebel Kantor">Perabotan & Mebel Kantor</option>
+                            <option value="Alat Keselamatan Kerja (K3)">Alat Keselamatan Kerja (K3)</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pt-8 text-slate-500">
+                            <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Alamat Lengkap</label>
+                        <textarea name="alamat" required rows="3"
                                class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700" 
-                               placeholder="Contoh: Alat Tulis, Perangkat IT, Jasa Cleaning">
+                               placeholder="Contoh: Jl. Sudirman No. 123, Jakarta"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Email Perusahaan</label>
+                            <input type="email" name="email" required 
+                                   class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700" 
+                                   placeholder="Contoh: info@perusahaan.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Nama PIC</label>
+                            <input type="text" name="pic_nama" required 
+                                   class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700" 
+                                   placeholder="Contoh: Budi Santoso">
+                        </div>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-bold text-slate-700 mb-2">Dokumen Legalitas (NIB/NPWP)</label>
-                        <div class="relative relative border-2 border-dashed border-slate-300 rounded-2xl p-8 text-center hover:border-red-500 hover:bg-red-50 transition-colors group">
-                            <input type="file" name="dokumen_legal" required accept=".pdf,.jpg,.jpeg,.png"
-                                   class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                   @change="fileName = $event.target.files[0].name">
-                            
-                            <div class="space-y-2" x-show="!fileName">
-                                <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto group-hover:bg-red-100 transition-colors">
-                                    <i class="fa-solid fa-cloud-arrow-up text-slate-400 group-hover:text-red-500 text-xl"></i>
-                                </div>
-                                <p class="text-sm font-bold text-slate-600">Klik atau seret file ke sini</p>
-                                <p class="text-xs text-slate-400 font-medium">Format: PDF, JPG, PNG (Maks 2MB)</p>
-                            </div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Nomor Kontak PIC (WA/Telp)</label>
+                        <input type="text" name="pic_kontak" required 
+                               class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700" 
+                               placeholder="Contoh: 081234567890">
+                    </div>
 
-                            <div x-cloak x-show="fileName" class="flex flex-col items-center">
-                                <i class="fa-solid fa-file-circle-check text-4xl text-green-500 mb-2"></i>
-                                <p class="text-sm font-bold text-slate-700" x-text="fileName"></p>
-                                <p class="text-xs text-red-500 mt-1 font-bold cursor-pointer">Klik untuk mengganti file</p>
-                            </div>
+                    <div class="grid grid-cols-2 gap-4 border-t border-slate-100 pt-6">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Nomor Induk Berusaha (NIB)</label>
+                            <input type="text" name="nib" required 
+                                   class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700" 
+                                   placeholder="Contoh: 1234567890123">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">NPWP Perusahaan</label>
+                            <input type="text" name="npwp" required 
+                                   class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700" 
+                                   placeholder="Contoh: 12.345.678.9-012.000">
                         </div>
                     </div>
 

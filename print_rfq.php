@@ -9,6 +9,14 @@ if (!isset($_SESSION['role'])) {
 
 $rfq_id = intval($_GET['id'] ?? 0);
 
+if ($_SESSION['role'] === 'Vendor') {
+    $vendor_id = $_SESSION['vendor_id'];
+    $check = mysqli_query($conn, "SELECT id FROM rfq_vendors WHERE rfq_id = $rfq_id AND vendor_id = $vendor_id");
+    if (mysqli_num_rows($check) == 0) {
+        die("Anda tidak memiliki akses ke dokumen RFQ ini.");
+    }
+}
+
 $query_rfq = mysqli_query($conn, "
     SELECT r.*, i.nama_barang, i.sku, i.unit, u.username as creator_name
     FROM rfq_requests r

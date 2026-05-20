@@ -71,6 +71,20 @@ $po = mysqli_fetch_assoc($query_po);
                         <p class="text-3xl font-black text-blue-600"><?= $po['jumlah_pesan'] ?> <span class="text-sm font-normal text-slate-500"><?= htmlspecialchars($po['unit']) ?></span></p>
                     </div>
                 </div>
+                <hr class="border-slate-200">
+                <div class="bg-blue-50/50 p-3 rounded-xl border border-blue-100">
+                    <p class="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-2"><i class="fa-solid fa-truck mr-1"></i> Detail Ekspedisi</p>
+                    <table class="text-xs w-full text-slate-600 font-medium">
+                        <tr><td class="pb-1 w-1/3">Surat Jalan</td><td class="pb-1 font-bold text-slate-800">: <?= htmlspecialchars($po['no_resi']) ?></td></tr>
+                        <tr><td class="pb-1 w-1/3">Pengemudi</td><td class="pb-1 font-bold text-slate-800">: <?= htmlspecialchars($po['sj_pengemudi']) ?></td></tr>
+                        <tr><td class="pb-1 w-1/3">No. Polisi</td><td class="pb-1 font-bold text-slate-800 uppercase">: <?= htmlspecialchars($po['sj_nopol']) ?></td></tr>
+                    </table>
+                    <div class="mt-3">
+                        <a href="print_surat_jalan.php?id=<?= $po['id'] ?>" target="_blank" class="block w-full text-center bg-white border border-blue-200 text-blue-600 hover:bg-blue-600 hover:text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-colors shadow-sm">
+                            <i class="fa-solid fa-print mr-1"></i> Cetak Surat Jalan Masuk
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <form action="proses_inbound.php" method="POST" id="inboundForm">

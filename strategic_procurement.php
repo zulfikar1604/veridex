@@ -22,9 +22,12 @@ $query_items = mysqli_query($conn, "
 
 // Fungsi pembantu untuk mengambil SPH per item
 function get_sph_for_item($conn, $inventory_id) {
-    $q = "SELECT s.*, v.nama_perusahaan 
+    $q = "SELECT s.*, v.nama_perusahaan,
+                 r.jumlah_kebutuhan, r.catatan as rfq_catatan, i2.unit
           FROM sph_submissions s 
-          JOIN vendors v ON s.vendor_id = v.id 
+          JOIN vendors v ON s.vendor_id = v.id
+          LEFT JOIN rfq_requests r ON s.rfq_id = r.id
+          LEFT JOIN inventory i2 ON s.inventory_id = i2.id
           WHERE s.inventory_id = $inventory_id
           ORDER BY s.id ASC";
     return mysqli_query($conn, $q);
@@ -114,7 +117,7 @@ function get_sph_for_item($conn, $inventory_id) {
                             
                             async submitTbe(sphId) {
                                 let score = this.getTbe(sphId);
-                                if(!score || score < 0 || score > 100) return alert('Score harus 0-100');
+                                if(!score || score < 1 || score > 10) return alert('Score harus 1-10');
                                 let fd = new FormData();
                                 fd.append('action', 'score_tbe');
                                 fd.append('sph_id', sphId);
@@ -131,7 +134,7 @@ function get_sph_for_item($conn, $inventory_id) {
                             
                             async submitCbe(sphId) {
                                 let score = this.getCbe(sphId);
-                                if(!score || score < 0 || score > 100) return alert('Score harus 0-100');
+                                if(!score || score < 1 || score > 10) return alert('Score harus 1-10');
                                 let fd = new FormData();
                                 fd.append('action', 'score_cbe');
                                 fd.append('sph_id', sphId);
@@ -214,52 +217,120 @@ function get_sph_for_item($conn, $inventory_id) {
                             <!-- STEP 1: Evaluation Forms -->
                             <div x-show="step === 1" x-transition.opacity class="space-y-4">
                                 <div class="bg-blue-50 text-blue-600 p-4 rounded-xl text-sm font-medium border border-blue-100 flex items-center gap-3">
-                                    <i class="fa-solid fa-circle-info"></i> Lakukan penilaian Teknis (TBE) lalu Komersial (CBE) untuk setiap vendor.
+                                    <i class="fa-solid fa-circle-info"></i> Lakukan penilaian Teknis (TBE) lalu Komersial (CBE) untuk setiap vendor. <strong>Range Nilai: 1 — 10</strong>
                                 </div>
                                 
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <?php foreach($sph_data as $s): ?>
-                                    <div class="border border-slate-200 rounded-2xl p-5 hover:border-slate-300 transition-colors">
-                                        <div class="flex justify-between items-start mb-4">
+                                <div class="space-y-6">
+                                    <?php foreach($sph_data as $s): 
+                                        $tbe_done = ($s['tbe_score'] != null && $s['tbe_score'] !== '');
+                                        $cbe_done = ($s['cbe_score'] != null && $s['cbe_score'] !== '');
+                                        
+                                        // Hitung diskon
+                                        $subtotal_sph = floatval($s['harga_penawaran']) * intval($s['jumlah_kebutuhan'] ?? 0);
+                                        $diskon_display = '-';
+                                        if (($s['diskon_jenis'] ?? 'Nominal') === 'Nominal') {
+                                            $diskon_display = 'Rp ' . number_format(floatval($s['diskon_nilai'] ?? 0), 0, ',', '.');
+                                        } else {
+                                            $diskon_display = floatval($s['diskon_nilai'] ?? 0) . '%';
+                                        }
+                                    ?>
+                                    <div class="border border-slate-200 rounded-2xl overflow-hidden hover:border-slate-300 transition-colors">
+                                        <!-- Header Vendor -->
+                                        <div class="bg-slate-50 p-5 border-b border-slate-200 flex justify-between items-start">
                                             <div>
-                                                <h4 class="font-black text-slate-800 uppercase"><?= htmlspecialchars($s['nama_perusahaan']) ?></h4>
+                                                <h4 class="font-black text-slate-800 uppercase text-lg"><?= htmlspecialchars($s['nama_perusahaan']) ?></h4>
                                                 <p class="text-[10px] text-slate-400 font-bold tracking-widest">SPH: <?= htmlspecialchars($s['nomor_sph'] ?? '-') ?></p>
                                             </div>
-                                            <span class="px-2 py-1 rounded text-[9px] font-black uppercase tracking-widest bg-slate-100 text-slate-500">
+                                            <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest bg-slate-100 text-slate-500 border border-slate-200">
                                                 <?= $s['status'] ?>
                                             </span>
                                         </div>
 
-                                        <div class="space-y-4">
-                                            <!-- TBE -->
-                                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex items-center justify-between">
-                                                <div class="font-bold text-xs text-slate-600">Technical (TBE)</div>
-                                                <?php if($s['tbe_score'] != null && $s['tbe_score'] !== ''): ?>
-                                                    <span class="font-black text-lg text-slate-800"><?= $s['tbe_score'] ?></span>
-                                                <?php else: ?>
-                                                    <div class="flex gap-2 w-32">
-                                                        <input type="number" :value="getTbe(<?= $s['id'] ?>)" @input="setTbe(<?= $s['id'] ?>, $event.target.value)" class="w-full text-xs p-1 border rounded text-center outline-none focus:border-red-500" placeholder="0-100" min="0" max="100">
-                                                        <button @click="submitTbe(<?= $s['id'] ?>)" class="bg-slate-900 text-white px-2 rounded text-xs hover:bg-red-600 transition"><i class="fa-solid fa-check"></i></button>
+                                        <div class="p-5">
+                                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                                                <!-- TBE Section -->
+                                                <div class="space-y-3">
+                                                    <div class="flex items-center justify-between">
+                                                        <h5 class="text-xs font-black text-blue-600 uppercase tracking-widest flex items-center gap-2">
+                                                            <i class="fa-solid fa-microscope"></i> Technical Bid (TBE)
+                                                        </h5>
+                                                        <span class="text-[9px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded">Range: 1-10</span>
                                                     </div>
-                                                <?php endif; ?>
-                                            </div>
 
-                                            <!-- CBE -->
-                                            <?php 
-                                                $tbe_done = ($s['tbe_score'] != null && $s['tbe_score'] !== '');
-                                            ?>
-                                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex items-center justify-between <?= !$tbe_done ? 'opacity-50 pointer-events-none' : '' ?>">
-                                                <div class="font-bold text-xs text-slate-600">Commercial (CBE)</div>
-                                                <?php if($s['cbe_score'] != null && $s['cbe_score'] !== ''): ?>
-                                                    <span class="font-black text-lg text-slate-800"><?= $s['cbe_score'] ?></span>
-                                                <?php elseif($tbe_done): ?>
-                                                    <div class="flex gap-2 w-32">
-                                                        <input type="number" :value="getCbe(<?= $s['id'] ?>)" @input="setCbe(<?= $s['id'] ?>, $event.target.value)" class="w-full text-xs p-1 border rounded text-center outline-none focus:border-red-500" placeholder="0-100" min="0" max="100">
-                                                        <button @click="submitCbe(<?= $s['id'] ?>)" class="bg-slate-900 text-white px-2 rounded text-xs hover:bg-red-600 transition"><i class="fa-solid fa-check"></i></button>
+                                                    <!-- TBE Info Cards -->
+                                                    <div class="bg-blue-50/50 border border-blue-100 rounded-xl p-3 space-y-2 text-xs">
+                                                        <div class="flex justify-between">
+                                                            <span class="text-slate-500 font-medium"><i class="fa-solid fa-boxes-stacked mr-1 text-blue-400"></i> Quantity</span>
+                                                            <span class="font-black text-slate-800"><?= intval($s['jumlah_kebutuhan'] ?? 0) ?> <?= htmlspecialchars($s['unit'] ?? '') ?></span>
+                                                        </div>
+                                                        <div class="flex justify-between">
+                                                            <span class="text-slate-500 font-medium"><i class="fa-solid fa-ship mr-1 text-blue-400"></i> Incoterm</span>
+                                                            <span class="font-black text-slate-800"><?= htmlspecialchars($s['incoterm'] ?: '-') ?></span>
+                                                        </div>
+                                                        <div class="flex justify-between">
+                                                            <span class="text-slate-500 font-medium"><i class="fa-solid fa-file-lines mr-1 text-blue-400"></i> Spesifikasi</span>
+                                                            <span class="font-bold text-slate-700 text-right max-w-[60%] truncate" title="<?= htmlspecialchars($s['keterangan'] ?: ($s['rfq_catatan'] ?: '-')) ?>"><?= htmlspecialchars($s['keterangan'] ?: ($s['rfq_catatan'] ?: '-')) ?></span>
+                                                        </div>
                                                     </div>
-                                                <?php else: ?>
-                                                    <span class="text-xs text-slate-400 italic">Isi TBE dulu</span>
-                                                <?php endif; ?>
+
+                                                    <!-- TBE Score Input -->
+                                                    <div class="bg-white p-3 rounded-xl border-2 <?= $tbe_done ? 'border-green-200 bg-green-50/30' : 'border-blue-200' ?> flex items-center justify-between">
+                                                        <div class="font-bold text-sm text-slate-700">Skor TBE</div>
+                                                        <?php if($tbe_done): ?>
+                                                            <span class="font-black text-2xl text-green-600"><?= $s['tbe_score'] ?><span class="text-xs text-slate-400 font-bold ml-1">/ 10</span></span>
+                                                        <?php else: ?>
+                                                            <div class="flex gap-2 items-center">
+                                                                <input type="number" :value="getTbe(<?= $s['id'] ?>)" @input="setTbe(<?= $s['id'] ?>, $event.target.value)" class="w-16 text-sm p-2 border-2 border-slate-200 rounded-lg text-center outline-none focus:border-blue-500 font-black" placeholder="1-10" min="1" max="10" step="0.1">
+                                                                <button @click="submitTbe(<?= $s['id'] ?>)" class="bg-blue-600 text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-blue-700 transition"><i class="fa-solid fa-check mr-1"></i>Save</button>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+
+                                                <!-- CBE Section -->
+                                                <div class="space-y-3 <?= !$tbe_done ? 'opacity-40 pointer-events-none' : '' ?>">
+                                                    <div class="flex items-center justify-between">
+                                                        <h5 class="text-xs font-black text-emerald-600 uppercase tracking-widest flex items-center gap-2">
+                                                            <i class="fa-solid fa-coins"></i> Commercial Bid (CBE)
+                                                        </h5>
+                                                        <span class="text-[9px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded">Range: 1-10</span>
+                                                    </div>
+
+                                                    <!-- CBE Info Cards -->
+                                                    <div class="bg-emerald-50/50 border border-emerald-100 rounded-xl p-3 space-y-2 text-xs">
+                                                        <div class="flex justify-between">
+                                                            <span class="text-slate-500 font-medium"><i class="fa-solid fa-tag mr-1 text-emerald-400"></i> Harga Satuan</span>
+                                                            <span class="font-black text-slate-800">Rp <?= number_format(floatval($s['harga_penawaran']), 0, ',', '.') ?></span>
+                                                        </div>
+                                                        <div class="flex justify-between">
+                                                            <span class="text-slate-500 font-medium"><i class="fa-solid fa-percent mr-1 text-emerald-400"></i> Diskon</span>
+                                                            <span class="font-black text-slate-800"><?= $diskon_display ?></span>
+                                                        </div>
+                                                        <div class="flex justify-between">
+                                                            <span class="text-slate-500 font-medium"><i class="fa-solid fa-truck mr-1 text-emerald-400"></i> Biaya Pengiriman</span>
+                                                            <span class="font-black text-slate-800">Rp <?= number_format(floatval($s['biaya_pengiriman'] ?? 0), 0, ',', '.') ?></span>
+                                                        </div>
+                                                        <div class="flex justify-between">
+                                                            <span class="text-slate-500 font-medium"><i class="fa-solid fa-clock mr-1 text-emerald-400"></i> Payment Term</span>
+                                                            <span class="font-black text-slate-800"><?= htmlspecialchars($s['payment_term'] ?: '-') ?></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- CBE Score Input -->
+                                                    <div class="bg-white p-3 rounded-xl border-2 <?= $cbe_done ? 'border-green-200 bg-green-50/30' : 'border-emerald-200' ?> flex items-center justify-between">
+                                                        <div class="font-bold text-sm text-slate-700">Skor CBE</div>
+                                                        <?php if($cbe_done): ?>
+                                                            <span class="font-black text-2xl text-green-600"><?= $s['cbe_score'] ?><span class="text-xs text-slate-400 font-bold ml-1">/ 10</span></span>
+                                                        <?php elseif($tbe_done): ?>
+                                                            <div class="flex gap-2 items-center">
+                                                                <input type="number" :value="getCbe(<?= $s['id'] ?>)" @input="setCbe(<?= $s['id'] ?>, $event.target.value)" class="w-16 text-sm p-2 border-2 border-slate-200 rounded-lg text-center outline-none focus:border-emerald-500 font-black" placeholder="1-10" min="1" max="10" step="0.1">
+                                                                <button @click="submitCbe(<?= $s['id'] ?>)" class="bg-emerald-600 text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-emerald-700 transition"><i class="fa-solid fa-check mr-1"></i>Save</button>
+                                                            </div>
+                                                        <?php else: ?>
+                                                            <span class="text-xs text-slate-400 italic">Isi TBE terlebih dahulu</span>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

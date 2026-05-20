@@ -20,7 +20,7 @@ if ($_SESSION['role'] === 'Vendor' && $_SESSION['vendor_id'] != $vendor_id) {
 }
 
 $query = mysqli_query($conn, "
-    SELECT s.*, r.rfq_number, r.jumlah_kebutuhan, r.unit, 
+    SELECT s.*, r.rfq_number, r.jumlah_kebutuhan, i.unit, 
            i.nama_barang, i.sku,
            v.nama_perusahaan, v.alamat, v.email, v.pic_nama, v.pic_kontak
     FROM sph_submissions s
@@ -28,7 +28,7 @@ $query = mysqli_query($conn, "
     JOIN inventory i ON s.inventory_id = i.id
     JOIN vendors v ON s.vendor_id = v.id
     WHERE s.rfq_id = $rfq_id AND s.vendor_id = $vendor_id
-");
+") or die("ERROR DATABASE: " . mysqli_error($conn));
 
 $sph = mysqli_fetch_assoc($query);
 
@@ -36,7 +36,15 @@ if (!$sph) {
     die("Dokumen Surat Penawaran Harga belum di-submit atau tidak ditemukan.");
 }
 
-$total_harga = $sph['harga_penawaran'] * $sph['jumlah_kebutuhan'];
+$subtotal = $sph['harga_penawaran'] * $sph['jumlah_kebutuhan'];
+$diskon = 0;
+if (($sph['diskon_jenis'] ?? 'Nominal') === 'Nominal') {
+    $diskon = floatval($sph['diskon_nilai'] ?? 0);
+} else {
+    $diskon = (floatval($sph['diskon_nilai'] ?? 0) / 100) * $subtotal;
+}
+$biaya_pengiriman = floatval($sph['biaya_pengiriman'] ?? 0);
+$total_harga = $subtotal - $diskon + $biaya_pengiriman;
 
 date_default_timezone_set('Asia/Jakarta');
 $tanggal_cetak = date('d F Y', strtotime($sph['created_at']));
@@ -121,14 +129,37 @@ $tanggal_cetak = date('d F Y', strtotime($sph['created_at']));
                         <?= number_format($sph['harga_penawaran'], 0, ',', '.') ?>
                     </td>
                     <td class="border border-slate-400 p-3 text-right font-bold text-slate-800">
-                        <?= number_format($total_harga, 0, ',', '.') ?>
+                        <?= number_format($subtotal, 0, ',', '.') ?>
                     </td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr class="bg-slate-50">
+                    <td colspan="4" class="border border-slate-400 p-3 text-right font-black uppercase">Subtotal</td>
+                    <td class="border border-slate-400 p-3 text-right font-black text-slate-800">
+                        Rp <?= number_format($subtotal, 0, ',', '.') ?>
+                    </td>
+                </tr>
+                <tr class="bg-red-50 text-red-600">
+                    <td colspan="4" class="border border-slate-400 p-3 text-right font-black uppercase">
+                        Diskon 
+                        <?php if(($sph['diskon_jenis'] ?? '') == 'Persentase'): ?>
+                            (<?= floatval($sph['diskon_nilai']) ?>%)
+                        <?php endif; ?>
+                    </td>
+                    <td class="border border-slate-400 p-3 text-right font-black">
+                        - Rp <?= number_format($diskon, 0, ',', '.') ?>
+                    </td>
+                </tr>
+                <tr class="bg-slate-50">
+                    <td colspan="4" class="border border-slate-400 p-3 text-right font-black uppercase">Biaya Pengiriman</td>
+                    <td class="border border-slate-400 p-3 text-right font-black text-slate-800">
+                        Rp <?= number_format($biaya_pengiriman, 0, ',', '.') ?>
+                    </td>
+                </tr>
+                <tr class="bg-slate-100">
                     <td colspan="4" class="border border-slate-400 p-3 text-right font-black uppercase">Grand Total Penawaran</td>
-                    <td class="border border-slate-400 p-3 text-right font-black text-lg text-slate-800">
+                    <td class="border border-slate-400 p-3 text-right font-black text-lg text-slate-900">
                         Rp <?= number_format($total_harga, 0, ',', '.') ?>
                     </td>
                 </tr>
@@ -137,10 +168,11 @@ $tanggal_cetak = date('d F Y', strtotime($sph['created_at']));
 
         <div class="mb-12 text-sm leading-relaxed">
             <p><strong>Syarat & Ketentuan:</strong></p>
-            <ul class="list-disc list-inside mt-2 text-slate-600">
-                <li>Harga di atas belum termasuk pajak yang berlaku (jika ada).</li>
-                <li>Penawaran ini tunduk pada syarat pembayaran standar yang telah disepakati bersama.</li>
-                <li>Dokumen ini dicetak otomatis oleh sistem dan sah sebagai dokumen penawaran resmi.</li>
+            <ul class="list-disc list-inside mt-2 text-slate-600 space-y-1">
+                <li><strong>Incoterm:</strong> <?= htmlspecialchars($sph['incoterm'] ?: '-') ?></li>
+                <li><strong>Payment Term:</strong> <?= htmlspecialchars($sph['payment_term'] ?: '-') ?></li>
+                <li><strong>Catatan/Keterangan:</strong> <?= nl2br(htmlspecialchars($sph['keterangan'] ?: '-')) ?></li>
+                <li class="mt-4 text-xs italic">Dokumen ini dicetak otomatis oleh sistem dan sah sebagai dokumen penawaran resmi.</li>
             </ul>
         </div>
 

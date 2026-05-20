@@ -19,10 +19,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $vendor_id = $_SESSION['vendor_id'] ?? 0;
 $po_id = intval($_POST['po_id'] ?? 0);
-$no_resi = trim($_POST['no_resi'] ?? '');
+$sj_pengemudi = trim($_POST['sj_pengemudi'] ?? '');
+$sj_nopol = trim($_POST['sj_nopol'] ?? '');
+$sj_kontak = trim($_POST['sj_kontak'] ?? '');
+$sj_catatan = trim($_POST['sj_catatan'] ?? '');
 
-if ($po_id <= 0 || empty($no_resi)) {
-    echo json_encode(['success' => false, 'message' => 'No. Resi/Surat Jalan wajib diisi']);
+if ($po_id <= 0 || empty($sj_pengemudi) || empty($sj_nopol) || empty($sj_kontak)) {
+    echo json_encode(['success' => false, 'message' => 'Detail pengemudi dan kendaraan wajib diisi lengkap.']);
     exit;
 }
 
@@ -36,49 +39,29 @@ if (!$check) {
     exit;
 }
 
-// Handle file upload foto surat jalan
-$foto_path = null;
-if (isset($_FILES['foto_surat_jalan']) && $_FILES['foto_surat_jalan']['error'] === UPLOAD_ERR_OK) {
-    $upload_dir = __DIR__ . '/uploads/delivery/';
-    if (!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0777, true);
-    }
-
-    $file_ext = strtolower(pathinfo($_FILES['foto_surat_jalan']['name'], PATHINFO_EXTENSION));
-    $allowed_ext = ['jpg', 'jpeg', 'png', 'pdf'];
-    
-    if (!in_array($file_ext, $allowed_ext)) {
-        echo json_encode(['success' => false, 'message' => 'Format file tidak didukung. Gunakan JPG, PNG, atau PDF.']);
-        exit;
-    }
-
-    if ($_FILES['foto_surat_jalan']['size'] > 5 * 1024 * 1024) { // Max 5MB
-        echo json_encode(['success' => false, 'message' => 'Ukuran file maksimal 5MB']);
-        exit;
-    }
-
-    $filename = 'delivery_' . $po_id . '_' . time() . '.' . $file_ext;
-    $filepath = $upload_dir . $filename;
-    
-    if (move_uploaded_file($_FILES['foto_surat_jalan']['tmp_name'], $filepath)) {
-        $foto_path = 'uploads/delivery/' . $filename;
-    }
-}
+// Generate Nomor Surat Jalan otomatis
+// Format: SJ-[VendorID]-[YYYYMMDD]-[PO_ID]
+$nomor_sj = 'SJ-' . str_pad($vendor_id, 3, '0', STR_PAD_LEFT) . '-' . date('Ymd') . '-' . str_pad($po_id, 4, '0', STR_PAD_LEFT);
 
 // Update PO
-$no_resi_safe = mysqli_real_escape_string($conn, $no_resi);
-$foto_safe = $foto_path ? "'" . mysqli_real_escape_string($conn, $foto_path) . "'" : "NULL";
+$pengemudi_safe = mysqli_real_escape_string($conn, $sj_pengemudi);
+$nopol_safe = mysqli_real_escape_string($conn, $sj_nopol);
+$kontak_safe = mysqli_real_escape_string($conn, $sj_kontak);
+$catatan_safe = mysqli_real_escape_string($conn, $sj_catatan);
 
 $sql = "UPDATE purchase_orders SET 
     status = 'Shipped', 
     shipped_at = NOW(), 
-    no_resi = '$no_resi_safe',
-    foto_surat_jalan = $foto_safe
+    no_resi = '$nomor_sj',
+    sj_pengemudi = '$pengemudi_safe',
+    sj_nopol = '$nopol_safe',
+    sj_kontak = '$kontak_safe',
+    sj_catatan = '$catatan_safe'
     WHERE id = $po_id";
 
 if (mysqli_query($conn, $sql)) {
-    echo json_encode(['success' => true, 'message' => 'Data pengiriman berhasil disimpan. Barang sedang dalam perjalanan.']);
+    echo json_encode(['success' => true, 'message' => 'Surat Jalan berhasil di-generate. Barang sedang dalam perjalanan.']);
 } else {
-    echo json_encode(['success' => false, 'message' => 'Gagal menyimpan data pengiriman: ' . mysqli_error($conn)]);
+    echo json_encode(['success' => false, 'message' => 'Gagal membuat Surat Jalan: ' . mysqli_error($conn)]);
 }
 ?>

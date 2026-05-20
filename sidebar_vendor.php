@@ -37,11 +37,18 @@ $_badge_invoice = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c F
             <span class="flex items-center"><i class="fa-solid fa-file-invoice w-6 text-center mr-3 text-lg"></i> E-Invoicing</span>
             <?php if($_badge_invoice > 0): ?><span class="bg-green-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center"><?= $_badge_invoice ?></span><?php endif; ?>
         </a>
+
+        <div class="mt-4 mb-2 px-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Archive</div>
+
+        <a href="arsip_rfq_vendor.php" class="flex items-center px-4 py-3.5 rounded-xl transition-all <?= ($active == 'arsip_rfq') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' ?>">
+            <i class="fa-solid fa-rectangle-list w-6 text-center mr-3 text-lg"></i> Arsip RFQ
+        </a>
     </nav>
     
     <div class="p-5">
-        <a href="logout.php" class="block w-full py-3.5 px-4 bg-slate-800 hover:bg-slate-700 text-center text-sm font-bold text-slate-300 hover:text-white rounded-xl transition-all">
+        <a href="logout.php" onclick="confirmLogout(event, 'logout.php')" class="block w-full py-3.5 px-4 bg-slate-800 hover:bg-slate-700 text-center text-sm font-bold text-slate-300 hover:text-white rounded-xl transition-all">
             Keluar
         </a>
     </div>
 </aside>
+<?php include 'sweetalert_script.php'; ?>

@@ -31,8 +31,9 @@ $_badge_payment = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c F
     </nav>
     
     <div class="p-5">
-        <a href="logout.php" class="block w-full py-3.5 px-4 bg-slate-800 hover:bg-slate-700 text-center text-sm font-bold text-slate-300 hover:text-white rounded-xl transition-all">
+        <a href="logout.php" onclick="confirmLogout(event, 'logout.php')" class="block w-full py-3.5 px-4 bg-slate-800 hover:bg-slate-700 text-center text-sm font-bold text-slate-300 hover:text-white rounded-xl transition-all">
             Keluar
         </a>
     </div>
 </aside>
+<?php include 'sweetalert_script.php'; ?>

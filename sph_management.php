@@ -103,7 +103,7 @@ $query_sph = mysqli_query($conn, "
                                 <span class="px-3 py-1 border rounded-lg text-[9px] font-black uppercase <?= $color ?> mr-2">
                                     <?= htmlspecialchars($row['status']) ?>
                                 </span>
-                                <a href="print_sph.php?id=<?= $row['id'] ?>" target="_blank" class="px-2 py-1 bg-white text-slate-500 border border-slate-200 rounded hover:text-blue-600 hover:border-blue-200 transition" title="Print SPH">
+                                <a href="print_sph.php?rfq=<?= $row['rfq_id'] ?>&vendor=<?= $row['vendor_id'] ?>" target="_blank" class="px-2 py-1 bg-white text-slate-500 border border-slate-200 rounded hover:text-blue-600 hover:border-blue-200 transition" title="Print SPH">
                                     <i class="fa-solid fa-print"></i>
                                 </a>
                             </td>

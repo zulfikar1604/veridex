@@ -10,8 +10,8 @@
             <?php if ($_SESSION['role'] === 'Manager Procurement'): ?>
                 <div class="px-3 py-2 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Strategic Monitor</div>
                 
-                <a href="kinerja_vendor.php" class="w-full p-3 text-left flex items-center transition-all <?= ($active == 'kinerja_vendor') ? 'bg-red-500 text-white rounded-lg font-bold shadow-lg shadow-red-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800' ?>">
-                    <i class="fa-solid fa-chart-line w-6"></i> Dashboard Kinerja
+                <a href="dashboard_manager.php" class="w-full p-3 text-left flex items-center transition-all <?= ($active == 'dashboard_manager') ? 'bg-red-500 text-white rounded-lg font-bold shadow-lg shadow-red-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800' ?>">
+                    <i class="fa-solid fa-chart-pie w-6"></i> Command Center
                 </a>
 
                 <a href="approval_procurement.php" class="w-full p-3 text-left flex items-center transition-all <?= ($active == 'approval') ? 'bg-red-500 text-white rounded-lg font-bold shadow-lg shadow-red-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800' ?>">
@@ -55,6 +55,10 @@
 
             <div class="px-3 py-2 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mt-4">Archive</div>
 
+            <a href="arsip_rfq.php" class="w-full p-3 text-left flex items-center transition-all <?= ($active == 'arsip_rfq') ? 'bg-red-500 text-white rounded-lg font-bold shadow-lg shadow-red-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800' ?>">
+                <i class="fa-solid fa-rectangle-list w-6"></i> Arsip RFQ
+            </a>
+
             <a href="sph_management.php" class="w-full p-3 text-left flex items-center transition-all <?= ($active == 'arsip_sph') ? 'bg-red-500 text-white rounded-lg font-bold shadow-lg shadow-red-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800' ?>">
                 <i class="fa-solid fa-folder-open w-6"></i> Arsip SPH
             </a>
@@ -71,6 +75,7 @@
     </nav>
 
     <div class="p-4 bg-slate-950">
-        <a href="logout.php" class="block w-full py-2 bg-gray-700 hover:bg-red-600 rounded-lg text-sm text-center transition font-bold">Keluar</a>
+        <a href="logout.php" onclick="confirmLogout(event, 'logout.php')" class="block w-full py-2 bg-gray-700 hover:bg-red-600 rounded-lg text-sm text-center transition font-bold">Keluar</a>
     </div>
 </aside>
+<?php include 'sweetalert_script.php'; ?>

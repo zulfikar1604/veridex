@@ -32,7 +32,23 @@ $query_vendors = mysqli_query($conn, "
 
     <?php include 'sidebar_procurement.php'; ?>
 
-    <main class="flex-1 flex flex-col overflow-hidden">
+    <main class="flex-1 flex flex-col overflow-hidden" x-data="{ 
+        detailModal: false, 
+        vendor: {},
+        openDetail(v) {
+            this.vendor = v;
+            this.detailModal = true;
+        },
+        updateStatus(id, action) {
+            if(!confirm('Anda yakin ingin ' + action + ' vendor ini?')) return;
+            let fd = new FormData();
+            fd.append('vendor_id', id);
+            fd.append('action', action);
+            fetch('process_vendor_status.php', { method: 'POST', body: fd })
+            .then(r => r.json())
+            .then(d => { alert(d.message); if(d.success) location.reload(); });
+        }
+    }">
         <div class="p-8 pb-4">
             <div class="flex justify-between items-center">
                 <div>
@@ -121,6 +137,14 @@ $query_vendors = mysqli_query($conn, "
                                             <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase bg-green-100 text-green-700 border border-green-200">
                                                 <i class="fa-solid fa-check mr-1.5"></i> <?= $row['status'] ?>
                                             </span>
+                                        <?php elseif($row['status'] == 'Pending'): ?>
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase bg-amber-100 text-amber-600 border border-amber-200">
+                                                <i class="fa-solid fa-clock mr-1.5"></i> <?= $row['status'] ?>
+                                            </span>
+                                        <?php elseif($row['status'] == 'Rejected' || $row['status'] == 'Non-Aktif'): ?>
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase bg-red-100 text-red-600 border border-red-200">
+                                                <i class="fa-solid fa-xmark mr-1.5"></i> <?= $row['status'] ?>
+                                            </span>
                                         <?php else: ?>
                                             <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase bg-slate-200 text-slate-600 border border-slate-300">
                                                 <i class="fa-solid fa-ban mr-1.5"></i> <?= $row['status'] ?>
@@ -128,7 +152,7 @@ $query_vendors = mysqli_query($conn, "
                                         <?php endif; ?>
                                     </td>
                                     <td class="py-4 px-6 text-right">
-                                        <button class="text-blue-500 hover:text-blue-700 font-bold text-xs uppercase tracking-widest">Detail <i class="fa-solid fa-chevron-right ml-1"></i></button>
+                                        <button @click="openDetail(<?= htmlspecialchars(json_encode($row)) ?>)" class="text-blue-500 hover:text-blue-700 font-bold text-xs uppercase tracking-widest">Detail <i class="fa-solid fa-chevron-right ml-1"></i></button>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>
@@ -146,6 +170,72 @@ $query_vendors = mysqli_query($conn, "
                 </div>
             </div>
             
+            <!-- Modal Detail Vendor -->
+            <div x-show="detailModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm">
+                <div @click.away="detailModal = false" class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl border border-slate-100 overflow-hidden flex flex-col max-h-[90vh]">
+                    <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                        <h3 class="text-xl font-black text-slate-800 uppercase tracking-tight">Detail Vendor</h3>
+                        <button @click="detailModal = false" class="text-slate-400 hover:text-red-500"><i class="fa-solid fa-xmark text-xl"></i></button>
+                    </div>
+                    
+                    <div class="p-8 overflow-y-auto flex-1 space-y-6">
+                        <div class="flex items-center gap-4 border-b border-slate-100 pb-6">
+                            <div class="w-16 h-16 rounded-2xl bg-slate-100 text-slate-500 flex items-center justify-center text-3xl shadow-inner">
+                                <i class="fa-solid fa-industry"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-black text-slate-800" x-text="vendor.nama_perusahaan"></h4>
+                                <span class="bg-blue-100 text-blue-700 text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-widest mt-2 inline-block" x-text="vendor.spesialisasi || 'Umum'"></span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Status Kemitraan</p>
+                                <span class="font-bold text-sm" 
+                                    :class="{'text-green-600': vendor.status === 'Approved' || vendor.status === 'Aktif', 'text-amber-500': vendor.status === 'Pending', 'text-red-500': vendor.status === 'Rejected'}"
+                                    x-text="vendor.status"></span>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Email Perusahaan</p>
+                                <p class="font-bold text-slate-700 text-sm" x-text="vendor.email || '-'"></p>
+                            </div>
+                            <div class="col-span-2">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Alamat Lengkap</p>
+                                <p class="font-medium text-slate-600 text-sm" x-text="vendor.alamat || '-'"></p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Nama PIC</p>
+                                <p class="font-bold text-slate-700 text-sm" x-text="vendor.pic_nama || '-'"></p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Kontak PIC</p>
+                                <p class="font-bold text-slate-700 text-sm" x-text="vendor.pic_kontak || '-'"></p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">NIB</p>
+                                <p class="font-bold text-slate-700 text-sm" x-text="vendor.nib || '-'"></p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">NPWP</p>
+                                <p class="font-bold text-slate-700 text-sm" x-text="vendor.npwp || '-'"></p>
+                            </div>
+                            <div class="col-span-2">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Dokumen Legalitas</p>
+                                <a :href="'print_profil_vendor.php?id=' + vendor.id" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-red-50 border border-red-100 hover:bg-red-600 hover:text-white text-red-600 rounded-xl text-xs font-bold transition-all shadow-sm">
+                                    <i class="fa-solid fa-file-contract"></i> Cetak Profil Vendor & Legalitas
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6 border-t border-slate-100 bg-slate-50 flex justify-end gap-3" x-show="vendor.status === 'Pending'">
+                        <button @click="updateStatus(vendor.id, 'Reject')" class="px-6 py-3 bg-white border border-red-200 text-red-600 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-red-50 transition">Tolak Vendor</button>
+                        <button @click="updateStatus(vendor.id, 'Approve')" class="px-6 py-3 bg-green-600 text-white rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-green-700 shadow-lg shadow-green-500/30 transition">Setujui Kemitraan</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
 </body>

@@ -10,15 +10,15 @@ if (!isset($_SESSION['role'])) {
 $inv_id = intval($_GET['id'] ?? 0);
 
 $query = mysqli_query($conn, "
-    SELECT inv.*, p.po_number, p.total_harga as po_total, p.jumlah_pesan, 
+    SELECT inv.*, p.po_number, p.total_harga as po_total, p.jumlah_pesan, p.payment_term,
            i.nama_barang, i.sku, i.unit,
-           v.nama_perusahaan, v.alamat, v.telepon, v.email
+           v.nama_perusahaan, v.alamat, v.pic_kontak, v.email, v.pic_nama
     FROM invoices inv
     JOIN purchase_orders p ON inv.po_id = p.id
     JOIN inventory i ON inv.inventory_id = i.id
     JOIN vendors v ON inv.vendor_id = v.id
     WHERE inv.id = $inv_id
-");
+") or die("ERROR DATABASE: " . mysqli_error($conn));
 
 $invoice = mysqli_fetch_assoc($query);
 
@@ -55,8 +55,8 @@ $unit_price = $invoice['jumlah_pesan'] > 0 ? $invoice['po_total'] / $invoice['ju
         <div class="flex justify-between items-start border-b-4 border-slate-800 pb-6 mb-8">
             <div>
                 <h1 class="text-4xl font-black text-slate-800 uppercase tracking-widest"><?= htmlspecialchars($invoice['nama_perusahaan']) ?></h1>
-                <p class="text-sm text-slate-600 mt-2 max-w-sm"><?= htmlspecialchars($invoice['alamat']) ?></p>
-                <p class="text-sm text-slate-600">Tel: <?= htmlspecialchars($invoice['telepon']) ?> | Email: <?= htmlspecialchars($invoice['email']) ?></p>
+                <p class="text-sm text-slate-600 mt-2 max-w-sm"><?= htmlspecialchars($invoice['alamat'] ?? '-') ?></p>
+                <p class="text-sm text-slate-600">PIC: <?= htmlspecialchars($invoice['pic_nama'] ?? '-') ?> | Tel: <?= htmlspecialchars($invoice['pic_kontak'] ?? '-') ?> | Email: <?= htmlspecialchars($invoice['email'] ?? '-') ?></p>
             </div>
             <div class="text-right">
                 <h2 class="text-4xl font-black text-blue-600 uppercase">INVOICE</h2>

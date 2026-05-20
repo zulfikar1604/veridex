@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
+            $_SESSION['welcome_message'] = "Login Berhasil! Selamat datang kembali, " . $user['username'] . ".";
 
             // 4. Redirect Berdasarkan Role
             if (isset($_SESSION['redirect_after_login'])) {
@@ -28,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header("Location: " . $redirect);
             } else {
                 if ($user['role'] === 'Manager Procurement') {
-                    header("Location: kinerja_vendor.php");
+                    header("Location: dashboard_manager.php");
                 } elseif ($user['role'] === 'Procurement') {
                     header("Location: dashboard_procurement.php");
                 } elseif ($user['role'] === 'Gudang') {

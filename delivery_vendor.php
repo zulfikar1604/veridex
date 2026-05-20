@@ -64,20 +64,28 @@ include 'header_meta.php';
                             </button>
                         </div>
                         <div x-show="open" x-cloak x-transition class="bg-slate-50 border-t border-slate-100 p-6">
-                            <form @submit.prevent="submitting=true; let fd=new FormData($event.target); fd.append('po_id',<?=$po['id']?>); fetch('process_vendor_delivery.php',{method:'POST',body:fd}).then(r=>r.json()).then(d=>{alert(d.message);if(d.success)location.reload();else submitting=false;}).catch(()=>{alert('Error');submitting=false;})" enctype="multipart/form-data" class="space-y-4 max-w-lg">
-                                <div>
-                                    <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">No. Resi / No. Surat Jalan *</label>
-                                    <input type="text" name="no_resi" required placeholder="Contoh: SJ-2026-0001" class="w-full border border-slate-200 p-4 rounded-xl outline-none focus:border-red-500 bg-white font-bold">
-                                </div>
-                                <div>
-                                    <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Foto Surat Jalan (Opsional)</label>
-                                    <div class="border-2 border-dashed border-slate-200 p-6 text-center rounded-2xl text-slate-400 text-xs font-medium hover:border-red-400 transition cursor-pointer relative">
-                                        <i class="fa-solid fa-camera text-2xl mb-2 block"></i>Unggah JPG/PNG/PDF (Maks 5MB)
-                                        <input type="file" name="foto_surat_jalan" accept=".jpg,.jpeg,.png,.pdf" class="absolute inset-0 opacity-0 cursor-pointer">
+                            <form @submit.prevent="submitting=true; let fd=new FormData($event.target); fd.append('po_id',<?=$po['id']?>); fetch('process_vendor_delivery.php',{method:'POST',body:fd}).then(r=>r.json()).then(d=>{alert(d.message);if(d.success)location.reload();else submitting=false;}).catch(()=>{alert('Error');submitting=false;})" class="space-y-4 max-w-xl">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Nama Pengemudi *</label>
+                                        <input type="text" name="sj_pengemudi" required placeholder="Contoh: Budi Santoso" class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-red-500 bg-white font-bold text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">No. Polisi Kendaraan *</label>
+                                        <input type="text" name="sj_nopol" required placeholder="Contoh: B 1234 CD" class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-red-500 bg-white font-bold text-sm uppercase">
                                     </div>
                                 </div>
-                                <button type="submit" :disabled="submitting" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-blue-600 transition disabled:opacity-50">
-                                    <span x-show="!submitting"><i class="fa-solid fa-paper-plane mr-2"></i> Submit Pengiriman</span>
+                                <div>
+                                    <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Kontak Pengemudi *</label>
+                                    <input type="text" name="sj_kontak" required placeholder="Contoh: 08123456789" class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-red-500 bg-white font-bold text-sm">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Catatan Pengiriman (Opsional)</label>
+                                    <textarea name="sj_catatan" rows="2" placeholder="Catatan khusus terkait pengiriman barang..." class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-red-500 bg-white text-sm"></textarea>
+                                </div>
+                                
+                                <button type="submit" :disabled="submitting" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-blue-600 transition shadow-lg disabled:opacity-50 mt-4">
+                                    <span x-show="!submitting"><i class="fa-solid fa-file-signature mr-2"></i> Generate Surat Jalan & Kirim</span>
                                     <span x-show="submitting"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Memproses...</span>
                                 </button>
                             </form>
@@ -105,6 +113,7 @@ include 'header_meta.php';
                                 <td class="p-4 text-slate-600"><?= htmlspecialchars($po['no_resi'] ?? '-') ?></td>
                                 <td class="p-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
+                                        <a href="print_surat_jalan.php?id=<?= $po['id'] ?>" target="_blank" class="px-3 py-1 bg-white border border-slate-200 text-slate-500 hover:text-red-600 hover:border-red-200 rounded-lg text-[9px] font-black uppercase transition shadow-sm" title="Cetak Surat Jalan"><i class="fa-solid fa-file-invoice"></i> SJ</a>
                                         <a href="print_delivery_label.php?id=<?= $po['id'] ?>" target="_blank" class="px-3 py-1 bg-white border border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-200 rounded-lg text-[9px] font-black uppercase transition shadow-sm" title="Cetak Label Barcode"><i class="fa-solid fa-barcode"></i> Label</a>
                                         <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase <?= $c ?>"><?= $po['status'] ?></span>
                                     </div>

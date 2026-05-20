@@ -79,6 +79,10 @@ $sql = "UPDATE purchase_orders SET
     WHERE id = $po_id";
 
 if (mysqli_query($conn, $sql)) {
+    // Sinkronisasi status invoice ke 'Paid' agar vendor melihat update yang sama
+    $user_id = $_SESSION['user_id'] ?? 0;
+    mysqli_query($conn, "UPDATE invoices SET status = 'Paid', paid_at = NOW(), paid_by = $user_id WHERE po_id = $po_id");
+    
     echo json_encode(['success' => true, 'message' => 'Pembayaran berhasil diproses! Siklus P2P selesai.']);
 } else {
     echo json_encode(['success' => false, 'message' => 'Gagal menyimpan pembayaran: ' . mysqli_error($conn)]);
