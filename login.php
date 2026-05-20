@@ -40,85 +40,84 @@ if (isset($_SESSION['role'])) {
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900 min-h-screen grid grid-cols-1 md:grid-cols-2">
+<body class="bg-slate-900 text-white min-h-screen flex items-center justify-center relative overflow-hidden font-sans selection:bg-red-500/30">
 
-    <!-- Left Column: Corporate Image -->
-    <div class="relative hidden md:flex flex-col justify-between bg-blue-900 overflow-hidden text-white p-12">
-        <div class="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" alt="Corporate Office" class="w-full h-full object-cover opacity-30">
-        </div>
-        <div class="z-10 mt-8">
-            <h1 class="text-4xl font-black tracking-tighter mb-2">VERIDEX</h1>
-            <p class="text-sm font-bold tracking-widest uppercase text-blue-200">Verified. Ranked. Trusted.</p>
-        </div>
-        <div class="z-10 mb-8">
-            <p class="text-lg font-light max-w-md leading-relaxed text-blue-100">
-                Enterprise Procurement & Supply Chain Platform. Designed for efficiency, transparency, and strategic growth.
-            </p>
-        </div>
-    </div>
+    <!-- Abstract Background & Blobs -->
+    <div class="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] bg-red-600/10 rounded-full mix-blend-screen filter blur-[100px] opacity-70 animate-pulse"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-rose-900/20 rounded-full mix-blend-screen filter blur-[120px] opacity-60"></div>
+    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0wIDBoNDB2NDBIMHoiIGZpbGw9Im5vbmUiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPgo8L3N2Zz4=')] opacity-50 z-0"></div>
 
-    <!-- Right Column: Login Form -->
-    <div class="flex flex-col justify-center items-center p-8 sm:p-16 lg:p-24 bg-white relative">
-        <div class="w-full max-w-md">
+    <div class="w-full max-w-[440px] px-6 z-10 relative">
+
+        <!-- Glassmorphism Card -->
+        <div class="bg-white/[0.03] backdrop-blur-xl border border-white/10 p-10 sm:p-12 rounded-[2.5rem] shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] relative">
             
-            <div class="md:hidden text-center mb-10">
-                <h1 class="text-4xl font-black tracking-tighter text-blue-900 mb-1">VERIDEX</h1>
-                <p class="text-[10px] font-bold tracking-widest uppercase text-gray-500">Verified. Ranked. Trusted.</p>
+            <!-- Floating Brand Icon -->
+            <div class="absolute -top-12 left-1/2 -translate-x-1/2">
+                <div class="w-24 h-24 bg-gradient-to-br from-red-600 to-red-900 rounded-[1.5rem] shadow-[0_15px_30px_rgba(220,38,38,0.4)] flex items-center justify-center transform -rotate-6 hover:rotate-0 transition-all duration-300 border border-red-500/30">
+                    <i class="fa-solid fa-fingerprint text-4xl text-white"></i>
+                </div>
             </div>
 
-            <div class="mb-10">
-                <h2 class="text-3xl font-bold text-gray-900 mb-2">Welcome back</h2>
-                <p class="text-gray-500">Please enter your credentials to access the portal.</p>
+            <!-- Card Content -->
+            <div class="pt-10 text-center mb-10">
+                <h1 class="text-3xl font-black tracking-tight text-white mb-2">VERIDEX</h1>
+                <p class="text-[10px] font-bold tracking-[0.2em] text-red-400 uppercase">Secure Enterprise Portal</p>
             </div>
 
             <?php if(isset($_SESSION['error'])): ?>
-                <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-8 rounded-r-md text-sm font-medium flex items-center shadow-sm">
-                    <i class="fa-solid fa-circle-exclamation mr-3"></i> <?= htmlspecialchars($_SESSION['error'], ENT_QUOTES, 'UTF-8') ?>
+                <div class="bg-red-500/10 border border-red-500/20 text-red-300 px-4 py-3 mb-6 rounded-2xl text-sm font-medium flex items-center shadow-inner">
+                    <i class="fa-solid fa-shield-cat mr-3 text-red-500 text-lg"></i> <?= htmlspecialchars($_SESSION['error'], ENT_QUOTES, 'UTF-8') ?>
                 </div>
                 <?php unset($_SESSION['error']); ?>
             <?php endif; ?>
 
-            <form action="process_login.php" method="POST" class="space-y-6">
+            <form action="process_login.php" method="POST" class="space-y-5">
                 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Username / Employee ID</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                            <i class="fa-regular fa-user text-gray-400"></i>
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-widest pl-1">ID Pengguna</label>
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none transition-colors group-focus-within:text-red-400 text-slate-500">
+                            <i class="fa-solid fa-user-astronaut"></i>
                         </div>
                         <input type="text" name="username" required autocomplete="off"
-                               class="w-full pl-11 py-3 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all shadow-sm"
-                               placeholder="Enter your username">
+                               class="w-full pl-11 py-3.5 bg-slate-800/50 border border-slate-700/50 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 transition-all placeholder-slate-600 shadow-inner"
+                               placeholder="Masukkan ID Anda">
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">System Password</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                            <i class="fa-solid fa-lock text-gray-400"></i>
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-widest pl-1">Kata Sandi</label>
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none transition-colors group-focus-within:text-red-400 text-slate-500">
+                            <i class="fa-solid fa-key"></i>
                         </div>
                         <input type="password" name="password" required 
-                               class="w-full pl-11 py-3 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all shadow-sm"
-                               placeholder="Enter your password">
+                               class="w-full pl-11 py-3.5 bg-slate-800/50 border border-slate-700/50 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 transition-all placeholder-slate-600 shadow-inner"
+                               placeholder="Masukkan sandi">
                     </div>
                 </div>
 
-                <div class="pt-2">
-                    <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3.5 rounded-lg transition-colors shadow-md flex items-center justify-center">
-                        Sign In <i class="fa-solid fa-arrow-right ml-2 text-sm"></i>
+                <div class="pt-6">
+                    <button type="submit" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 rounded-2xl transition-all shadow-[0_8px_20px_rgba(220,38,38,0.3)] hover:shadow-[0_12px_25px_rgba(220,38,38,0.4)] flex items-center justify-center transform hover:-translate-y-0.5 border border-red-500/50">
+                        Otorisasi Akses <i class="fa-solid fa-bolt ml-3"></i>
                     </button>
                 </div>
             </form>
 
-            <div class="mt-8 pt-8 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between text-sm">
-                <a href="register_vendor.php" class="text-blue-600 hover:text-blue-800 font-semibold mb-4 sm:mb-0 transition-colors">
-                    Register as New Vendor
+            <div class="mt-8 text-center">
+                <a href="register_vendor.php" class="text-xs font-medium text-slate-400 hover:text-white transition-colors flex items-center justify-center">
+                    <i class="fa-solid fa-arrow-up-right-from-square mr-2 opacity-50"></i> Pendaftaran Vendor Baru
                 </a>
-                <span class="text-gray-400 text-xs">&copy; 2026 Veridex</span>
             </div>
 
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-12 text-center">
+            <p class="text-[10px] font-bold text-slate-600 tracking-[0.2em] uppercase">
+                &copy; <?= date('Y') ?> Veridex Platform.
+            </p>
         </div>
     </div>
 
