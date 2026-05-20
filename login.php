@@ -35,175 +35,89 @@ if (isset($_SESSION['role'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        :root {
-            --primary: #ef4444; 
-            --cyan: #3b82f6;
-            --purple: #8b5cf6;
-        }
-
         body {
             font-family: 'Inter', sans-serif;
-            background:
-                radial-gradient(circle at 20% 20%, rgba(239,68,68,0.1), transparent 30%),
-                radial-gradient(circle at 80% 15%, rgba(59,130,246,0.1), transparent 28%),
-                radial-gradient(circle at 50% 80%, rgba(139,92,246,0.1), transparent 30%),
-                linear-gradient(180deg, #050c16 0%, #0a1322 45%, #0b1220 100%);
-            color: #ffffff;
-            overflow-x: hidden;
-            position: relative;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Animated Background Grid */
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            z-index: -2;
-            opacity: 0.35;
-            pointer-events: none;
-        }
-
-        /* Glow blobs */
-        .glow-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(70px);
-            opacity: 0.35;
-            pointer-events: none;
-            z-index: -1;
-            animation: floatOrb 12s ease-in-out infinite alternate;
-        }
-        .orb-1 { width: 250px; height: 250px; background: rgba(239,68,68,0.3); top: 10%; left: 15%; }
-        .orb-2 { width: 300px; height: 300px; background: rgba(59,130,246,0.2); top: 20%; right: 10%; animation-delay: 2s; }
-        .orb-3 { width: 250px; height: 250px; background: rgba(139,92,246,0.2); bottom: 10%; left: 30%; animation-delay: 4s; }
-
-        @keyframes floatOrb {
-            0% { transform: translateY(0px) translateX(0px) scale(1); }
-            100% { transform: translateY(-30px) translateX(20px) scale(1.05); }
-        }
-
-        /* Glassmorphism Card */
-        .glass-card {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            backdrop-filter: blur(20px);
-            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
-            border-radius: 28px;
-        }
-
-        /* Custom Input */
-        .form-control {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.08);
-            color: #fff !important;
-            transition: 0.25s ease;
-        }
-        .form-control:focus {
-            background: rgba(255,255,255,0.08);
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(239,68,68,0.15);
-            outline: none;
-        }
-        .form-control::placeholder { color: rgba(255,255,255,0.35); }
-
-        .btn-primary-grad {
-            background: linear-gradient(135deg, #ef4444, #b91c1c);
-            box-shadow: 0 12px 28px rgba(239,68,68,0.3);
-            transition: 0.3s ease;
-        }
-        .btn-primary-grad:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 16px 32px rgba(239,68,68,0.4);
-        }
-
-        .brand-gradient {
-            background: linear-gradient(90deg, #f87171, #ef4444, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-900 text-white min-h-screen flex items-center justify-center relative overflow-hidden font-sans selection:bg-red-500/30">
 
-    <div class="glow-orb orb-1"></div>
-    <div class="glow-orb orb-2"></div>
-    <div class="glow-orb orb-3"></div>
+    <!-- Abstract Background & Blobs -->
+    <div class="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] bg-red-600/10 rounded-full mix-blend-screen filter blur-[100px] opacity-70 animate-pulse"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-rose-900/20 rounded-full mix-blend-screen filter blur-[120px] opacity-60"></div>
+    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0wIDBoNDB2NDBIMHoiIGZpbGw9Im5vbmUiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPgo8L3N2Zz4=')] opacity-50 z-0"></div>
 
-    <div class="w-full max-w-md px-6 z-10 py-12">
-        
-        <div class="text-center mb-8 transform transition-all duration-500 hover:scale-105">
-            <h1 class="text-5xl font-black tracking-tighter mb-1">VERIDEX</h1>
-            <p class="text-xs font-bold tracking-[0.3em] brand-gradient uppercase">Verified. Rankes. Trusted.</p>
-        </div>
+    <div class="w-full max-w-[440px] px-6 z-10 relative">
 
-        <div class="glass-card p-8 sm:p-10 relative overflow-hidden">
+        <!-- Glassmorphism Card -->
+        <div class="bg-white/[0.03] backdrop-blur-xl border border-white/10 p-10 sm:p-12 rounded-[2.5rem] shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] relative">
             
+            <!-- Floating Brand Icon -->
+            <div class="absolute -top-12 left-1/2 -translate-x-1/2">
+                <div class="w-24 h-24 bg-gradient-to-br from-red-600 to-red-900 rounded-[1.5rem] shadow-[0_15px_30px_rgba(220,38,38,0.4)] flex items-center justify-center transform -rotate-6 hover:rotate-0 transition-all duration-300 border border-red-500/30">
+                    <i class="fa-solid fa-fingerprint text-4xl text-white"></i>
+                </div>
+            </div>
+
+            <!-- Card Content -->
+            <div class="pt-10 text-center mb-10">
+                <h1 class="text-3xl font-black tracking-tight text-white mb-2">VERIDEX</h1>
+                <p class="text-[10px] font-bold tracking-[0.2em] text-red-400 uppercase">Secure Enterprise Portal</p>
+            </div>
+
             <?php if(isset($_SESSION['error'])): ?>
-                <div class="bg-red-500/10 border border-red-500/30 text-red-200 p-4 mb-6 rounded-xl text-sm font-medium flex items-center shadow-lg">
-                    <i class="fa-solid fa-triangle-exclamation mr-3 text-red-400"></i> <?= htmlspecialchars($_SESSION['error'], ENT_QUOTES, 'UTF-8') ?>
+                <div class="bg-red-500/10 border border-red-500/20 text-red-300 px-4 py-3 mb-6 rounded-2xl text-sm font-medium flex items-center shadow-inner">
+                    <i class="fa-solid fa-shield-cat mr-3 text-red-500 text-lg"></i> <?= htmlspecialchars($_SESSION['error'], ENT_QUOTES, 'UTF-8') ?>
                 </div>
                 <?php unset($_SESSION['error']); ?>
             <?php endif; ?>
 
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-white/5 border border-white/10 rounded-2xl mb-4 shadow-inner">
-                    <i class="fa-solid fa-shield-halved text-2xl text-red-400"></i>
-                </div>
-                <h2 class="text-2xl font-black text-white">Secure Login</h2>
-                <p class="text-sm text-white/50 mt-1">Masukkan kredensial Anda</p>
-            </div>
-
             <form action="process_login.php" method="POST" class="space-y-5">
                 
-                <div class="form-group">
-                    <label class="block text-[11px] font-bold text-white/60 mb-2 uppercase tracking-widest">Username / ID Pegawai</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                            <i class="fa-solid fa-user text-white/40"></i>
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-widest pl-1">ID Pengguna</label>
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none transition-colors group-focus-within:text-red-400 text-slate-500">
+                            <i class="fa-solid fa-user-astronaut"></i>
                         </div>
                         <input type="text" name="username" required autocomplete="off"
-                               class="form-control w-full pl-12 py-3.5 rounded-xl font-medium" 
-                               placeholder="Masukkan username...">
+                               class="w-full pl-11 py-3.5 bg-slate-800/50 border border-slate-700/50 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 transition-all placeholder-slate-600 shadow-inner"
+                               placeholder="Masukkan ID Anda">
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="block text-[11px] font-bold text-white/60 mb-2 uppercase tracking-widest">Password Sistem</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                            <i class="fa-solid fa-lock text-white/40"></i>
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-widest pl-1">Kata Sandi</label>
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none transition-colors group-focus-within:text-red-400 text-slate-500">
+                            <i class="fa-solid fa-key"></i>
                         </div>
                         <input type="password" name="password" required 
-                               class="form-control w-full pl-12 py-3.5 rounded-xl font-medium" 
-                               placeholder="Masukkan password...">
+                               class="w-full pl-11 py-3.5 bg-slate-800/50 border border-slate-700/50 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 transition-all placeholder-slate-600 shadow-inner"
+                               placeholder="Masukkan sandi">
                     </div>
                 </div>
 
-                <div class="pt-4">
-                    <button type="submit" class="btn-primary-grad w-full py-4 rounded-xl font-black text-white uppercase tracking-widest flex items-center justify-center">
-                        Login Dashboard <i class="fa-solid fa-arrow-right-to-bracket ml-3"></i>
+                <div class="pt-6">
+                    <button type="submit" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 rounded-2xl transition-all shadow-[0_8px_20px_rgba(220,38,38,0.3)] hover:shadow-[0_12px_25px_rgba(220,38,38,0.4)] flex items-center justify-center transform hover:-translate-y-0.5 border border-red-500/50">
+                        Otorisasi Akses <i class="fa-solid fa-bolt ml-3"></i>
                     </button>
                 </div>
             </form>
 
-            <div class="pt-6 border-t border-white/10 mt-6 text-center">
-                <a href="register_vendor.php" class="text-xs font-bold text-white/60 hover:text-white transition-all">
-                    Daftar Vendor Baru / Info Platform
+            <div class="mt-8 text-center">
+                <a href="register_vendor.php" class="text-xs font-medium text-slate-400 hover:text-white transition-colors flex items-center justify-center">
+                    <i class="fa-solid fa-arrow-up-right-from-square mr-2 opacity-50"></i> Pendaftaran Vendor Baru
                 </a>
             </div>
 
         </div>
 
-        <div class="mt-8 text-center text-[10px] font-bold text-white/30 tracking-[0.2em] uppercase">
-            &copy; 2026 Veridex Platform
+        <!-- Footer -->
+        <div class="mt-12 text-center">
+            <p class="text-[10px] font-bold text-slate-600 tracking-[0.2em] uppercase">
+                &copy; <?= date('Y') ?> Veridex Platform.
+            </p>
         </div>
     </div>
 
