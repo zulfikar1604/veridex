@@ -62,6 +62,10 @@
             <a href="sph_management.php" class="w-full p-3 text-left flex items-center transition-all <?= ($active == 'arsip_sph') ? 'bg-red-500 text-white rounded-lg font-bold shadow-lg shadow-red-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800' ?>">
                 <i class="fa-solid fa-folder-open w-6"></i> Arsip SPH
             </a>
+            
+            <a href="arsip_po.php" class="w-full p-3 text-left flex items-center transition-all <?= ($active == 'arsip_po') ? 'bg-red-500 text-white rounded-lg font-bold shadow-lg shadow-red-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800' ?>">
+                <i class="fa-solid fa-file-invoice w-6"></i> Arsip PO
+            </a>
 
             <a href="arsip_invoice.php" class="w-full p-3 text-left flex items-center transition-all <?= ($active == 'arsip_invoice') ? 'bg-red-500 text-white rounded-lg font-bold shadow-lg shadow-red-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800' ?>">
                 <i class="fa-solid fa-file-invoice-dollar w-6"></i> Arsip Invoice

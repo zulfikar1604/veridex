@@ -30,7 +30,7 @@ $query_po = mysqli_query($conn, "
 
 // Query: SPH yang sudah Selected tapi belum ada PO-nya
 $query_ready = mysqli_query($conn, "
-    SELECT s.inventory_id, s.vendor_id, s.harga_penawaran, 
+    SELECT s.inventory_id, s.vendor_id, s.rfq_id, s.harga_penawaran, 
            i.nama_barang, v.nama_perusahaan,
            rq.jumlah_kebutuhan, vq.quota_percentage
     FROM sph_submissions s
@@ -38,7 +38,7 @@ $query_ready = mysqli_query($conn, "
     JOIN vendors v ON s.vendor_id = v.id
     LEFT JOIN rfq_requests rq ON s.rfq_id = rq.id
     LEFT JOIN vendor_quotas vq ON s.inventory_id = vq.inventory_id AND s.vendor_id = vq.vendor_id
-    LEFT JOIN purchase_orders po ON po.inventory_id = s.inventory_id AND po.vendor_id = s.vendor_id
+    LEFT JOIN purchase_orders po ON po.rfq_id = s.rfq_id AND po.vendor_id = s.vendor_id
     WHERE s.status = 'Selected' AND po.id IS NULL
 ") or handle_db_error($conn);
 
@@ -65,11 +65,12 @@ include 'header_meta.php';
 
         <div class="flex-1 overflow-y-auto px-8 pb-8" x-data="{ 
             showModal: false, 
-            form: { inventory_id: 0, vendor_id: 0, vendor_name: '', item_name: '', jumlah_pesan: 0, harga_satuan: 0 },
+            form: { inventory_id: 0, vendor_id: 0, rfq_id: 0, vendor_name: '', item_name: '', jumlah_pesan: 0, harga_satuan: 0 },
             get totalHarga() { return this.form.jumlah_pesan * this.form.harga_satuan; },
             openModal(item) {
                 this.form.inventory_id = item.inventory_id;
                 this.form.vendor_id = item.vendor_id;
+                this.form.rfq_id = item.rfq_id;
                 this.form.vendor_name = item.nama_perusahaan;
                 this.form.item_name = item.nama_barang;
                 
@@ -86,6 +87,7 @@ include 'header_meta.php';
                 let fd = new FormData();
                 fd.append('inventory_id', this.form.inventory_id);
                 fd.append('vendor_id', this.form.vendor_id);
+                fd.append('rfq_id', this.form.rfq_id);
                 fd.append('jumlah_pesan', this.form.jumlah_pesan);
                 fd.append('harga_satuan', this.form.harga_satuan);
 

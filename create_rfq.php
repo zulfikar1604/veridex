@@ -24,7 +24,7 @@ if (!$item) {
 // Auto-heal: Tutup RFQ yang statusnya masih 'Open' tapi proses Strategic Procurement sudah selesai (sudah ada vendor yang 'Selected')
 mysqli_query($conn, "
     UPDATE rfq_requests r 
-    JOIN sph_submissions s ON r.inventory_id = s.inventory_id
+    JOIN sph_submissions s ON r.id = s.rfq_id
     SET r.status = 'Closed', r.closed_at = NOW()
     WHERE r.status = 'Open' AND s.status = 'Selected'
 ");

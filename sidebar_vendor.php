@@ -43,6 +43,10 @@ $_badge_invoice = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c F
         <a href="arsip_rfq_vendor.php" class="flex items-center px-4 py-3.5 rounded-xl transition-all <?= ($active == 'arsip_rfq') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' ?>">
             <i class="fa-solid fa-rectangle-list w-6 text-center mr-3 text-lg"></i> Arsip RFQ
         </a>
+        
+        <a href="arsip_po_vendor.php" class="flex items-center px-4 py-3.5 rounded-xl transition-all <?= ($active == 'arsip_po') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' ?>">
+            <i class="fa-solid fa-file-invoice w-6 text-center mr-3 text-lg"></i> Arsip PO
+        </a>
     </nav>
     
     <div class="p-5">

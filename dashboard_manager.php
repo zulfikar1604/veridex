@@ -121,7 +121,8 @@ $query_kinerja = mysqli_query($conn, "
                         <p class="text-xs font-black text-slate-400 uppercase"><?= $hari_ini ?></p>
                         <p class="text-sm font-bold text-red-600"><?= htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8') ?></p>
                     </div>
-                    <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center shadow-lg shadow-slate-900/20">
+                    <?php include 'navbar_notifications.php'; ?>
+                    <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center shadow-lg shadow-slate-900/20 shrink-0">
                         <i class="fa-solid fa-user-tie text-xl"></i>
                     </div>
                 </div>

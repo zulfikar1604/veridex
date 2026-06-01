@@ -22,13 +22,22 @@ $query_items = mysqli_query($conn, "
 
 // Fungsi pembantu untuk mengambil SPH per item
 function get_sph_for_item($conn, $inventory_id) {
+    // Cari RFQ yang statusnya 'Open' untuk item ini
+    $q_rfq = mysqli_query($conn, "SELECT id FROM rfq_requests WHERE inventory_id = $inventory_id AND status = 'Open' LIMIT 1");
+    $rfq = mysqli_fetch_assoc($q_rfq);
+    $rfq_id = $rfq ? intval($rfq['id']) : 0;
+
+    // Jika ada RFQ aktif, filter hanya SPH yang tergabung ke RFQ tersebut.
+    // Jika tidak ada (fallback/edge case), ambil semua SPH berdasarkan inventory_id.
+    $where_clause = $rfq_id > 0 ? "s.rfq_id = $rfq_id" : "s.inventory_id = $inventory_id";
+
     $q = "SELECT s.*, v.nama_perusahaan,
                  r.jumlah_kebutuhan, r.catatan as rfq_catatan, i2.unit
           FROM sph_submissions s 
           JOIN vendors v ON s.vendor_id = v.id
           LEFT JOIN rfq_requests r ON s.rfq_id = r.id
           LEFT JOIN inventory i2 ON s.inventory_id = i2.id
-          WHERE s.inventory_id = $inventory_id
+          WHERE $where_clause
           ORDER BY s.id ASC";
     return mysqli_query($conn, $q);
 }
@@ -81,10 +90,10 @@ function get_sph_for_item($conn, $inventory_id) {
                         
                         while($sph = mysqli_fetch_assoc($sph_list)) {
                             $sph_data[] = $sph;
-                            if ($sph['status'] !== 'Evaluated') {
+                            if (!in_array($sph['status'], ['Evaluated', 'Selected', 'Rejected'])) {
                                 $all_evaluated = false;
                             }
-                            if (in_array($sph['status'], ['CBE Done', 'Evaluated'])) {
+                            if (in_array($sph['status'], ['CBE Done', 'Evaluated', 'Selected', 'Rejected'])) {
                                 $any_cbe_done = true;
                             }
                             
@@ -400,6 +409,7 @@ function get_sph_for_item($conn, $inventory_id) {
                                 <?php else: ?>
                                     <form @submit="finalizeSelection" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <input type="hidden" name="inventory_id" value="<?= $item['id'] ?>">
+                                        <input type="hidden" name="rfq_id" value="<?= !empty($sph_data) ? intval($sph_data[0]['rfq_id']) : 0 ?>">
                                         
                                         <!-- Rank 1 Assignment -->
                                         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">

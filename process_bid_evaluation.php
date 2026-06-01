@@ -81,14 +81,15 @@ switch ($action) {
         $quota_1 = intval($_POST['quota_1'] ?? 0);
         $vendor_2 = intval($_POST['vendor_2'] ?? 0);
         $quota_2 = intval($_POST['quota_2'] ?? 0);
+        $rfq_id = intval($_POST['rfq_id'] ?? 0);
 
-        if ($inventory_id <= 0 || $vendor_1 <= 0 || $quota_1 <= 0) {
-            echo json_encode(['success' => false, 'message' => 'Vendor utama dan kuota wajib diisi']);
+        if ($inventory_id <= 0 || $vendor_1 <= 0 || $quota_1 <= 0 || $rfq_id <= 0) {
+            echo json_encode(['success' => false, 'message' => 'Input tidak valid atau RFQ tidak ditemukan']);
             exit;
         }
 
-        // Validasi: Vendor harus sudah "Evaluated" untuk item ini
-        $check_eval = mysqli_query($conn, "SELECT id FROM sph_submissions WHERE inventory_id = $inventory_id AND vendor_id = $vendor_1 AND status = 'Evaluated'");
+        // Validasi: Vendor harus sudah "Evaluated" atau "Selected" untuk item ini di RFQ terpilih
+        $check_eval = mysqli_query($conn, "SELECT id FROM sph_submissions WHERE rfq_id = $rfq_id AND vendor_id = $vendor_1 AND status IN ('Evaluated', 'Selected', 'Rejected')");
         if (mysqli_num_rows($check_eval) === 0) {
             echo json_encode(['success' => false, 'message' => 'Vendor utama belum menyelesaikan evaluasi TBE/CBE']);
             exit;
@@ -103,7 +104,7 @@ switch ($action) {
 
         // Jika vendor_2 dipilih, validasi juga
         if ($vendor_2 > 0) {
-            $check_eval2 = mysqli_query($conn, "SELECT id FROM sph_submissions WHERE inventory_id = $inventory_id AND vendor_id = $vendor_2 AND status = 'Evaluated'");
+            $check_eval2 = mysqli_query($conn, "SELECT id FROM sph_submissions WHERE rfq_id = $rfq_id AND vendor_id = $vendor_2 AND status IN ('Evaluated', 'Selected', 'Rejected')");
             if (mysqli_num_rows($check_eval2) === 0) {
                 echo json_encode(['success' => false, 'message' => 'Vendor pendamping belum menyelesaikan evaluasi TBE/CBE']);
                 exit;
@@ -114,8 +115,8 @@ switch ($action) {
 
         try {
             // Update SPH status vendor terpilih menjadi 'Selected'
-            $stmt1 = mysqli_prepare($conn, "UPDATE sph_submissions SET status = 'Selected' WHERE inventory_id = ? AND vendor_id = ?");
-            mysqli_stmt_bind_param($stmt1, "ii", $inventory_id, $vendor_1);
+            $stmt1 = mysqli_prepare($conn, "UPDATE sph_submissions SET status = 'Selected' WHERE rfq_id = ? AND vendor_id = ?");
+            mysqli_stmt_bind_param($stmt1, "ii", $rfq_id, $vendor_1);
             mysqli_stmt_execute($stmt1);
 
             // Simpan quota ke vendor_quotas
@@ -125,8 +126,8 @@ switch ($action) {
 
             // Jika ada vendor 2
             if ($vendor_2 > 0 && $quota_2 > 0) {
-                $stmt2 = mysqli_prepare($conn, "UPDATE sph_submissions SET status = 'Selected' WHERE inventory_id = ? AND vendor_id = ?");
-                mysqli_stmt_bind_param($stmt2, "ii", $inventory_id, $vendor_2);
+                $stmt2 = mysqli_prepare($conn, "UPDATE sph_submissions SET status = 'Selected' WHERE rfq_id = ? AND vendor_id = ?");
+                mysqli_stmt_bind_param($stmt2, "ii", $rfq_id, $vendor_2);
                 mysqli_stmt_execute($stmt2);
 
                 $stmt_q2 = mysqli_prepare($conn, "INSERT INTO vendor_quotas (inventory_id, vendor_id, quota_percentage, rank_position) VALUES (?, ?, ?, 2) ON DUPLICATE KEY UPDATE quota_percentage = VALUES(quota_percentage), rank_position = VALUES(rank_position)");
@@ -138,10 +139,10 @@ switch ($action) {
             $reject_ids = [$vendor_1];
             if ($vendor_2 > 0) $reject_ids[] = $vendor_2;
             $reject_list = implode(',', $reject_ids);
-            mysqli_query($conn, "UPDATE sph_submissions SET status = 'Rejected' WHERE inventory_id = $inventory_id AND vendor_id NOT IN ($reject_list) AND status = 'Evaluated'");
+            mysqli_query($conn, "UPDATE sph_submissions SET status = 'Rejected' WHERE rfq_id = $rfq_id AND vendor_id NOT IN ($reject_list) AND status IN ('Evaluated', 'Selected', 'Rejected')");
 
             // Tutup RFQ yang sedang berjalan agar item ini bisa dipesan ulang di masa depan
-            mysqli_query($conn, "UPDATE rfq_requests SET status = 'Closed', closed_at = NOW() WHERE inventory_id = $inventory_id AND status = 'Open'");
+            mysqli_query($conn, "UPDATE rfq_requests SET status = 'Closed', closed_at = NOW() WHERE id = $rfq_id");
 
             mysqli_commit($conn);
             echo json_encode(['success' => true, 'message' => 'Vendor berhasil dipilih. Silakan lanjut ke halaman Buat PO untuk men-generate Purchase Order.']);

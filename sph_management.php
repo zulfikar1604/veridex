@@ -41,9 +41,12 @@ $query_sph = mysqli_query($conn, "
                     <h2 class="text-3xl font-black text-slate-800 uppercase tracking-tighter">SPH Management</h2>
                     <p class="text-sm text-slate-400 font-bold uppercase tracking-widest mt-1">Incoming Vendor Quotations</p>
                 </div>
-                <button class="bg-slate-900 text-white px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-red-600 transition shadow-lg">
-                    <i class="fa-solid fa-file-import mr-2"></i> Import SPH Data
-                </button>
+                <div class="flex items-center gap-4">
+                    <?php include 'navbar_notifications.php'; ?>
+                    <button class="bg-slate-900 text-white px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-red-600 transition shadow-lg">
+                        <i class="fa-solid fa-file-import mr-2"></i> Import SPH Data
+                    </button>
+                </div>
             </div>
         </div>
 

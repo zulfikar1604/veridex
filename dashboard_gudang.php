@@ -55,6 +55,7 @@ $query_inventory = mysqli_query($conn, "SELECT * FROM inventory ORDER BY FIELD(s
                 <h2 class="text-2xl font-black text-slate-800 tracking-[0.1em] uppercase">INVENTORY</h2>
                 <div class="flex items-center gap-4">
                     <span class="text-sm font-bold text-slate-400"><?= $hari_ini ?></span>
+                    <?php include 'navbar_notifications.php'; ?>
                     <div class="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center font-black text-lg shadow-md">
                         <?= htmlspecialchars(strtoupper(substr($_SESSION['role'], 0, 1)), ENT_QUOTES, 'UTF-8') ?>
                     </div>

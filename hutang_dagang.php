@@ -46,7 +46,8 @@ include 'header_meta.php';
                 </div>
                 <div class="flex items-center gap-4">
                     <span class="text-sm font-bold text-slate-400"><?= $hari_ini ?></span>
-                    <div class="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center font-black text-lg shadow-md">F</div>
+                    <?php include 'navbar_notifications.php'; ?>
+                    <div class="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center font-black text-lg shadow-md shrink-0">F</div>
                 </div>
             </div>
         </div>

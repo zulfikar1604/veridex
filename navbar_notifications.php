@@ -132,6 +132,9 @@ elseif ($role === 'Finance') {
 // Ensure AlpineJS is loaded if not already in the parent document (it is in Veridex usually, but good practice to have it available in headers)
 // Usually the parent has `<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>`
 ?>
+<?php if (!isset($GLOBALS['alpine_loaded'])): $GLOBALS['alpine_loaded'] = true; ?>
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<?php endif; ?>
 
 <!-- Notification Component (Alpine.js) -->
 <div x-data="{ openNotif: false }" class="relative">

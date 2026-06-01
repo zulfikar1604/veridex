@@ -54,6 +54,7 @@ include 'header_meta.php';
                     </span>
                     <?php endif; ?>
                     <span class="text-sm font-bold text-slate-400"><?= $hari_ini ?></span>
+                    <?php include 'navbar_notifications.php'; ?>
                     <div class="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center font-black text-lg shadow-md">V</div>
                 </div>
             </div>

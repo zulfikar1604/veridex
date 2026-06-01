@@ -42,6 +42,7 @@ $query_rop = mysqli_query($conn, "SELECT * FROM inventory WHERE status_label='Kr
                 <h2 class="text-2xl font-black text-slate-800 tracking-tight uppercase">ROP DASHBOARD</h2>
                 <div class="flex items-center gap-4">
                     <span class="text-sm font-bold text-slate-400"><?= $hari_ini ?></span>
+                    <?php include 'navbar_notifications.php'; ?>
                     <div class="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center font-black text-lg shadow-md">
                         <?= strtoupper(substr($_SESSION['role'], 0, 1)) ?>
                     </div>
