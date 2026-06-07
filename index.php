@@ -120,13 +120,13 @@ if (isset($_SESSION['role'])) {
                 <!-- Left: Headline & Description -->
                 <div class="lg:col-span-7 space-y-6">
                     <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 border border-red-500/20 text-red-400">
-                        <i class="fa-solid fa-shield-halved mr-2"></i> Smart Procurement Platform
+                        <i class="fa-solid fa-shield-halved mr-2"></i> Enterprise Procurement Platform
                     </span>
                     <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight uppercase leading-none">
-                        Verified.<br>Ranked.<br><span class="gradient-text">Trusted.</span>
+                        Where Procurement<br>Meets <span class="gradient-text">Confidence.</span>
                     </h1>
                     <p class="text-sm sm:text-base text-slate-400 font-medium leading-relaxed max-w-xl">
-                        Veridex memodernisasi rantai pasok perusahaan melalui optimasi stok kritis (Safety Stock & ROP), analisis penawaran vendor terautomasi, serta verifikasi pembayaran aman dengan 3-Way Matching.
+                        Veridex membantu perusahaan mengelola pengadaan secara lebih terukur melalui visibilitas inventori, evaluasi vendor berbasis data, dan kontrol pembayaran yang terverifikasi dalam satu platform terintegrasi.
                     </p>
                     <div class="flex gap-4 pt-4 flex-wrap">
                         <a href="#simulator" class="px-6 py-4 bg-white text-slate-900 rounded-2xl text-xs font-black uppercase tracking-wider hover:bg-slate-100 transition shadow-lg shadow-white/5 active:scale-[0.98]">
@@ -199,9 +199,9 @@ if (isset($_SESSION['role'])) {
         <section id="about" class="py-20 max-w-7xl mx-auto px-6 space-y-12">
             <div class="text-center max-w-2xl mx-auto space-y-3">
                 <span class="text-red-500 text-xs font-black uppercase tracking-widest">Company Profile</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 uppercase">Solusi Intelligent Procurement Terpercaya</h2>
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 uppercase">Membangun Standar Baru dalam Pengadaan Digital</h2>
                 <p class="text-slate-500 text-sm font-medium leading-relaxed">
-                    Veridex dikembangkan dengan visi mewujudkan efisiensi rantai pasok korporat. Melalui teknologi otomasi, kami mempertemukan transparansi operasional dan akuntabilitas keuangan secara aman.
+                    Kami percaya bahwa pengadaan yang baik bukan hanya tentang mendapatkan harga terbaik, tetapi juga tentang menciptakan proses yang transparan, terukur, dan dapat dipertanggungjawabkan di setiap tahap pengambilan keputusan.
                 </p>
             </div>
 
@@ -408,9 +408,9 @@ if (isset($_SESSION['role'])) {
         <section id="features" class="py-20 max-w-7xl mx-auto px-6 space-y-12">
             <div class="text-center max-w-2xl mx-auto space-y-3">
                 <span class="text-red-500 text-xs font-black uppercase tracking-widest">Fitur Platform</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 uppercase">Ekosistem Pengadaan Digital Lengkap</h2>
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 uppercase">Satu Platform untuk Seluruh Siklus Pengadaan</h2>
                 <p class="text-slate-500 text-sm font-medium leading-relaxed">
-                    Setiap peran dalam perusahaan memiliki modul khusus untuk menjalankan tanggung jawab operasional masing-masing dengan alur kerja yang seragam.
+                    Dari perencanaan kebutuhan hingga validasi pembayaran, setiap proses terhubung dalam satu alur kerja yang dirancang untuk meningkatkan efisiensi dan akuntabilitas operasional.
                 </p>
             </div>
 
@@ -458,9 +458,9 @@ if (isset($_SESSION['role'])) {
             <div class="glow-orb w-[350px] h-[350px] bg-red-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20"></div>
 
             <div class="max-w-4xl mx-auto px-6 text-center space-y-6 relative z-10">
-                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight uppercase">Siap Mengoptimalkan Pengadaan Anda?</h2>
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight uppercase">Tingkatkan Kinerja Pengadaan Anda</h2>
                 <p class="text-slate-400 text-xs sm:text-sm font-medium leading-relaxed max-w-xl mx-auto">
-                    Masuk ke portal login Veridex sekarang untuk menikmati manajemen procurement otomatis berbasis AI dan optimasi rantai pasokan yang andal.
+                    Kelola pengadaan dengan visibilitas yang lebih baik, kontrol yang lebih kuat, dan pengambilan keputusan yang didukung oleh data yang akurat.
                 </p>
                 <div class="pt-2">
                     <a href="<?= $dashboard_link ?>" class="inline-flex items-center px-8 py-4 bg-red-600 hover:bg-red-700 text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-red-500/20 hover:shadow-xl hover:shadow-red-500/30 transition-all active:scale-[0.98]">
@@ -477,12 +477,12 @@ if (isset($_SESSION['role'])) {
         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="text-center md:text-left space-y-1.5">
                 <span class="text-lg font-black text-red-500">VERIDEX</span>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Intelligent Procurement Ecosystem</p>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Procurement Excellence Ecosystem</p>
             </div>
 
             <div class="text-center md:text-right space-y-2 text-xs">
                 <p>&copy; 2026 Veridex. Hak Cipta Dilindungi Undang-Undang.</p>
-                <p class="text-[10px] text-slate-600 font-bold uppercase tracking-widest">Verified • Ranked • Trusted</p>
+                <p class="text-[10px] text-slate-600 font-bold uppercase tracking-widest">Procurement Excellence • Transparency • Control</p>
             </div>
         </div>
     </footer>

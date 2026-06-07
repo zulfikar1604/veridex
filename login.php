@@ -3,8 +3,8 @@ session_start();
 
 if (isset($_SESSION['role'])) {
     if ($_SESSION['role'] === 'Manager Procurement') {
-        // Khusus Manager, langsung ke halaman Kinerja Vendor
-        header("Location: kinerja_vendor.php");
+        // Khusus Manager, arahkan ke dashboard
+        header("Location: dashboard_manager.php");
         exit;
     } elseif ($_SESSION['role'] === 'Procurement') {
         header("Location: dashboard_procurement.php");
@@ -137,14 +137,20 @@ if (isset($_SESSION['role'])) {
     <div class="glow-orb orb-2"></div>
     <div class="glow-orb orb-3"></div>
 
-    <div class="w-full max-w-md px-6 z-10 py-12">
+    <div class="w-full max-w-sm px-4 z-10 py-8">
         
-        <div class="text-center mb-8 transform transition-all duration-500 hover:scale-105">
-            <h1 class="text-5xl font-black tracking-tighter mb-1">VERIDEX</h1>
-            <p class="text-xs font-bold tracking-[0.3em] brand-gradient uppercase">Verified. Rankes. Trusted.</p>
+        <div class="mb-4 flex justify-start">
+            <a href="index.php" class="inline-flex items-center gap-2 text-xs font-bold text-white/50 hover:text-white transition-all bg-white/5 border border-white/10 px-4 py-2 rounded-xl hover:bg-white/10 shadow-sm">
+                <i class="fa-solid fa-arrow-left"></i> Kembali ke Beranda
+            </a>
         </div>
 
-        <div class="glass-card p-8 sm:p-10 relative overflow-hidden">
+        <div class="text-center mb-6 transform transition-all duration-500 hover:scale-105">
+            <h1 class="text-4xl font-black tracking-tighter mb-1">VERIDEX</h1>
+            <p class="text-[10px] font-bold tracking-[0.3em] brand-gradient uppercase">Verified. Ranked. Trusted.</p>
+        </div>
+
+        <div class="glass-card p-6 sm:p-8 relative overflow-hidden">
             
             <?php if(isset($_SESSION['error'])): ?>
                 <div class="bg-red-500/10 border border-red-500/30 text-red-200 p-4 mb-6 rounded-xl text-sm font-medium flex items-center shadow-lg">
@@ -153,42 +159,42 @@ if (isset($_SESSION['role'])) {
                 <?php unset($_SESSION['error']); ?>
             <?php endif; ?>
 
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-white/5 border border-white/10 rounded-2xl mb-4 shadow-inner">
-                    <i class="fa-solid fa-shield-halved text-2xl text-red-400"></i>
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-12 h-12 bg-white/5 border border-white/10 rounded-2xl mb-3 shadow-inner">
+                    <i class="fa-solid fa-shield-halved text-xl text-red-400"></i>
                 </div>
-                <h2 class="text-2xl font-black text-white">Secure Login</h2>
-                <p class="text-sm text-white/50 mt-1">Masukkan kredensial Anda</p>
+                <h2 class="text-xl font-black text-white">Secure Login</h2>
+                <p class="text-xs text-white/50 mt-1">Masukkan kredensial Anda</p>
             </div>
 
-            <form action="process_login.php" method="POST" class="space-y-5">
+            <form action="process_login.php" method="POST" class="space-y-4">
                 
                 <div class="form-group">
-                    <label class="block text-[11px] font-bold text-white/60 mb-2 uppercase tracking-widest">Username / ID Pegawai</label>
+                    <label class="block text-[10px] font-bold text-white/60 mb-2 uppercase tracking-widest">Username / ID Pegawai</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                            <i class="fa-solid fa-user text-white/40"></i>
+                            <i class="fa-solid fa-user text-white/40 text-xs"></i>
                         </div>
                         <input type="text" name="username" required autocomplete="off"
-                               class="form-control w-full pl-12 py-3.5 rounded-xl font-medium" 
+                               class="form-control w-full pl-10 py-2.5 rounded-xl text-sm font-medium" 
                                placeholder="Masukkan username...">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="block text-[11px] font-bold text-white/60 mb-2 uppercase tracking-widest">Password Sistem</label>
+                    <label class="block text-[10px] font-bold text-white/60 mb-2 uppercase tracking-widest">Password Sistem</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                            <i class="fa-solid fa-lock text-white/40"></i>
+                            <i class="fa-solid fa-lock text-white/40 text-xs"></i>
                         </div>
                         <input type="password" name="password" required 
-                               class="form-control w-full pl-12 py-3.5 rounded-xl font-medium" 
+                               class="form-control w-full pl-10 py-2.5 rounded-xl text-sm font-medium" 
                                placeholder="Masukkan password...">
                     </div>
                 </div>
 
-                <div class="pt-4">
-                    <button type="submit" class="btn-primary-grad w-full py-4 rounded-xl font-black text-white uppercase tracking-widest flex items-center justify-center">
+                <div class="pt-2">
+                    <button type="submit" class="btn-primary-grad w-full py-3.5 rounded-xl font-black text-white uppercase tracking-widest text-xs flex items-center justify-center">
                         Login Dashboard <i class="fa-solid fa-arrow-right-to-bracket ml-3"></i>
                     </button>
                 </div>

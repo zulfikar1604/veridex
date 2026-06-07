@@ -56,8 +56,36 @@ include 'header_meta.php';
     <div class="flex-1 flex overflow-hidden">
         <?php include 'sidebar_procurement.php'; ?>
 
-        <main class="flex-1 overflow-y-auto p-6 md:p-8">
-            r.json())
+        <main class="flex-1 overflow-y-auto p-6 md:p-8" x-data="{ 
+            showModal: false, 
+            form: { inventory_id: 0, vendor_id: 0, rfq_id: 0, vendor_name: '', item_name: '', jumlah_pesan: 0, harga_satuan: 0 },
+            get totalHarga() { return this.form.jumlah_pesan * this.form.harga_satuan; },
+            openModal(item) {
+                this.form.inventory_id = item.inventory_id;
+                this.form.vendor_id = item.vendor_id;
+                this.form.rfq_id = item.rfq_id;
+                this.form.vendor_name = item.nama_perusahaan;
+                this.form.item_name = item.nama_barang;
+                
+                let kebutuhan = parseInt(item.jumlah_kebutuhan) || 0;
+                let quota = parseInt(item.quota_percentage) || 100;
+                this.form.jumlah_pesan = Math.round(kebutuhan * (quota / 100));
+                
+                // Harga penawaran adalah Harga Satuan
+                this.form.harga_satuan = parseFloat(item.harga_penawaran) || 0;
+                
+                this.showModal = true;
+            },
+            submitPO() {
+                let fd = new FormData();
+                fd.append('inventory_id', this.form.inventory_id);
+                fd.append('vendor_id', this.form.vendor_id);
+                fd.append('rfq_id', this.form.rfq_id);
+                fd.append('jumlah_pesan', this.form.jumlah_pesan);
+                fd.append('harga_satuan', this.form.harga_satuan);
+
+                fetch('process_buat_po.php', { method: 'POST', body: fd })
+                .then(r => r.json())
                 .then(d => {
                     alert(d.message);
                     if (d.success) location.reload();

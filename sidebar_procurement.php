@@ -38,6 +38,13 @@
             </a>
 
             <div class="my-4 border-t border-slate-800"></div>
+            <div class="px-3 py-2 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">AI & Analytics</div>
+            
+            <a href="ai_item_check.php" class="w-full p-3 text-left flex items-center transition-all <?= ($active == 'ai_analytics') ? 'bg-fuchsia-600 text-white rounded-lg font-bold shadow-lg shadow-fuchsia-600/30' : 'text-slate-300 hover:text-white hover:bg-slate-800' ?>">
+                <i class="fa-solid fa-radar w-6 text-fuchsia-400 group-hover:text-white"></i> AI Analytics & Prediksi
+            </a>
+            
+            <div class="my-4 border-t border-slate-800"></div>
 
             <div class="px-3 py-2 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Operational</div>
             

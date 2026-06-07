@@ -121,24 +121,32 @@ session_start();
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-bold text-slate-700 mb-2">Email Perusahaan</label>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Email Perusahaan (Username Login)</label>
                             <input type="email" name="email" required 
                                    class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700" 
                                    placeholder="Contoh: info@perusahaan.com">
                         </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Password Akun Baru</label>
+                            <input type="password" name="password" required 
+                                   class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700" 
+                                   placeholder="Masukkan password...">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">Nama PIC</label>
                             <input type="text" name="pic_nama" required 
                                    class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700" 
                                    placeholder="Contoh: Budi Santoso">
                         </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-bold text-slate-700 mb-2">Nomor Kontak PIC (WA/Telp)</label>
-                        <input type="text" name="pic_kontak" required 
-                               class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700" 
-                               placeholder="Contoh: 081234567890">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Nomor Kontak PIC (WA/Telp)</label>
+                            <input type="text" name="pic_kontak" required 
+                                   class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700" 
+                                   placeholder="Contoh: 081234567890">
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-100 pt-6">

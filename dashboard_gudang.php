@@ -171,7 +171,12 @@ $query_inventory = mysqli_query($conn, "SELECT * FROM inventory ORDER BY FIELD(s
                                         <div class="bg-white p-2 border rounded inline-block">
                                             <img src="https://barcode.tec-it.com/barcode.ashx?data=<?= $row['sku'] ?>&code=Code128" alt="<?= $row['sku'] ?>" class="h-10">
                                         </div>
-                                        <div class="text-[10px] font-black text-slate-400 mt-1 uppercase tracking-widest"><?= $row['sku'] ?></div>
+                                        <div class="flex items-center gap-2 mt-2">
+                                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest"><?= $row['sku'] ?></div>
+                                            <a href="print_barcode.php?sku=<?= urlencode($row['sku']) ?>&nama=<?= urlencode($row['nama_barang']) ?>" target="_blank" class="text-slate-400 hover:text-blue-600 transition" title="Cetak Barcode">
+                                                <i class="fa-solid fa-print"></i>
+                                            </a>
+                                        </div>
                                     </td>
                                     <td class="py-5 px-6 font-bold text-slate-800"><?= $row['nama_barang'] ?></td>
                                     <td class="py-5 px-6 text-slate-500"><?= $row['unit'] ?></td>

@@ -58,7 +58,23 @@ $query_vendors = mysqli_query($conn, "
     <div class="flex-1 flex overflow-hidden">
         <?php include 'sidebar_procurement.php'; ?>
 
-        <main class="flex-1 overflow-y-auto p-6 md:p-8">
+        <main class="flex-1 overflow-y-auto p-6 md:p-8" x-data="{ 
+            detailModal: false, 
+            vendor: {},
+            openDetail(v) {
+                this.vendor = v;
+                this.detailModal = true;
+            },
+            updateStatus(id, action) {
+                if(!confirm('Anda yakin ingin ' + action + ' vendor ini?')) return;
+                let fd = new FormData();
+                fd.append('vendor_id', id);
+                fd.append('action', action);
+                fetch('process_vendor_status.php', { method: 'POST', body: fd })
+                .then(r => r.json())
+                .then(d => { alert(d.message); if(d.success) location.reload(); });
+            }
+        }">
             <?php if(isset($_GET['pesan']) && $_GET['pesan'] == 'sukses'): ?>
                 <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-xl shadow-sm" role="alert">
                   <p class="font-bold"><i class="fa-solid fa-check-circle mr-2"></i> Sukses!</p>

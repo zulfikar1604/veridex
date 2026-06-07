@@ -2,20 +2,26 @@
 session_start();
 require 'database.php';
 
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Vendor') {
+if (!isset($_SESSION['role'])) {
     header("Location: login.php");
     exit;
 }
 
 $po_id = intval($_GET['id'] ?? 0);
-$vendor_id = $_SESSION['vendor_id'] ?? 0;
+
+// Jika role adalah Vendor, pastikan ia hanya bisa melihat PO miliknya
+$vendor_filter = "";
+if ($_SESSION['role'] === 'Vendor') {
+    $vendor_id = $_SESSION['vendor_id'] ?? 0;
+    $vendor_filter = "AND p.vendor_id = $vendor_id";
+}
 
 $query = mysqli_query($conn, "
     SELECT p.*, i.nama_barang, i.sku, v.nama_perusahaan, v.alamat 
     FROM purchase_orders p
     JOIN inventory i ON p.inventory_id = i.id
     JOIN vendors v ON p.vendor_id = v.id
-    WHERE p.id = $po_id AND p.vendor_id = $vendor_id AND p.status != 'Pending Manager'
+    WHERE p.id = $po_id $vendor_filter AND p.status != 'Pending Manager'
 ");
 
 $po = mysqli_fetch_assoc($query);

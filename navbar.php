@@ -104,9 +104,13 @@ if (!isset($GLOBALS['alpine_loaded'])) {
                     <p class="text-xs font-bold text-white max-w-[140px] truncate"><?= htmlspecialchars($_SESSION['username'] ?? 'User Account', ENT_QUOTES, 'UTF-8') ?></p>
                 </div>
                 <!-- Avatar Circle -->
-                <div class="w-10 h-10 rounded-xl bg-slate-800 text-white flex items-center justify-center border border-slate-700 relative shrink-0">
-                    <i class="fa-solid <?= $avatar_icon ?> text-sm group-hover:scale-110 transition-transform"></i>
-                    <span class="absolute bottom-0 right-0 w-2 h-2 bg-green-500 rounded-full"></span>
+                <div class="w-10 h-10 rounded-xl bg-slate-800 text-white flex items-center justify-center border border-slate-700 relative shrink-0 overflow-hidden">
+                    <?php if (!empty($_SESSION['profile_photo'])): ?>
+                        <img src="<?= htmlspecialchars($_SESSION['profile_photo'], ENT_QUOTES, 'UTF-8') ?>" alt="Profile" class="w-full h-full object-cover">
+                    <?php else: ?>
+                        <i class="fa-solid <?= $avatar_icon ?> text-sm group-hover:scale-110 transition-transform"></i>
+                    <?php endif; ?>
+                    <span class="absolute bottom-0 right-0 w-2 h-2 bg-green-500 rounded-full z-10 border border-slate-800"></span>
                 </div>
                 <!-- Chevron -->
                 <i class="fa-solid fa-chevron-down text-[10px] text-slate-500 group-hover:text-white transition-colors"></i>
@@ -126,8 +130,12 @@ if (!isset($GLOBALS['alpine_loaded'])) {
                 
                 <!-- User Info Card -->
                 <div class="px-5 py-3 border-b border-slate-50 flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-lg bg-slate-105 text-slate-700 flex items-center justify-center font-bold">
-                        <i class="fa-solid <?= $avatar_icon ?> text-xs"></i>
+                    <div class="w-9 h-9 rounded-lg bg-slate-105 text-slate-700 flex items-center justify-center font-bold overflow-hidden">
+                        <?php if (!empty($_SESSION['profile_photo'])): ?>
+                            <img src="<?= htmlspecialchars($_SESSION['profile_photo'], ENT_QUOTES, 'UTF-8') ?>" alt="Profile" class="w-full h-full object-cover">
+                        <?php else: ?>
+                            <i class="fa-solid <?= $avatar_icon ?> text-xs"></i>
+                        <?php endif; ?>
                     </div>
                     <div class="min-w-0 flex-1">
                         <p class="font-black text-slate-850 text-xs uppercase tracking-tight truncate">

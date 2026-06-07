@@ -46,6 +46,16 @@ if ($_SESSION['role'] === 'Vendor' && $po['vendor_id'] != $_SESSION['vendor_id']
             body { background: white; margin: 0; padding: 0; }
             .print-area { margin: 0; padding: 1cm; box-shadow: none; max-w: 100%; min-h: auto; }
             .no-print { display: none !important; }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .stamp-img {
+                mix-blend-mode: normal !important;
+                opacity: 0.95 !important;
+                display: block !important;
+                visibility: visible !important;
+            }
         }
     </style>
 </head>
@@ -147,16 +157,32 @@ if ($_SESSION['role'] === 'Vendor' && $po['vendor_id'] != $_SESSION['vendor_id']
                 </ul>
             </div>
             
-            <div class="flex justify-end gap-12">
-                <div class="text-center w-32">
+            <div class="flex justify-end gap-12 relative">
+                <div class="text-center w-32 relative">
                     <p class="text-xs font-bold text-slate-500 uppercase mb-12">Procurement</p>
-                    <div class="border-b border-slate-400 pb-1 font-bold text-sm"><?= htmlspecialchars($po['creator_name'] ?? 'Procurement Staff') ?></div>
+                    <div class="border-b border-slate-400 pb-1 font-bold text-sm z-10 relative"><?= htmlspecialchars($po['creator_name'] ?? 'Procurement Staff') ?></div>
                 </div>
-                <div class="text-center w-32">
+                <div class="text-center w-32 relative">
                     <p class="text-xs font-bold text-slate-500 uppercase mb-12">Manager Approval</p>
-                    <?php if($po['approved_by']): ?>
-                    <div class="border-b border-slate-400 pb-1 font-bold text-sm">Approved</div>
+                    <?php if($po['status'] === 'Rejected'): ?>
+                    <div class="border-b border-slate-400 pb-1 font-bold text-sm text-red-600 z-10 relative">Rejected</div>
+                    <?php if(!empty($po['approved_at'])): ?>
+                    <p class="text-[9px] mt-1 text-red-500"><?= date('d/m/Y', strtotime($po['approved_at'])) ?></p>
+                    <?php endif; ?>
+                    <?php elseif($po['status'] !== 'Pending Manager'): ?>
+                    <div class="absolute -top-2 -left-10 w-[6rem] h-[6rem] border-[3px] border-red-600 rounded-full p-1 opacity-80 pointer-events-none z-0" style="transform: rotate(-15deg);">
+                        <div class="w-full h-full border border-red-600 rounded-full flex flex-col items-center justify-center text-red-600">
+                            <span class="text-[10px] font-black uppercase tracking-widest leading-none">VERIDEX</span>
+                            <div class="border-y border-red-600 w-full text-center py-1 my-1">
+                                <span class="text-[10px] font-black uppercase tracking-widest leading-none">APPROVED</span>
+                            </div>
+                            <span class="text-[6px] font-bold uppercase tracking-widest leading-none">PROCUREMENT</span>
+                        </div>
+                    </div>
+                    <div class="border-b border-slate-400 pb-1 font-bold text-sm z-10 relative">Approved</div>
+                    <?php if(!empty($po['approved_at'])): ?>
                     <p class="text-[9px] mt-1"><?= date('d/m/Y', strtotime($po['approved_at'])) ?></p>
+                    <?php endif; ?>
                     <?php else: ?>
                     <div class="border-b border-slate-400 pb-1 font-bold text-sm text-white select-none">.</div>
                     <?php endif; ?>

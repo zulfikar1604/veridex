@@ -8,7 +8,7 @@ session_unset();
 // Hancurkan session secara total
 session_destroy();
 
-// Tendang kembali ke halaman login
-header("Location: login.php");
+// Tendang kembali ke halaman landing page (index.php)
+header("Location: index.php");
 exit;
 ?>

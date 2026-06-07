@@ -14,6 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $barang = mysqli_fetch_assoc($query);
 
     $stok_baru = $barang['stok_saat_ini'] - $jumlah_keluar;
+    
+    if ($stok_baru < 0) {
+        $_SESSION['error'] = "Gagal! Jumlah pengeluaran melebihi stok yang tersedia (Maksimal: " . $barang['stok_saat_ini'] . ").";
+        header("Location: scan_barcode_outbound.php");
+        exit;
+    }
 
     // 2. Hitung status label baru pakai fungsi milikmu (Aman, Warning, Kritis)
     $status_baru = calculateStatusLabel($stok_baru, $barang['stok_kritis']);

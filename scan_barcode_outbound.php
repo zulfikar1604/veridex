@@ -15,7 +15,8 @@ $hari_ini = $hari_array[date('w')] . ', ' . date('j') . ' ' . $bulan_array[date(
 
 // Variabel penampung
 $barang = null;
-$pesan_error = "";
+$pesan_error = isset($_SESSION['error']) ? $_SESSION['error'] : "";
+unset($_SESSION['error']);
 $pesan_sukses = isset($_SESSION['sukses']) ? $_SESSION['sukses'] : "";
 unset($_SESSION['sukses']); // Hapus session sukses setelah ditampilkan
 

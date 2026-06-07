@@ -59,6 +59,16 @@ while($v = mysqli_fetch_assoc($query_vendors)) {
             body { background: white; margin: 0; padding: 0; }
             .print-area { margin: 0; padding: 1cm; box-shadow: none; max-w: 100%; min-h: auto; }
             .no-print { display: none !important; }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .stamp-img {
+                mix-blend-mode: normal !important;
+                opacity: 0.95 !important;
+                display: block !important;
+                visibility: visible !important;
+            }
         }
     </style>
 </head>
@@ -144,9 +154,18 @@ while($v = mysqli_fetch_assoc($query_vendors)) {
             </div>
             
             <div class="flex justify-end gap-12">
-                <div class="text-center w-40">
+                <div class="text-center w-40 relative">
                     <p class="text-xs font-bold text-slate-500 uppercase mb-12">Diterbitkan Oleh</p>
-                    <div class="border-b border-slate-400 pb-1 font-bold text-sm"><?= htmlspecialchars($rfq['creator_name'] ?? 'Procurement') ?></div>
+                    <div class="absolute -top-2 -left-6 w-[6rem] h-[6rem] border-[3px] border-red-600 rounded-full p-1 opacity-80 pointer-events-none z-0" style="transform: rotate(5deg);">
+                        <div class="w-full h-full border border-red-600 rounded-full flex flex-col items-center justify-center text-red-600">
+                            <span class="text-[10px] font-black uppercase tracking-widest leading-none">VERIDEX</span>
+                            <div class="border-y border-red-600 w-full text-center py-1 my-1">
+                                <span class="text-[10px] font-black uppercase tracking-widest leading-none">OFFICIAL</span>
+                            </div>
+                            <span class="text-[6px] font-bold uppercase tracking-widest leading-none">PROCUREMENT</span>
+                        </div>
+                    </div>
+                    <div class="border-b border-slate-400 pb-1 font-bold text-sm relative z-10"><?= htmlspecialchars($rfq['creator_name'] ?? 'Procurement') ?></div>
                     <p class="text-[10px] mt-1 text-slate-500">Veridex Procurement</p>
                 </div>
             </div>
