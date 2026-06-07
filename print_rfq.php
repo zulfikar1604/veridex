@@ -86,11 +86,13 @@ while($v = mysqli_fetch_assoc($query_vendors)) {
             <div class="text-right">
                 <h2 class="text-3xl font-black text-slate-800 uppercase mb-2">Request For Quotation</h2>
                 <div class="inline-block bg-slate-100 p-3 rounded-lg text-left border border-slate-200">
-                    <table class="text-sm">
+                    <div class="overflow-x-auto w-full">
+<table class="text-sm">
                         <tr><td class="font-bold text-slate-500 pr-4">RFQ Number</td><td class="font-black"><?= htmlspecialchars($rfq['rfq_number']) ?></td></tr>
                         <tr><td class="font-bold text-slate-500 pr-4">Date Issued</td><td class="font-bold"><?= date('d F Y', strtotime($rfq['created_at'])) ?></td></tr>
                         <tr><td class="font-bold text-slate-500 pr-4">Submission Deadline</td><td class="font-black text-red-600"><?= date('d F Y H:i', strtotime($rfq['deadline'])) ?></td></tr>
                     </table>
+</div>
                 </div>
             </div>
         </div>
@@ -102,7 +104,8 @@ while($v = mysqli_fetch_assoc($query_vendors)) {
 
         <!-- Items Table -->
         <h3 class="font-black text-md mb-3 uppercase tracking-widest text-slate-500">Spesifikasi Kebutuhan:</h3>
-        <table class="w-full mb-8 border border-slate-300">
+        <div class="overflow-x-auto w-full">
+<table class="w-full mb-8 border border-slate-300">
             <thead class="bg-slate-900 text-white">
                 <tr>
                     <th class="py-3 px-4 text-left text-xs font-black uppercase tracking-widest">No</th>
@@ -126,9 +129,10 @@ while($v = mysqli_fetch_assoc($query_vendors)) {
                 <tr class="h-32"><td colspan="4"></td></tr>
             </tbody>
         </table>
+</div>
 
         <!-- Terms and Signatures -->
-        <div class="grid grid-cols-2 gap-8 mt-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
             <div>
                 <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Instruksi Bidding:</h3>
                 <ul class="text-xs text-slate-600 list-decimal pl-4 space-y-2">

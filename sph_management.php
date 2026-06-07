@@ -29,31 +29,22 @@ $query_sph = mysqli_query($conn, "
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-50 flex h-screen overflow-hidden">
+<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
 
-    <?php include 'sidebar_procurement.php'; ?>
+    <?php
+    $page_title = "Surat Penawaran Harga";
+    $page_subtitle = "Evaluasi & Arsip Penawaran Masuk";
+    $navbar_badge = '<span class="bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">Total SPH: ' . mysqli_num_rows($query_sph) . '</span>';
+    include 'navbar.php';
+?>
 
-    <main class="flex-1 flex flex-col overflow-hidden">
-        <!-- Header -->
-        <div class="p-8 pb-4">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h2 class="text-3xl font-black text-slate-800 uppercase tracking-tighter">SPH Management</h2>
-                    <p class="text-sm text-slate-400 font-bold uppercase tracking-widest mt-1">Incoming Vendor Quotations</p>
-                </div>
-                <div class="flex items-center gap-4">
-                    <?php include 'navbar_notifications.php'; ?>
-                    <button class="bg-slate-900 text-white px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-red-600 transition shadow-lg">
-                        <i class="fa-solid fa-file-import mr-2"></i> Import SPH Data
-                    </button>
-                </div>
-            </div>
-        </div>
+    <div class="flex-1 flex overflow-hidden">
+        <?php include 'sidebar_procurement.php'; ?>
 
-        <!-- Rekap Penawaran -->
-        <div class="flex-1 overflow-y-auto px-8 pb-8">
+        <main class="flex-1 overflow-y-auto p-6 md:p-8">
             <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-                <table class="w-full text-left">
+                <div class="overflow-x-auto w-full">
+<table class="w-full text-left">
                     <thead class="bg-slate-50 border-b border-slate-100">
                         <tr class="text-[10px] font-black text-slate-500 uppercase tracking-widest">
                             <th class="p-6">Date Received</th>
@@ -114,10 +105,11 @@ $query_sph = mysqli_query($conn, "
                         <?php endwhile; ?>
                     </tbody>
                 </table>
+</div>
             </div>
 
             <!-- Dashboard Info -->
-            <div class="mt-6 p-6 bg-slate-900 rounded-3xl text-white flex items-center justify-between">
+            <div class="mt-6 p-6 bg-slate-900 rounded-3xl text-white flex items-center justify-between flex-wrap gap-4">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center text-xl shadow-lg shadow-red-600/40">
                         <i class="fa-solid fa-database"></i>
@@ -131,8 +123,23 @@ $query_sph = mysqli_query($conn, "
                     Go to Strategic Analysis <i class="fa-solid fa-arrow-right ml-2"></i>
                 </a>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
+
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('main-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (!sidebar) return;
+            if (window.innerWidth >= 768) {
+                sidebar.classList.toggle('sidebar-collapsed');
+            } else {
+                sidebar.classList.toggle('sidebar-open');
+                if (overlay) overlay.classList.toggle('overlay-open');
+            }
+        }
+    </script>
 
 </body>
 </html>

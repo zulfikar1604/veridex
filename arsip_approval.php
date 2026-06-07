@@ -34,27 +34,18 @@ $query_arsip = mysqli_query($conn, "
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-50 flex h-screen overflow-hidden">
+<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
 
-    <?php include 'sidebar_procurement.php'; ?>
+    <?php
+    $page_title = "Arsip Approval";
+    $page_subtitle = "Riwayat Keputusan Validasi PO";
+    include 'navbar.php';
+?>
 
-    <main class="flex-1 flex flex-col overflow-hidden">
-        <!-- Header Section -->
-        <div class="p-8 pb-4">
-            <div class="flex justify-between items-end">
-                <div>
-                    <h2 class="text-3xl font-black text-slate-800 uppercase tracking-tighter">Approval Archives</h2>
-                    <p class="text-sm text-slate-400 font-bold uppercase tracking-widest mt-1">History of Validated Documents</p>
-                </div>
-                <div class="bg-white px-4 py-2 rounded-2xl shadow-sm border border-slate-100">
-                    <span class="text-[10px] font-black text-slate-400 uppercase block">Total Arsip</span>
-                    <span class="text-xl font-black text-red-600"><?= mysqli_num_rows($query_arsip) ?></span>
-                </div>
-            </div>
-        </div>
+    <div class="flex-1 flex overflow-hidden">
+        <?php include 'sidebar_procurement.php'; ?>
 
-        <!-- Filter & Search Mockup -->
-        <div class="px-8 mb-4">
+        <main class="px-8 mb-4 p-6 md:p-8">
             <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex gap-4">
                 <input type="text" placeholder="Cari Nomor PO atau Vendor..." class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-red-500">
                 <button class="bg-slate-800 text-white px-6 py-2 rounded-xl text-sm font-bold">Filter Tanggal</button>
@@ -64,7 +55,8 @@ $query_arsip = mysqli_query($conn, "
         <!-- Table Section -->
         <div class="flex-1 overflow-y-auto px-8 pb-8">
             <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-                <table class="w-full text-left">
+                <div class="overflow-x-auto w-full">
+<table class="w-full text-left">
                     <thead class="bg-slate-50/50 border-b border-slate-100">
                         <tr class="text-[10px] font-black text-slate-500 uppercase tracking-widest">
                             <th class="p-6">ID Dokumen</th>
@@ -104,8 +96,24 @@ $query_arsip = mysqli_query($conn, "
                         <?php endwhile; ?>
                     </tbody>
                 </table>
+</div>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('main-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (!sidebar) return;
+            if (window.innerWidth >= 768) {
+                sidebar.classList.toggle('sidebar-collapsed');
+            } else {
+                sidebar.classList.toggle('sidebar-open');
+                if (overlay) overlay.classList.toggle('overlay-open');
+            }
+        }
+    </script>
+
 </body>
 </html>

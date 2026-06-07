@@ -64,7 +64,7 @@ $unit_price = $invoice['jumlah_pesan'] > 0 ? $invoice['po_total'] / $invoice['ju
             </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-8 mb-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
             <div>
                 <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Bill To:</p>
                 <h3 class="text-lg font-black text-slate-800">PT Veridex</h3>
@@ -79,7 +79,8 @@ $unit_price = $invoice['jumlah_pesan'] > 0 ? $invoice['po_total'] / $invoice['ju
         </div>
 
         <!-- Tabel Barang -->
-        <table class="w-full border-collapse border border-slate-400 mb-8 text-sm">
+        <div class="overflow-x-auto w-full">
+<table class="w-full border-collapse border border-slate-400 mb-8 text-sm">
             <thead>
                 <tr class="bg-slate-800 text-white">
                     <th class="border border-slate-400 p-3 text-left">No</th>
@@ -122,6 +123,7 @@ $unit_price = $invoice['jumlah_pesan'] > 0 ? $invoice['po_total'] / $invoice['ju
                 </tr>
             </tfoot>
         </table>
+</div>
 
         <!-- Info Pembayaran -->
         <div class="mb-12 border border-slate-300 p-5 rounded-lg bg-slate-50">

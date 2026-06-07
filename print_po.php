@@ -73,17 +73,19 @@ if ($_SESSION['role'] === 'Vendor' && $po['vendor_id'] != $_SESSION['vendor_id']
             <div class="text-right">
                 <h2 class="text-3xl font-black text-slate-800 uppercase mb-2">Purchase Order</h2>
                 <div class="inline-block bg-slate-100 p-3 rounded-lg text-left border border-slate-200">
-                    <table class="text-sm">
+                    <div class="overflow-x-auto w-full">
+<table class="text-sm">
                         <tr><td class="font-bold text-slate-500 pr-4">PO Number</td><td class="font-black"><?= htmlspecialchars($po['po_number']) ?></td></tr>
                         <tr><td class="font-bold text-slate-500 pr-4">Date</td><td class="font-bold"><?= date('d F Y', strtotime($po['created_at'])) ?></td></tr>
                         <tr><td class="font-bold text-slate-500 pr-4">Status</td><td class="font-bold text-red-600 uppercase"><?= $po['status'] ?></td></tr>
                     </table>
+</div>
                 </div>
             </div>
         </div>
 
         <!-- Vendor & Ship To -->
-        <div class="grid grid-cols-2 gap-12 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-8">
             <div>
                 <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-200 pb-1">Vendor To:</h3>
                 <h4 class="text-lg font-black text-slate-800 uppercase"><?= htmlspecialchars($po['nama_perusahaan']) ?></h4>
@@ -100,7 +102,8 @@ if ($_SESSION['role'] === 'Vendor' && $po['vendor_id'] != $_SESSION['vendor_id']
         </div>
 
         <!-- Items Table -->
-        <table class="w-full mb-8 border border-slate-300">
+        <div class="overflow-x-auto w-full">
+<table class="w-full mb-8 border border-slate-300">
             <thead class="bg-slate-900 text-white">
                 <tr>
                     <th class="py-3 px-4 text-left text-xs font-black uppercase tracking-widest">No</th>
@@ -131,9 +134,10 @@ if ($_SESSION['role'] === 'Vendor' && $po['vendor_id'] != $_SESSION['vendor_id']
                 </tr>
             </tfoot>
         </table>
+</div>
 
         <!-- Terms and Signatures -->
-        <div class="grid grid-cols-2 gap-8 mt-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
             <div>
                 <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Terms & Conditions:</h3>
                 <ul class="text-xs text-slate-600 list-disc pl-4 space-y-1">

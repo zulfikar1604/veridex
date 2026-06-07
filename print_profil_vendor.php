@@ -62,7 +62,7 @@ $vendor = mysqli_fetch_assoc($query);
         </div>
 
         <!-- Detail Grid -->
-        <div class="grid grid-cols-2 gap-y-8 gap-x-12 mb-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12 mb-10">
             
             <div class="col-span-2">
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Alamat Lengkap Perusahaan</p>
@@ -95,7 +95,7 @@ $vendor = mysqli_fetch_assoc($query);
         <div class="bg-slate-50 border border-slate-200 p-8 rounded-xl print-border mb-12">
             <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest mb-6 border-b border-slate-200 pb-2">Informasi Legalitas & Perizinan</h3>
             
-            <div class="grid grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
                     <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Nomor Induk Berusaha (NIB)</p>
                     <p class="font-black text-xl text-slate-900 tracking-wider"><?= htmlspecialchars($vendor['nib'] ?? 'Tidak ada data') ?></p>
@@ -108,7 +108,7 @@ $vendor = mysqli_fetch_assoc($query);
         </div>
 
         <!-- Tanda Tangan -->
-        <div class="grid grid-cols-2 gap-8 text-center pt-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-center pt-8">
             <div>
                 <p class="text-sm font-bold text-slate-500 mb-20">Pihak Vendor</p>
                 <p class="font-black text-slate-900 underline underline-offset-4 decoration-2"><?= htmlspecialchars($vendor['pic_nama']) ?></p>

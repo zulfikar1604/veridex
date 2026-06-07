@@ -23,22 +23,18 @@ $query_list_po = mysqli_query($conn, "
 ") or handle_db_error($conn);
 
 ?>
-<body class="bg-slate-50 flex h-screen overflow-hidden">
-    
-    <?php include 'sidebar_procurement.php'; ?>
-    
-    <main class="flex-1 flex flex-col h-full overflow-hidden">
-        
-        <div class="p-6 pb-0">
-            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex justify-between items-center">
-                <h2 class="text-2xl font-black text-slate-800 tracking-tight uppercase">MESSAGING SYSTEM</h2>
-                <div class="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center font-black shadow-md">
-                    <i class="fa-solid fa-comments"></i>
-                </div>
-            </div>
-        </div>
+<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
 
-        <div class="flex-1 p-6 flex flex-col overflow-hidden">
+    <?php
+    $page_title = "Messaging System";
+    $page_subtitle = "Komunikasi Tim Internal & Vendor";
+    include 'navbar.php';
+?>
+
+    <div class="flex-1 flex overflow-hidden">
+        <?php include 'sidebar_procurement.php'; ?>
+
+        <main class="flex-1 p-6 md:p-8 flex flex-col overflow-hidden">
             <div class="bg-white rounded-3xl border shadow-xl flex h-full max-w-6xl mx-auto w-full overflow-hidden">
                 
                 <div class="w-1/3 border-r border-slate-100 flex flex-col bg-slate-50/50">
@@ -111,8 +107,8 @@ $query_list_po = mysqli_query($conn, "
                 </div>
 
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <?php if ($selected_po != ''): ?>
     <script>

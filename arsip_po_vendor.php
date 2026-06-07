@@ -21,32 +21,23 @@ $query_po = mysqli_query($conn, "
 
 include 'header_meta.php';
 ?>
-<body class="bg-slate-50 flex h-screen overflow-hidden text-slate-800">
-    <?php include 'sidebar_vendor.php'; ?>
+<body class="bg-slate-50 flex flex-col h-screen overflow-hidden text-slate-800">
 
-    <main class="flex-1 flex flex-col overflow-hidden">
-        <div class="p-8 pb-4">
-            <div class="flex justify-between items-center bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                <div>
-                    <h2 class="text-3xl font-black text-slate-800 uppercase tracking-tighter">Arsip PO</h2>
-                    <p class="text-sm text-slate-400 font-bold uppercase tracking-widest mt-1">Riwayat Purchase Order Anda</p>
-                </div>
-                <div class="flex items-center gap-4">
-                    <span class="bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">
-                        Total: <?= mysqli_num_rows($query_po) ?> PO
-                    </span>
-                    <?php include 'navbar_notifications.php'; ?>
-                    <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center shadow-lg shadow-slate-900/20 shrink-0">
-                        <i class="fa-solid fa-building text-xl"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <?php
+    $page_title = "Arsip PO";
+    $page_subtitle = "Riwayat Purchase Order Anda";
+    $navbar_badge = '<span class="bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">Total: ' . mysqli_num_rows($query_po) . ' PO</span>';
+    include 'navbar.php';
+?>
 
-        <div class="flex-1 overflow-y-auto px-8 pb-8">
+    <div class="flex-1 flex overflow-hidden">
+        <?php include 'sidebar_vendor.php'; ?>
+
+        <main class="flex-1 overflow-y-auto p-6 md:p-8">
             <?php if(mysqli_num_rows($query_po) > 0): ?>
             <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-                <table class="w-full text-left">
+                <div class="overflow-x-auto w-full">
+<table class="w-full text-left">
                     <thead class="bg-slate-900">
                         <tr class="text-[10px] font-black text-slate-500 uppercase tracking-widest">
                             <th class="p-6">PO Number</th>
@@ -99,6 +90,7 @@ include 'header_meta.php';
                         <?php endwhile; ?>
                     </tbody>
                 </table>
+</div>
             </div>
             <?php else: ?>
             <div class="bg-white p-16 rounded-[2.5rem] border shadow-sm text-center">
@@ -107,8 +99,8 @@ include 'header_meta.php';
                 <p class="text-slate-400 text-sm">Purchase Order yang Anda terima akan muncul di sini.</p>
             </div>
             <?php endif; ?>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>

@@ -28,32 +28,21 @@ $query_invoice = mysqli_query($conn, "
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-50 flex h-screen overflow-hidden">
+<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
 
-    <?php include 'sidebar_procurement.php'; ?>
+    <?php
+    $page_title = "Arsip Invoice";
+    $page_subtitle = "Riwayat Tagihan & Pembayaran";
+    include 'navbar.php';
+?>
 
-    <main class="flex-1 flex flex-col overflow-hidden">
-        <!-- Header -->
-        <div class="p-8 pb-4">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h2 class="text-3xl font-black text-slate-800 uppercase tracking-tighter">Invoice Archive</h2>
-                    <p class="text-sm text-slate-400 font-bold uppercase tracking-widest mt-1 italic">Financial Procurement Settlement</p>
-                </div>
-                <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
-                    <i class="fa-solid fa-file-invoice-dollar text-red-600 text-2xl"></i>
-                    <div class="text-right">
-                        <span class="text-[10px] font-black text-slate-400 uppercase block">Total Records</span>
-                        <span class="text-xl font-black text-slate-800"><?= mysqli_num_rows($query_invoice) ?></span>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="flex-1 flex overflow-hidden">
+        <?php include 'sidebar_procurement.php'; ?>
 
-        <!-- Tabel Arsip -->
-        <div class="flex-1 overflow-y-auto px-8 pb-8">
+        <main class="flex-1 overflow-y-auto p-6 md:p-8">
             <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-                <table class="w-full text-left">
+                <div class="overflow-x-auto w-full">
+<table class="w-full text-left">
                     <thead class="bg-slate-900 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
                         <tr>
                             <th class="p-6">Invoice & Date</th>
@@ -91,9 +80,25 @@ $query_invoice = mysqli_query($conn, "
                         <?php endwhile; ?>
                     </tbody>
                 </table>
+</div>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
+
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('main-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (!sidebar) return;
+            if (window.innerWidth >= 768) {
+                sidebar.classList.toggle('sidebar-collapsed');
+            } else {
+                sidebar.classList.toggle('sidebar-open');
+                if (overlay) overlay.classList.toggle('overlay-open');
+            }
+        }
+    </script>
 
 </body>
 </html>

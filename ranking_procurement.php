@@ -33,35 +33,39 @@ while($v = mysqli_fetch_assoc($query_vendors)) {
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>[x-cloak] { display: none !important; }</style>
+    <style>[x-cloak] { display: none !important; }
+    <style>
+        #main-sidebar { transition: width 0.3s ease, min-width 0.3s ease, transform 0.3s ease; }
+        @media (min-width: 768px) {
+            #main-sidebar { position: relative !important; transform: translateX(0) !important; width: 280px; min-width: 280px; overflow: hidden; }
+            #main-sidebar.sidebar-collapsed { width: 0 !important; min-width: 0 !important; }
+            #sidebar-overlay { display: none !important; }
+        }
+        @media (max-width: 767px) {
+            #main-sidebar { position: fixed !important; top: 0; left: 0; bottom: 0; z-index: 50; width: 280px !important; min-width: 280px !important; transform: translateX(-100%); }
+            #main-sidebar.sidebar-open { transform: translateX(0); }
+            #sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.5); z-index: 40; }
+            #sidebar-overlay.overlay-open { display: block; }
+        }
+        .sidebar-toggle-btn { display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;cursor:pointer;transition:background 0.2s,color 0.2s,transform 0.1s;flex-shrink:0; }
+        .sidebar-toggle-btn:hover { background:#ef4444;color:#fff;border-color:#ef4444; }
+        .sidebar-toggle-btn:active { transform:scale(0.92); }
+        .sidebar-close-btn { display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,0.08);color:#94a3b8;cursor:pointer;transition:background 0.2s,color 0.2s;flex-shrink:0;border:none; }
+        .sidebar-close-btn:hover { background:rgba(239,68,68,0.2);color:#fca5a5; }
+    </style>
 </head>
-<body class="bg-slate-50 flex h-screen overflow-hidden">
+<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
 
-    <!-- Memanggil Sidebar[cite: 1] -->
-    <?php include 'sidebar_procurement.php'; ?>
+    <?php
+    $page_title = "Ranking Procurement";
+    $page_subtitle = "Evaluasi Rekomendasi Vendor Terbaik";
+    include 'navbar.php';
+?>
 
-    <main class="flex-1 flex flex-col overflow-hidden">
-        <!-- Header Dinamis -->
-        <div class="p-8 pb-4">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h2 class="text-3xl font-black text-slate-800 uppercase tracking-tighter">Multi-Vendor Ranking</h2>
-                    <p class="text-sm text-slate-400 font-bold uppercase tracking-widest mt-1">Penetapan Kuota Order & Ranking Vendor</p>
-                </div>
-                <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
-                    <div class="text-right">
-                        <span class="text-[10px] font-black text-slate-400 uppercase block">Items to Rank</span>
-                        <span class="text-xl font-black text-red-600"><?= mysqli_num_rows($query_items) ?></span>
-                    </div>
-                    <div class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400">
-                        <i class="fa-solid fa-layer-group"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="flex-1 flex overflow-hidden">
+        <?php include 'sidebar_procurement.php'; ?>
 
-        <!-- List Barang dengan Desain Compressed Master-Detail[cite: 1] -->
-        <div class="flex-1 overflow-y-auto px-8 pb-8">
+        <main class="flex-1 overflow-y-auto p-6 md:p-8">
             <div class="max-w-6xl">
                 <!-- Label Tabel -->
                 <div class="grid grid-cols-12 gap-4 px-6 py-3 bg-slate-900 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] rounded-t-2xl">
@@ -167,7 +171,22 @@ while($v = mysqli_fetch_assoc($query_vendors)) {
                     <?php endif; ?>
                 </div>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('main-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (!sidebar) return;
+            if (window.innerWidth >= 768) {
+                sidebar.classList.toggle('sidebar-collapsed');
+            } else {
+                sidebar.classList.toggle('sidebar-open');
+                if (overlay) overlay.classList.toggle('overlay-open');
+            }
+        }
+    </script>
+
 </body>
 </html>

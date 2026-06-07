@@ -21,7 +21,7 @@ session_start();
 <body class="bg-pattern font-sans min-h-screen flex flex-col">
 
     <header class="bg-slate-900 shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center flex-wrap gap-4">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center shadow-lg shadow-red-500/30">
                     <i class="fa-solid fa-cube text-white text-xl"></i>
@@ -38,7 +38,7 @@ session_start();
     </header>
     
     <main class="flex-1 w-full max-w-7xl mx-auto px-6 py-12 flex items-center">
-        <div class="grid lg:grid-cols-2 gap-16 items-center w-full">
+        <div class="grid lg:grid-cols-1 md:grid-cols-2 gap-16 items-center w-full">
             
             <div class="space-y-8 animate-[fade-in-right_1s_ease-out]">
                 <div>
@@ -119,7 +119,7 @@ session_start();
                                placeholder="Contoh: Jl. Sudirman No. 123, Jakarta"></textarea>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">Email Perusahaan</label>
                             <input type="email" name="email" required 
@@ -141,7 +141,7 @@ session_start();
                                placeholder="Contoh: 081234567890">
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4 border-t border-slate-100 pt-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-100 pt-6">
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">Nomor Induk Berusaha (NIB)</label>
                             <input type="text" name="nib" required 

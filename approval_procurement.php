@@ -29,31 +29,24 @@ $query_pending = mysqli_query($conn, "
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-50 flex h-screen overflow-hidden">
-    
-    <?php include 'sidebar_procurement.php'; ?>
+<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
 
-    <main class="flex-1 flex flex-col overflow-hidden">
-        <!-- Header Dashboard -->
-        <div class="p-8 pb-4">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h2 class="text-3xl font-black text-slate-800 uppercase tracking-tighter">PO Validation</h2>
-                    <p class="text-sm text-slate-400 font-bold uppercase tracking-widest mt-1">Daftar Pengadaan Menunggu Persetujuan</p>
-                </div>
-                <div class="bg-white px-6 py-3 rounded-2xl border border-slate-100 shadow-sm">
-                    <span class="text-[10px] font-black text-slate-400 uppercase block">Pending Tasks</span>
-                    <span class="text-xl font-black text-red-600"><?= mysqli_num_rows($query_pending) ?> Requests</span>
-                </div>
-            </div>
-        </div>
+    <?php
+    $page_title = "PO Validation";
+    $page_subtitle = "Daftar Pengadaan Menunggu Persetujuan";
+    $navbar_badge = '<div class="bg-white px-6 py-3 rounded-2xl border border-slate-100 shadow-sm"><span class="text-[10px] font-black text-slate-400 uppercase block">Pending Tasks</span><span class="text-xl font-black text-red-600">' . mysqli_num_rows($query_pending) . ' Requests</span></div>';
+    include 'navbar.php';
+?>
 
-        <!-- List Pengadaan (List View)[cite: 2] -->
-        <div class="flex-1 overflow-y-auto px-8 pb-8">
+    <div class="flex-1 flex overflow-hidden">
+        <?php include 'sidebar_procurement.php'; ?>
+
+        <main class="flex-1 overflow-y-auto p-6 md:p-8">
             <div class="max-w-6xl">
                 <?php if(mysqli_num_rows($query_pending) > 0): ?>
                     <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-                        <table class="w-full text-left">
+                        <div class="overflow-x-auto w-full">
+<table class="w-full text-left">
                             <thead class="bg-slate-900 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
                                 <tr>
                                     <th class="p-6">Request Date</th>
@@ -103,6 +96,7 @@ $query_pending = mysqli_query($conn, "
                                 <?php endwhile; ?>
                             </tbody>
                         </table>
+</div>
                     </div>
                 <?php else: ?>
                     <!-- State jika tidak ada antrean -->
@@ -114,7 +108,22 @@ $query_pending = mysqli_query($conn, "
                     </div>
                 <?php endif; ?>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('main-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (!sidebar) return;
+            if (window.innerWidth >= 768) {
+                sidebar.classList.toggle('sidebar-collapsed');
+            } else {
+                sidebar.classList.toggle('sidebar-open');
+                if (overlay) overlay.classList.toggle('overlay-open');
+            }
+        }
+    </script>
+
 </body>
 </html>

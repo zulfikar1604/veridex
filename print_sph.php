@@ -105,7 +105,8 @@ $tanggal_cetak = date('d F Y', strtotime($sph['created_at']));
         </div>
 
         <!-- Tabel Barang -->
-        <table class="w-full border-collapse border border-slate-400 mb-8 text-sm">
+        <div class="overflow-x-auto w-full">
+<table class="w-full border-collapse border border-slate-400 mb-8 text-sm">
             <thead>
                 <tr class="bg-slate-100">
                     <th class="border border-slate-400 p-3 text-left">No</th>
@@ -165,6 +166,7 @@ $tanggal_cetak = date('d F Y', strtotime($sph['created_at']));
                 </tr>
             </tfoot>
         </table>
+</div>
 
         <div class="mb-12 text-sm leading-relaxed">
             <p><strong>Syarat & Ketentuan:</strong></p>

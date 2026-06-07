@@ -32,26 +32,18 @@ $query_done = mysqli_query($conn, "
 
 include 'header_meta.php';
 ?>
-<body class="bg-slate-50 h-screen flex overflow-hidden">
-    <?php include 'sidebar_finance.php'; ?>
+<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
 
-    <main class="flex-1 flex flex-col h-full overflow-hidden">
-        <div class="p-6 pb-0">
-            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex justify-between items-center">
-                <div>
-                    <h2 class="text-2xl font-black text-slate-800 tracking-tight uppercase">Management Pembayaran</h2>
-                    <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Proses Pelunasan PO</p>
-                </div>
-                <div class="flex items-center gap-3">
-                    <?php if(mysqli_num_rows($query_ready) > 0): ?>
-                    <span class="bg-amber-500 text-white text-xs font-black px-3 py-1 rounded-full animate-pulse"><?= mysqli_num_rows($query_ready) ?> Siap Bayar</span>
-                    <?php endif; ?>
-                    <div class="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center font-black shadow-md">F</div>
-                </div>
-            </div>
-        </div>
+    <?php
+    $page_title = "Payment Release";
+    $page_subtitle = "Pelepasan Pembayaran Invoice Vendor";
+    include 'navbar.php';
+?>
 
-        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+    <div class="flex-1 flex overflow-hidden">
+        <?php include 'sidebar_finance.php'; ?>
+
+        <main class="flex-1 overflow-y-auto p-6 md:p-8 space-y-6">
             <!-- PO Siap Bayar -->
             <?php if(mysqli_num_rows($query_ready) > 0): ?>
             <div>
@@ -90,7 +82,8 @@ include 'header_meta.php';
                 <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Riwayat Pembayaran</h3>
                 <?php if(mysqli_num_rows($query_done) > 0): ?>
                 <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
-                    <table class="w-full text-sm">
+                    <div class="overflow-x-auto w-full">
+<table class="w-full text-sm">
                         <thead><tr class="bg-slate-900 text-[10px] font-black text-slate-400 uppercase tracking-widest"><th class="p-4">No PO</th><th class="p-4">Vendor & Barang</th><th class="p-4 text-center">Nilai</th><th class="p-4 text-center">Tgl Bayar</th><th class="p-4 text-right">Status</th></tr></thead>
                         <tbody class="divide-y divide-slate-50">
                             <?php while($po = mysqli_fetch_assoc($query_done)): ?>
@@ -104,6 +97,7 @@ include 'header_meta.php';
                             <?php endwhile; ?>
                         </tbody>
                     </table>
+</div>
                 </div>
                 <?php else: ?>
                 <div class="bg-white p-12 rounded-2xl border shadow-sm text-center">
@@ -120,7 +114,7 @@ include 'header_meta.php';
                 <p class="text-slate-400 text-sm">Lakukan 3-Way Matching terlebih dahulu di halaman sebelumnya.</p>
             </div>
             <?php endif; ?>
-        </div>
-    </main>
+        </main>
+    </div>
 </body>
 </html>

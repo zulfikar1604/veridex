@@ -31,25 +31,28 @@ $query_match = mysqli_query($conn, "
 
 include 'header_meta.php';
 ?>
-<body class="bg-slate-50 h-screen flex overflow-hidden">
-    <?php $active = '3way'; include 'sidebar_finance.php'; ?>
+<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
 
-    <main class="flex-1 flex flex-col h-full overflow-hidden">
-        <div class="p-6 pb-0">
-            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex justify-between items-center">
+    <?php
+    $page_title = "3-Way Matching";
+    $page_subtitle = "Validasi PO • Penerimaan Gudang • Invoice";
+    include 'navbar.php';
+?>
+
+    <div class="flex-1 flex overflow-hidden">
+        <?php include 'sidebar_finance.php'; ?>
+
+        <main class="flex-1 overflow-y-auto p-6 md:p-8 space-y-6">
+            <!-- GREETING BANNER -->
+            <div class="bg-gradient-to-r from-emerald-500/10 to-transparent p-6 rounded-3xl border border-emerald-500/20 flex justify-between items-center flex-wrap gap-4 mb-6">
                 <div>
-                    <h2 class="text-2xl font-black text-slate-800 tracking-tight uppercase">3-Way Matching</h2>
-                    <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Validasi PO • Penerimaan Gudang • Invoice</p>
+                    <h3 class="text-lg font-black text-slate-800 uppercase tracking-tight">Validasi Keuangan PO</h3>
+                    <p class="text-xs text-slate-500 font-medium mt-1">Selamat datang kembali, <?= htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8') ?>. Lakukan pencocokan invoice vendor.</p>
                 </div>
-                <div class="flex items-center gap-4">
-                    <span class="text-sm font-bold text-slate-400"><?= $hari_ini ?></span>
-                    <?php include 'navbar_notifications.php'; ?>
-                    <div class="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center font-black text-lg shadow-md shrink-0">F</div>
+                <div class="bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100 text-xs font-bold text-slate-600">
+                    <i class="fa-solid fa-shield-halved text-emerald-500 mr-1.5"></i> AP Secure
                 </div>
             </div>
-        </div>
-
-        <div class="flex-1 overflow-y-auto p-6 space-y-6">
             <?php if(mysqli_num_rows($query_match) > 0): ?>
                 <?php while($po = mysqli_fetch_assoc($query_match)): ?>
                 <div class="bg-white p-8 rounded-[2rem] border shadow-sm" x-data="{ matching: false }">
@@ -148,8 +151,8 @@ include 'header_meta.php';
                 <p class="text-slate-400 text-sm">Semua PO sudah di-match atau belum ada invoice yang masuk dari vendor.</p>
             </div>
             <?php endif; ?>
-        </div>
-    </main>
+        </main>
+    </div>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>
 </html>

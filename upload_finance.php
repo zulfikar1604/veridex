@@ -29,10 +29,12 @@ include 'header_meta.php';
     <?php include 'sidebar_finance.php'; ?>
 
     <main class="flex-1 flex flex-col h-full overflow-hidden">
-        <div class="p-6 pb-0">
-            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex justify-between items-center">
-                <div>
-                    <h2 class="text-2xl font-black text-slate-800 tracking-tight uppercase">Upload Bukti Bayar</h2>
+        <div class="p-4 md:p-4 md:p-6 pb-0 md:pb-0 md:pb-0">
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex justify-between items-center flex-wrap gap-4">
+                <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()" class="sidebar-toggle-btn" title="Toggle Sidebar"><i class="fa-solid fa-bars text-sm"></i></button>
+                <h2 class="text-2xl font-black text-slate-800 tracking-tight uppercase">Upload Bukti Bayar</h2>
+            </div>
                     <?php if($po): ?>
                     <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1"><?= htmlspecialchars($po['po_number']) ?></p>
                     <?php endif; ?>
@@ -47,13 +49,13 @@ include 'header_meta.php';
                 <!-- Detail PO -->
                 <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 mb-8">
                     <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Detail Pembayaran</h3>
-                    <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                         <div><span class="text-slate-500">No PO</span><p class="font-black text-slate-800"><?= $po['po_number'] ?></p></div>
                         <div><span class="text-slate-500">Vendor</span><p class="font-black text-slate-800"><?= htmlspecialchars($po['nama_perusahaan']) ?></p></div>
                         <div><span class="text-slate-500">Barang</span><p class="font-black text-slate-800"><?= htmlspecialchars($po['nama_barang']) ?></p></div>
                         <div><span class="text-slate-500">Invoice</span><p class="font-black text-slate-800"><?= htmlspecialchars($po['invoice_number'] ?? '-') ?></p></div>
                     </div>
-                    <div class="mt-4 pt-4 border-t border-slate-200 flex justify-between items-center">
+                    <div class="mt-4 pt-4 border-t border-slate-200 flex justify-between items-center flex-wrap gap-4">
                         <span class="text-slate-500 text-sm">Total Pembayaran</span>
                         <span class="text-2xl font-black text-red-600">Rp <?= number_format($po['total_harga'],0,',','.') ?></span>
                     </div>

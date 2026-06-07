@@ -25,28 +25,23 @@ $query_rfq = mysqli_query($conn, "
 
 include 'header_meta.php';
 ?>
-<body class="bg-slate-50 flex h-screen overflow-hidden text-slate-800">
-    <?php include 'sidebar_vendor.php'; ?>
+<body class="bg-slate-50 flex flex-col h-screen overflow-hidden text-slate-800">
 
-    <main class="flex-1 flex flex-col overflow-hidden">
-        <div class="p-8 pb-4">
-            <div class="flex justify-between items-center bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                <div>
-                    <h2 class="text-3xl font-black text-slate-800 uppercase tracking-tighter">Arsip RFQ</h2>
-                    <p class="text-sm text-slate-400 font-bold uppercase tracking-widest mt-1">Riwayat Undangan Pengadaan Anda</p>
-                </div>
-                <div class="flex items-center gap-3">
-                    <span class="bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">
-                        Total: <?= mysqli_num_rows($query_rfq) ?> RFQ
-                    </span>
-                </div>
-            </div>
-        </div>
+    <?php
+    $page_title = "Arsip RFQ";
+    $page_subtitle = "Daftar Permintaan Penawaran Terbuka";
+    $navbar_badge = '<span class="bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">Total: ' . mysqli_num_rows($query_rfq) . ' RFQ</span>';
+    include 'navbar.php';
+?>
 
-        <div class="flex-1 overflow-y-auto px-8 pb-8">
+    <div class="flex-1 flex overflow-hidden">
+        <?php include 'sidebar_vendor.php'; ?>
+
+        <main class="flex-1 overflow-y-auto p-6 md:p-8">
             <?php if(mysqli_num_rows($query_rfq) > 0): ?>
             <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-                <table class="w-full text-left">
+                <div class="overflow-x-auto w-full">
+<table class="w-full text-left">
                     <thead class="bg-slate-900">
                         <tr class="text-[10px] font-black text-slate-500 uppercase tracking-widest">
                             <th class="p-6">RFQ Number</th>
@@ -129,6 +124,7 @@ include 'header_meta.php';
                         <?php endwhile; ?>
                     </tbody>
                 </table>
+</div>
             </div>
             <?php else: ?>
             <div class="bg-white p-16 rounded-[2.5rem] border shadow-sm text-center">
@@ -137,8 +133,8 @@ include 'header_meta.php';
                 <p class="text-slate-400 text-sm">Anda belum pernah diundang dalam proses pengadaan.</p>
             </div>
             <?php endif; ?>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>

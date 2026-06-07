@@ -47,25 +47,39 @@ while ($v = mysqli_fetch_assoc($query_vendors)) {
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>[x-cloak] { display: none !important; }</style>
+    <style>[x-cloak] { display: none !important; }
+    <style>
+        #main-sidebar { transition: width 0.3s ease, min-width 0.3s ease, transform 0.3s ease; }
+        @media (min-width: 768px) {
+            #main-sidebar { position: relative !important; transform: translateX(0) !important; width: 280px; min-width: 280px; overflow: hidden; }
+            #main-sidebar.sidebar-collapsed { width: 0 !important; min-width: 0 !important; }
+            #sidebar-overlay { display: none !important; }
+        }
+        @media (max-width: 767px) {
+            #main-sidebar { position: fixed !important; top: 0; left: 0; bottom: 0; z-index: 50; width: 280px !important; min-width: 280px !important; transform: translateX(-100%); }
+            #main-sidebar.sidebar-open { transform: translateX(0); }
+            #sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.5); z-index: 40; }
+            #sidebar-overlay.overlay-open { display: block; }
+        }
+        .sidebar-toggle-btn { display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;cursor:pointer;transition:background 0.2s,color 0.2s,transform 0.1s;flex-shrink:0; }
+        .sidebar-toggle-btn:hover { background:#ef4444;color:#fff;border-color:#ef4444; }
+        .sidebar-toggle-btn:active { transform:scale(0.92); }
+        .sidebar-close-btn { display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,0.08);color:#94a3b8;cursor:pointer;transition:background 0.2s,color 0.2s;flex-shrink:0;border:none; }
+        .sidebar-close-btn:hover { background:rgba(239,68,68,0.2);color:#fca5a5; }
+    </style>
 </head>
-<body class="bg-slate-50 flex h-screen overflow-hidden text-slate-800">
-    <?php include 'sidebar_procurement.php'; ?>
+<body class="bg-slate-50 flex flex-col h-screen overflow-hidden text-slate-800">
 
-    <main class="flex-1 flex flex-col overflow-hidden">
-        <div class="p-8 pb-4">
-            <div class="flex justify-between items-center bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                <div>
-                    <h2 class="text-3xl font-black text-slate-800 uppercase tracking-tighter">Create RFQ</h2>
-                    <p class="text-sm text-slate-400 font-bold uppercase tracking-widest mt-1">Request for Quotation — Undang Vendor</p>
-                </div>
-                <a href="dashboard_procurement.php" class="text-slate-400 hover:text-slate-800 font-bold text-xs uppercase transition flex items-center gap-2">
-                    <i class="fa-solid fa-arrow-left"></i> Kembali
-                </a>
-            </div>
-        </div>
+    <?php
+    $page_title = "Create RFQ";
+    $page_subtitle = "Pengadaan Barang Baru & Undang Vendor";
+    include 'navbar.php';
+?>
 
-        <div class="flex-1 overflow-y-auto px-8 pb-8">
+    <div class="flex-1 flex overflow-hidden">
+        <?php include 'sidebar_procurement.php'; ?>
+
+        <main class="flex-1 overflow-y-auto p-6 md:p-8">
             <div class="max-w-4xl mx-auto">
 
                 <?php if ($existing_rfq): ?>
@@ -90,9 +104,11 @@ while ($v = mysqli_fetch_assoc($query_vendors)) {
                 <?php else: ?>
 
                 <!-- Info Barang -->
-                <div class="bg-slate-900 p-6 rounded-t-3xl flex justify-between items-center">
-                    <div>
-                        <h3 class="text-xl font-black text-white uppercase"><?= htmlspecialchars($item['nama_barang']) ?></h3>
+                <div class="bg-slate-900 p-6 rounded-t-3xl flex justify-between items-center flex-wrap gap-4">
+                    <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()" class="sidebar-toggle-btn" title="Toggle Sidebar"><i class="fa-solid fa-bars text-sm"></i></button>
+                <h3 class="text-xl font-black text-white uppercase"><?= htmlspecialchars($item['nama_barang']) ?></h3>
+            </div>
                         <div class="flex gap-3 mt-1">
                             <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-bold uppercase">SKU: <?= $item['sku'] ?></span>
                             <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-bold uppercase">Unit: <?= $item['unit'] ?></span>
@@ -140,7 +156,7 @@ while ($v = mysqli_fetch_assoc($query_vendors)) {
                     <form id="rfq_form" @submit.prevent="submitRFQ()" class="space-y-6">
                         <input type="hidden" name="inventory_id" value="<?= $item['id'] ?>">
 
-                        <div class="grid grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Jumlah Kebutuhan *</label>
                                 <div class="relative">
@@ -215,7 +231,22 @@ while ($v = mysqli_fetch_assoc($query_vendors)) {
                 </div>
                 <?php endif; ?>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('main-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (!sidebar) return;
+            if (window.innerWidth >= 768) {
+                sidebar.classList.toggle('sidebar-collapsed');
+            } else {
+                sidebar.classList.toggle('sidebar-open');
+                if (overlay) overlay.classList.toggle('overlay-open');
+            }
+        }
+    </script>
+
 </body>
 </html>

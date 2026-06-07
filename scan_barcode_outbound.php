@@ -65,42 +65,53 @@ if (isset($_POST['sku_scan'])) {
         #reader { border: none !important; border-radius: 1rem; overflow: hidden; }
         #reader button { background: #e2e8f0; padding: 8px 16px; border-radius: 8px; font-weight: bold; margin: 5px; cursor: pointer; }
         #reader a { display: none; } /* Sembunyikan link credit library */
+    
+    <style>
+        #main-sidebar { transition: width 0.3s ease, min-width 0.3s ease, transform 0.3s ease; }
+        @media (min-width: 768px) {
+            #main-sidebar { position: relative !important; transform: translateX(0) !important; width: 280px; min-width: 280px; overflow: hidden; }
+            #main-sidebar.sidebar-collapsed { width: 0 !important; min-width: 0 !important; }
+            #sidebar-overlay { display: none !important; }
+        }
+        @media (max-width: 767px) {
+            #main-sidebar { position: fixed !important; top: 0; left: 0; bottom: 0; z-index: 50; width: 280px !important; min-width: 280px !important; transform: translateX(-100%); }
+            #main-sidebar.sidebar-open { transform: translateX(0); }
+            #sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.5); z-index: 40; }
+            #sidebar-overlay.overlay-open { display: block; }
+        }
+        .sidebar-toggle-btn { display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;cursor:pointer;transition:background 0.2s,color 0.2s,transform 0.1s;flex-shrink:0; }
+        .sidebar-toggle-btn:hover { background:#ef4444;color:#fff;border-color:#ef4444; }
+        .sidebar-toggle-btn:active { transform:scale(0.92); }
+        .sidebar-close-btn { display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,0.08);color:#94a3b8;cursor:pointer;transition:background 0.2s,color 0.2s;flex-shrink:0;border:none; }
+        .sidebar-close-btn:hover { background:rgba(239,68,68,0.2);color:#fca5a5; }
     </style>
 </head>
 
-<body class="bg-slate-50 h-screen flex overflow-hidden">
-    
-    <?php 
+<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
+
+    <?php
+    $page_title = "Barcode Outbound";
+    $page_subtitle = "Pengeluaran Barang Cepat via Barcode Scanner";
+    include 'navbar.php';
+?>
+
+    <div class="flex-1 flex overflow-hidden">
+        <?php 
         $active_menu = 'outbound'; 
-        include 'sidebar_gudang.php'; 
+         include 'sidebar_gudang.php'; 
     ?>
 
-    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
-        <div class="p-6 pb-0">
-            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex justify-between items-center">
-                <h2 class="text-2xl font-black text-slate-800 tracking-[0.1em] uppercase">BARANG KELUAR (OUTBOUND)</h2>
-                <div class="flex items-center gap-4">
-                    <span class="text-sm font-bold text-slate-400"><?= $hari_ini ?></span>
-                    <?php include 'navbar_notifications.php'; ?>
-                    <div class="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center font-black text-lg shadow-md">
-                        <?= htmlspecialchars(strtoupper(substr($_SESSION['role'], 0, 1)), ENT_QUOTES, 'UTF-8') ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="flex-1 overflow-y-auto p-6 flex items-center justify-center">
-            
+        <main class="flex-1 overflow-y-auto p-6 md:p-8 flex items-center justify-center">
             <div class="bg-white p-8 md:p-12 rounded-3xl border shadow-sm text-center w-full max-w-2xl">
                 
                 <?php if ($pesan_sukses): ?>
-                    <div class="bg-green-50 text-green-600 p-4 rounded-xl border border-green-200 font-bold mb-6 flex justify-between items-center">
+                    <div class="bg-green-50 text-green-600 p-4 rounded-xl border border-green-200 font-bold mb-6 flex justify-between items-center flex-wrap gap-4">
                         <span><i class="fa-solid fa-check-circle mr-2"></i> <?= $pesan_sukses ?></span>
                     </div>
                 <?php endif; ?>
 
                 <?php if ($pesan_error): ?>
-                    <div class="bg-red-50 text-red-600 p-4 rounded-xl border border-red-200 font-bold mb-6 flex justify-between items-center">
+                    <div class="bg-red-50 text-red-600 p-4 rounded-xl border border-red-200 font-bold mb-6 flex justify-between items-center flex-wrap gap-4">
                         <span><i class="fa-solid fa-circle-xmark mr-2"></i> <?= $pesan_error ?></span>
                         <a href="scan_barcode_outbound.php" class="bg-red-600 text-white px-3 py-1 rounded text-xs hover:bg-red-700">Scan Ulang</a>
                     </div>
@@ -112,7 +123,7 @@ if (isset($_POST['sku_scan'])) {
                         <h3 class="text-xs font-black text-rose-600 uppercase tracking-widest mb-1">PROSES OUTBOUND</h3>
                         <p class="text-3xl font-black text-slate-800 mb-4"><?= $barang['nama_barang'] ?></p>
                         
-                        <div class="grid grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div class="bg-white p-4 rounded-xl border border-rose-100 shadow-sm">
                                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Kode SKU</p>
                                 <p class="text-lg font-black text-slate-700"><?= $barang['sku'] ?></p>
@@ -185,8 +196,8 @@ if (isset($_POST['sku_scan'])) {
                 <?php endif; ?>
 
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <script>
         // Hanya jalankan kamera jika form pencarian barang (scanner box) sedang tampil
@@ -223,5 +234,20 @@ if (isset($_POST['sku_scan'])) {
             html5QrcodeScanner.render(onScanSuccess, onScanFailure);
         }
     </script>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('main-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (!sidebar) return;
+            if (window.innerWidth >= 768) {
+                sidebar.classList.toggle('sidebar-collapsed');
+            } else {
+                sidebar.classList.toggle('sidebar-open');
+                if (overlay) overlay.classList.toggle('overlay-open');
+            }
+        }
+    </script>
+
 </body>
 </html>

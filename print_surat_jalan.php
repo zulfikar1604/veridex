@@ -72,17 +72,19 @@ if ($_SESSION['role'] === 'Vendor' && $_SESSION['vendor_id'] != $sj['vendor_id']
             <div class="text-right">
                 <h2 class="text-4xl font-black text-red-600 uppercase mb-2 tracking-widest">Surat Jalan</h2>
                 <div class="inline-block bg-slate-50 p-3 rounded-lg text-left border border-slate-200">
-                    <table class="text-sm">
+                    <div class="overflow-x-auto w-full">
+<table class="text-sm">
                         <tr><td class="font-bold text-slate-500 pr-4">No. Dokumen</td><td class="font-black text-slate-800"><?= htmlspecialchars($sj['no_resi']) ?></td></tr>
                         <tr><td class="font-bold text-slate-500 pr-4">Tanggal</td><td class="font-bold"><?= date('d F Y', strtotime($sj['shipped_at'])) ?></td></tr>
                         <tr><td class="font-bold text-slate-500 pr-4">No. Referensi PO</td><td class="font-bold text-blue-600"><?= htmlspecialchars($sj['po_number']) ?></td></tr>
                     </table>
+</div>
                 </div>
             </div>
         </div>
 
         <!-- Info Tujuan & Ekspedisi -->
-        <div class="grid grid-cols-2 gap-12 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-8">
             <div>
                 <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-200 pb-1">Tujuan Pengiriman (Ship To):</h3>
                 <h4 class="text-lg font-black text-slate-800 uppercase">PT Veridex</h4>
@@ -92,18 +94,21 @@ if ($_SESSION['role'] === 'Vendor' && $_SESSION['vendor_id'] != $sj['vendor_id']
             </div>
             <div>
                 <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-200 pb-1">Detail Ekspedisi / Kendaraan:</h3>
-                <table class="text-sm w-full">
+                <div class="overflow-x-auto w-full">
+<table class="text-sm w-full">
                     <tr><td class="py-1 font-bold text-slate-500 w-1/3">Nama Pengemudi</td><td class="py-1 font-black text-slate-800">: <?= htmlspecialchars($sj['sj_pengemudi'] ?? '-') ?></td></tr>
                     <tr><td class="py-1 font-bold text-slate-500 w-1/3">No. Polisi (Nopol)</td><td class="py-1 font-black text-slate-800 uppercase">: <?= htmlspecialchars($sj['sj_nopol'] ?? '-') ?></td></tr>
                     <tr><td class="py-1 font-bold text-slate-500 w-1/3">Kontak Pengemudi</td><td class="py-1 font-bold text-slate-800">: <?= htmlspecialchars($sj['sj_kontak'] ?? '-') ?></td></tr>
                 </table>
+</div>
             </div>
         </div>
 
         <p class="text-sm text-slate-600 italic mb-4">Bersama surat ini, kami kirimkan barang dengan rincian sebagai berikut:</p>
 
         <!-- Items Table -->
-        <table class="w-full mb-8 border border-slate-300">
+        <div class="overflow-x-auto w-full">
+<table class="w-full mb-8 border border-slate-300">
             <thead class="bg-slate-900 text-white">
                 <tr>
                     <th class="py-3 px-4 text-center text-xs font-black uppercase tracking-widest w-16">No</th>
@@ -125,6 +130,7 @@ if ($_SESSION['role'] === 'Vendor' && $_SESSION['vendor_id'] != $sj['vendor_id']
                 <tr class="h-24"><td colspan="3"></td><td class="border-l border-slate-200"></td><td class="border-l border-slate-200"></td></tr>
             </tbody>
         </table>
+</div>
 
         <!-- Catatan Tambahan -->
         <?php if(!empty($sj['sj_catatan'])): ?>
@@ -135,7 +141,7 @@ if ($_SESSION['role'] === 'Vendor' && $_SESSION['vendor_id'] != $sj['vendor_id']
         <?php endif; ?>
 
         <!-- Signatures -->
-        <div class="grid grid-cols-3 gap-8 mt-16 text-center">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 text-center">
             <div>
                 <p class="text-xs font-bold text-slate-500 uppercase mb-16">Hormat Kami,<br>Pengirim (Vendor)</p>
                 <div class="border-b border-slate-400 pb-1 font-bold text-sm mx-8"></div>

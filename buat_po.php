@@ -44,55 +44,20 @@ $query_ready = mysqli_query($conn, "
 
 include 'header_meta.php';
 ?>
-<body class="bg-slate-50 flex h-screen overflow-hidden text-slate-800">
+<body class="bg-slate-50 flex flex-col h-screen overflow-hidden text-slate-800">
 
-    <?php include 'sidebar_procurement.php'; ?>
+    <?php
+    $page_title = "Purchase Orders";
+    $page_subtitle = "Daftar PO (Pending Approval Manager)";
+    $navbar_badge = '<div class="text-right"><span class="text-[10px] font-black text-slate-400 uppercase block">Pending PO</span><span class="text-2xl font-black text-red-600">' . mysqli_num_rows($query_po) . '</span></div>';
+    include 'navbar.php';
+?>
 
-    <main class="flex-1 flex flex-col overflow-hidden">
-        <!-- Header -->
-        <div class="p-8 pb-4">
-            <div class="flex justify-between items-center bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                <div>
-                    <h2 class="text-3xl font-black text-slate-800 uppercase tracking-tighter">Purchase Orders</h2>
-                    <p class="text-sm text-slate-400 font-bold uppercase tracking-widest mt-1">Daftar PO (Pending Approval Manager)</p>
-                </div>
-                <div class="text-right">
-                    <span class="text-[10px] font-black text-slate-400 uppercase block">Pending PO</span>
-                    <span class="text-2xl font-black text-red-600"><?= mysqli_num_rows($query_po) ?></span>
-                </div>
-            </div>
-        </div>
+    <div class="flex-1 flex overflow-hidden">
+        <?php include 'sidebar_procurement.php'; ?>
 
-        <div class="flex-1 overflow-y-auto px-8 pb-8" x-data="{ 
-            showModal: false, 
-            form: { inventory_id: 0, vendor_id: 0, rfq_id: 0, vendor_name: '', item_name: '', jumlah_pesan: 0, harga_satuan: 0 },
-            get totalHarga() { return this.form.jumlah_pesan * this.form.harga_satuan; },
-            openModal(item) {
-                this.form.inventory_id = item.inventory_id;
-                this.form.vendor_id = item.vendor_id;
-                this.form.rfq_id = item.rfq_id;
-                this.form.vendor_name = item.nama_perusahaan;
-                this.form.item_name = item.nama_barang;
-                
-                let kebutuhan = parseInt(item.jumlah_kebutuhan) || 0;
-                let quota = parseInt(item.quota_percentage) || 100;
-                this.form.jumlah_pesan = Math.round(kebutuhan * (quota / 100));
-                
-                // Harga penawaran adalah Harga Satuan
-                this.form.harga_satuan = parseFloat(item.harga_penawaran) || 0;
-                
-                this.showModal = true;
-            },
-            submitPO() {
-                let fd = new FormData();
-                fd.append('inventory_id', this.form.inventory_id);
-                fd.append('vendor_id', this.form.vendor_id);
-                fd.append('rfq_id', this.form.rfq_id);
-                fd.append('jumlah_pesan', this.form.jumlah_pesan);
-                fd.append('harga_satuan', this.form.harga_satuan);
-
-                fetch('process_buat_po.php', { method: 'POST', body: fd })
-                .then(r => r.json())
+        <main class="flex-1 overflow-y-auto p-6 md:p-8">
+            r.json())
                 .then(d => {
                     alert(d.message);
                     if (d.success) location.reload();
@@ -106,7 +71,8 @@ include 'header_meta.php';
                 <div>
                     <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-4"><i class="fa-solid fa-clipboard-list text-red-500 mr-2"></i> Siap Dibuat PO</h3>
                     <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-                        <table class="w-full text-left">
+                        <div class="overflow-x-auto w-full">
+<table class="w-full text-left">
                             <thead class="bg-red-50 text-[10px] font-black text-red-600 uppercase tracking-[0.2em]">
                                 <tr>
                                     <th class="p-6">Item & Kebutuhan</th>
@@ -140,6 +106,7 @@ include 'header_meta.php';
                                 <?php endwhile; ?>
                             </tbody>
                         </table>
+</div>
                     </div>
                 </div>
                 <?php endif; ?>
@@ -148,7 +115,8 @@ include 'header_meta.php';
 
                 <?php if(mysqli_num_rows($query_po) > 0): ?>
                     <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-                        <table class="w-full text-left">
+                        <div class="overflow-x-auto w-full">
+<table class="w-full text-left">
                             <thead class="bg-slate-900 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
                                 <tr>
                                     <th class="p-6">PO Number</th>
@@ -183,6 +151,7 @@ include 'header_meta.php';
                                 <?php endwhile; ?>
                             </tbody>
                         </table>
+</div>
                     </div>
                 <?php else: ?>
                     <div class="bg-white p-20 rounded-[3rem] text-center border-2 border-dashed border-slate-200 shadow-sm">
@@ -235,9 +204,8 @@ include 'header_meta.php';
                     </div>
                 </div>
             </div>
-            
-        </div>
-    </main>
+        </main>
+    </div>
 
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>

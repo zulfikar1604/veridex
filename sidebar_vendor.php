@@ -6,10 +6,14 @@ $_badge_po = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM p
 $_badge_delivery = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM purchase_orders WHERE vendor_id = $_vendor_id AND status = 'Confirmed by Vendor'"))['c'] ?? 0;
 $_badge_invoice = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM purchase_orders WHERE vendor_id = $_vendor_id AND status = 'Goods Received'"))['c'] ?? 0;
 ?>
-<aside class="w-[280px] bg-[#111827] text-white flex flex-col h-full shadow-2xl z-20 shrink-0">
-    <div class="p-8 border-b border-slate-800">
+<div id="sidebar-overlay" onclick="toggleSidebar()"></div>
+<aside id="main-sidebar" class="w-[280px] bg-[#111827] text-white flex flex-col h-full shadow-2xl shrink-0">
+    <div class="flex justify-between items-center p-6 md:p-6 md:p-8 border-b border-slate-800">
+        <div>
         <h1 class="text-3xl font-black text-red-500 tracking-wider">VERIDEX</h1>
         <p class="text-[10px] text-slate-400 mt-1 uppercase tracking-widest font-bold">ROLE: VENDOR</p>
+            </div>
+        <button onclick="toggleSidebar()" class="sidebar-close-btn md:hidden"><i class="fa-solid fa-xmark"></i></button>
     </div>
     
     <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">

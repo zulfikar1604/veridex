@@ -22,29 +22,26 @@ $query_invoiced = mysqli_query($conn, "
 
 include 'header_meta.php';
 ?>
-<body class="bg-slate-50 h-screen flex overflow-hidden">
-    <?php include 'sidebar_vendor.php'; ?>
-    <main class="flex-1 flex flex-col h-full overflow-hidden">
-        <div class="p-6 pb-0">
-            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex justify-between items-center">
-                <div>
-                    <h2 class="text-2xl font-black text-slate-800 tracking-tight uppercase">E-Invoicing</h2>
-                    <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Penagihan Digital</p>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center font-black shadow-md">V</div>
-                </div>
-            </div>
-        </div>
+<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
 
-        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+    <?php
+    $page_title = "Upload Invoice";
+    $page_subtitle = "Penagihan Pembayaran ke Pembeli";
+    include 'navbar.php';
+?>
+
+    <div class="flex-1 flex overflow-hidden">
+        <?php include 'sidebar_vendor.php'; ?>
+
+        <main class="flex-1 overflow-y-auto p-6 md:p-8 space-y-6">
             <!-- Bagian ini sudah tidak dipakai karena Invoice otomatis di-generate saat Inbound (Pay as Received) -->
 
             <div>
                 <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Riwayat Invoice</h3>
                 <?php if(mysqli_num_rows($query_invoiced) > 0): ?>
                 <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
-                    <table class="w-full text-sm">
+                    <div class="overflow-x-auto w-full">
+<table class="w-full text-sm">
                         <thead><tr class="bg-slate-900 text-[10px] font-black text-slate-400 uppercase tracking-widest"><th class="p-4">No PO</th><th class="p-4">Barang</th><th class="p-4">No. Invoice</th><th class="p-4 text-center">Total</th><th class="p-4 text-right">Aksi & Status</th></tr></thead>
                         <tbody class="divide-y divide-slate-50">
                             <?php while($inv = mysqli_fetch_assoc($query_invoiced)):
@@ -66,6 +63,7 @@ include 'header_meta.php';
                             <?php endwhile; ?>
                         </tbody>
                     </table>
+</div>
                 </div>
                 <?php else: ?>
                 <div class="bg-white p-12 rounded-2xl border shadow-sm text-center">
@@ -75,8 +73,8 @@ include 'header_meta.php';
                 </div>
                 <?php endif; ?>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>
 </html>

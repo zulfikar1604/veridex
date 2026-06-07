@@ -1,7 +1,11 @@
-<aside class="w-72 bg-slate-900 text-white flex flex-col shadow-xl h-screen">
-    <div class="p-6 border-b border-slate-800">
+<div id="sidebar-overlay" onclick="toggleSidebar()"></div>
+<aside id="main-sidebar" class="w-[280px] bg-slate-900 text-white flex flex-col shadow-xl h-full shrink-0">
+    <div class="flex justify-between items-center p-6 border-b border-slate-800">
+        <div>
         <h1 class="text-2xl font-black text-red-500">VERIDEX</h1>
         <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">ROLE: <?= htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8') ?></p>
+            </div>
+        <button onclick="toggleSidebar()" class="sidebar-close-btn md:hidden"><i class="fa-solid fa-xmark"></i></button>
     </div>
     
     <nav class="flex-1 p-4 space-y-2 overflow-y-auto">

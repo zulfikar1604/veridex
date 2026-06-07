@@ -12,7 +12,10 @@ include 'header_meta.php';
 
     <main class="flex-1 overflow-y-auto p-10 flex items-center justify-center">
         <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 w-full max-w-lg">
-            <h2 class="text-2xl font-black text-slate-800 mb-6 uppercase">Tambah Barang Baru</h2>
+            <div class="flex items-center gap-4 mb-6">
+                <button onclick="toggleSidebar()" class="sidebar-toggle-btn" title="Toggle Sidebar"><i class="fa-solid fa-bars text-sm"></i></button>
+                <h2 class="text-2xl font-black text-slate-800 uppercase">Tambah Barang Baru</h2>
+            </div>
             
             <form action="proses_tambah.php" method="POST" class="space-y-4">
                 <div>
