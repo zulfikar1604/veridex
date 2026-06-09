@@ -317,8 +317,8 @@ elseif ($role === 'Finance') {
 
 <!-- Notification Component (Alpine.js) -->
 <div x-data="{ openNotif: false }" class="relative">
-    <button @click="openNotif = !openNotif" class="relative w-11 h-11 flex items-center justify-center bg-white rounded-xl border border-slate-100 text-slate-500 hover:text-slate-800 hover:shadow-md transition">
-        <i class="fa-regular fa-bell text-lg"></i>
+    <button @click="openNotif = !openNotif" class="relative w-9 h-9 flex items-center justify-center bg-white rounded-xl border border-slate-100 text-slate-500 hover:text-slate-800 hover:shadow-md transition">
+        <i class="fa-regular fa-bell text-[15px]"></i>
         <?php if($total_notifs > 0): ?>
             <span class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-[9px] font-black rounded-full flex items-center justify-center shadow-sm"><?= $total_notifs ?></span>
         <?php endif; ?>

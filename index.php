@@ -1,6 +1,5 @@
 <?php
 session_start();
-// Jika sudah login, berikan shortcut ke dashboard yang sesuai
 $dashboard_link = "login.php";
 if (isset($_SESSION['role'])) {
     if ($_SESSION['role'] === 'Manager Procurement') $dashboard_link = "dashboard_manager.php";
@@ -11,183 +10,444 @@ if (isset($_SESSION['role'])) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Veridex adalah platform manajemen procurement terintegrasi untuk optimasi ROP (Reorder Point), Safety Stock, evaluasi SPH, dan otomatisasi 3-Way Matching.">
-    <title>Veridex | Intelligent Procurement & Vendor Performance System</title>
+    <meta name="description" content="Veridex adalah platform manajemen procurement terintegrasi untuk optimasi ROP, Safety Stock, evaluasi SPH, dan otomatisasi 3-Way Matching.">
+    <title>Veridex | Enterprise Procurement Intelligence</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: {
+                            900: '#050505',
+                            800: '#0a0a0a',
+                            700: '#141414',
+                            600: '#1f1f1f',
+                            500: '#2d2d2d',
+                        },
+                        brand: {
+                            500: '#ff3366',
+                            600: '#e62e5c',
+                        }
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'fade-in-up': 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            scroll-behavior: smooth;
+            background-color: #050505;
+            color: #f3f4f6;
+            overflow-x: hidden;
         }
-        
-        .glow-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.15;
-            pointer-events: none;
-            z-index: 0;
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f1f1f;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #333;
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .glass-header {
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(12px);
+            background: rgba(5, 5, 5, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .gradient-text {
-            background: linear-gradient(135deg, #ef4444 0%, #fca5a5 100%);
+        .glass-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 51, 102, 0.3);
+            box-shadow: 0 12px 40px 0 rgba(255, 51, 102, 0.1);
+        }
+
+        .text-gradient {
+            background: linear-gradient(to right, #ffffff, #a1a1aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .text-gradient-brand {
+            background: linear-gradient(to right, #ff3366, #ff8da1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .gradient-bg-dark {
-            background: linear-gradient(180deg, #090f1a 0%, #0f172a 100%);
+        .bg-grid-pattern {
+            background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
         }
 
-        .feature-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Reveal on scroll */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .feature-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 40px rgba(239, 68, 68, 0.08);
-            border-color: rgba(239, 68, 68, 0.2);
-        }
-
-        .step-node {
-            transition: all 0.3s ease;
-        }
-        .step-node:hover {
-            background: rgba(255, 255, 255, 0.04);
-            border-color: rgba(239, 68, 68, 0.3);
-        }
-
-        /* Simulator Card Glass style */
-        .simulator-glass {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(226, 232, 240, 0.8);
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased overflow-x-hidden">
+<body class="antialiased selection:bg-brand-500 selection:text-white">
 
-    <!-- HEADER / NAVIGATION -->
-    <header class="fixed top-0 inset-x-0 z-50 glass-header text-white">
-        <nav class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center" aria-label="Main Navigation">
+    <!-- Glowing Background Effects -->
+    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand-600/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob"></div>
+        <div class="absolute top-[20%] right-[-10%] w-[35%] h-[35%] bg-indigo-600/20 rounded-full mix-blend-screen filter blur-[120px] animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-[-20%] left-[20%] w-[50%] h-[50%] bg-purple-600/15 rounded-full mix-blend-screen filter blur-[150px] animate-blob animation-delay-4000"></div>
+        <div class="absolute inset-0 bg-grid-pattern z-0 opacity-50"></div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="fixed top-0 inset-x-0 z-50 glass-header transition-all duration-300">
+        <nav class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
             <!-- Brand Logo -->
-            <a href="#" class="flex items-center gap-2 group">
-                <span class="text-2xl font-black text-red-500 tracking-tighter">VERIDEX</span>
+            <a href="#" class="flex items-center gap-3 group relative">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center shadow-lg shadow-brand-500/30 group-hover:shadow-brand-500/50 transition-all duration-300">
+                    <i class="fa-solid fa-layer-group text-white text-sm"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-white">VERIDEX</span>
             </a>
 
-            <!-- Menu Navigation -->
-            <div class="hidden md:flex items-center gap-8 text-sm font-bold text-slate-350">
-                <a href="#about" class="hover:text-red-500 transition-colors">Tentang Kami</a>
-                <a href="#p2p" class="hover:text-red-500 transition-colors">Edukasi P2P</a>
-                <a href="#simulator" class="hover:text-red-500 transition-colors">Simulator ROP</a>
-                <a href="#features" class="hover:text-red-500 transition-colors">Fitur Utama</a>
+            <!-- Navigation -->
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#about" class="text-sm font-medium text-gray-400 hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-brand-500 after:transition-all hover:after:w-full">Tentang Kami</a>
+                <a href="#features" class="text-sm font-medium text-gray-400 hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-brand-500 after:transition-all hover:after:w-full">Fitur</a>
+                <a href="#simulator" class="text-sm font-medium text-gray-400 hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-brand-500 after:transition-all hover:after:w-full">Simulator ROP</a>
+                <a href="#p2p" class="text-sm font-medium text-gray-400 hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-brand-500 after:transition-all hover:after:w-full">Edukasi P2P</a>
             </div>
 
             <!-- Login CTA -->
-            <a href="<?= $dashboard_link ?>" 
-               id="nav-login-btn"
-               class="bg-gradient-to-r from-red-600 to-red-700 text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider hover:from-red-500 hover:to-red-600 shadow-md shadow-red-500/20 hover:shadow-lg hover:shadow-red-500/30 transition-all active:scale-[0.98]">
-                Masuk Sistem <i class="fa-solid fa-arrow-right-to-bracket ml-2"></i>
+            <a href="<?= $dashboard_link ?>" class="relative group overflow-hidden rounded-full p-[1px]">
+                <span class="absolute inset-0 bg-gradient-to-r from-brand-500 to-purple-600 rounded-full opacity-70 group-hover:opacity-100 transition-opacity duration-300"></span>
+                <div class="relative flex items-center gap-2 bg-dark-900 px-6 py-2.5 rounded-full transition-all duration-300 group-hover:bg-opacity-0">
+                    <span class="text-sm font-semibold text-white">Akses Platform</span>
+                    <i class="fa-solid fa-arrow-right text-white text-xs transition-transform group-hover:translate-x-1"></i>
+                </div>
             </a>
         </nav>
     </header>
 
-    <main>
+    <main class="relative z-10">
         
         <!-- HERO SECTION -->
-        <section class="relative min-h-[90vh] flex items-center pt-24 pb-16 gradient-bg-dark text-white overflow-hidden">
-            <!-- Glow Orbs -->
-            <div class="glow-orb w-[400px] h-[400px] bg-red-600 top-1/4 left-[-100px] opacity-15"></div>
-            <div class="glow-orb w-[500px] h-[500px] bg-blue-600 bottom-1/4 right-[-100px] opacity-10"></div>
-            
-            <!-- Matrix dots bg -->
-            <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:30px_30px] opacity-40 pointer-events-none"></div>
-
-            <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10 w-full">
-                <!-- Left: Headline & Description -->
-                <div class="lg:col-span-7 space-y-6">
-                    <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 border border-red-500/20 text-red-400">
-                        <i class="fa-solid fa-shield-halved mr-2"></i> Enterprise Procurement Platform
-                    </span>
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight uppercase leading-none">
-                        Where Procurement<br>Meets <span class="gradient-text">Confidence.</span>
+        <section class="min-h-screen flex items-center pt-24 pb-20 relative">
+            <div class="max-w-7xl mx-auto px-6 w-full grid lg:grid-cols-2 gap-16 items-center">
+                
+                <div class="space-y-8 animate-fade-in-up">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-white/10 text-xs font-medium text-gray-300">
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-500 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
+                        </span>
+                        Sistem Pengadaan Terintegrasi Next-Gen
+                    </div>
+                    
+                    <h1 class="text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1]">
+                        Ubah Pengadaan Menjadi <br>
+                        <span class="text-gradient-brand">Keunggulan Bisnis.</span>
                     </h1>
-                    <p class="text-sm sm:text-base text-slate-400 font-medium leading-relaxed max-w-xl">
-                        Veridex membantu perusahaan mengelola pengadaan secara lebih terukur melalui visibilitas inventori, evaluasi vendor berbasis data, dan kontrol pembayaran yang terverifikasi dalam satu platform terintegrasi.
+                    
+                    <p class="text-lg text-gray-400 max-w-xl leading-relaxed font-light">
+                        Veridex menyatukan manajemen persediaan, evaluasi vendor AI, dan otomasi 3-Way Matching dalam satu ekosistem digital yang tak tertandingi.
                     </p>
-                    <div class="flex gap-4 pt-4 flex-wrap">
-                        <a href="#simulator" class="px-6 py-4 bg-white text-slate-900 rounded-2xl text-xs font-black uppercase tracking-wider hover:bg-slate-100 transition shadow-lg shadow-white/5 active:scale-[0.98]">
-                            Simulasi ROP <i class="fa-solid fa-calculator ml-2 text-slate-500"></i>
+                    
+                    <div class="flex flex-wrap gap-4 pt-4">
+                        <a href="#simulator" class="flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]">
+                            <i class="fa-solid fa-calculator"></i> Simulasi ROP
                         </a>
-                        <a href="#p2p" class="px-6 py-4 bg-slate-800 text-slate-300 rounded-2xl text-xs font-black uppercase tracking-wider hover:text-white hover:bg-slate-700 transition border border-slate-700 active:scale-[0.98]">
-                            Edukasi Procurement <i class="fa-solid fa-circle-info ml-2"></i>
+                        <a href="#features" class="flex items-center gap-3 glass px-8 py-4 rounded-full font-semibold text-white hover:bg-white/10 transition-all duration-300">
+                            Pelajari Fitur <i class="fa-solid fa-chevron-down text-xs"></i>
                         </a>
+                    </div>
+
+                    <div class="pt-8 flex items-center gap-6 border-t border-white/5">
+                        <div class="flex -space-x-3">
+                            <img class="w-10 h-10 rounded-full border-2 border-dark-900 object-cover" src="https://i.pravatar.cc/100?img=3" alt="User">
+                            <img class="w-10 h-10 rounded-full border-2 border-dark-900 object-cover" src="https://i.pravatar.cc/100?img=4" alt="User">
+                            <img class="w-10 h-10 rounded-full border-2 border-dark-900 object-cover" src="https://i.pravatar.cc/100?img=5" alt="User">
+                            <div class="w-10 h-10 rounded-full border-2 border-dark-900 bg-dark-700 flex items-center justify-center text-xs font-bold text-gray-300">+50</div>
+                        </div>
+                        <p class="text-sm text-gray-400">Dipercaya oleh <strong class="text-white">50+</strong> Enterprise di Indonesia</p>
                     </div>
                 </div>
 
-                <!-- Right: Visual Platform Mockup -->
-                <div class="lg:col-span-5 relative">
-                    <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-[2rem] p-6 border border-slate-700 shadow-2xl relative overflow-hidden group hover:scale-[1.02] transition-transform duration-500">
-                        <!-- Card Header Mock -->
-                        <div class="flex justify-between items-center mb-6">
-                            <div class="flex gap-1.5">
-                                <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-                                <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
-                                <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+                <!-- Abstract UI Representation -->
+                <div class="relative lg:h-[600px] flex items-center justify-center animate-fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-brand-500/20 to-purple-600/20 rounded-[40px] blur-3xl"></div>
+                    
+                    <div class="glass-card w-full h-[500px] rounded-[30px] p-6 relative overflow-hidden flex flex-col gap-6">
+                        <!-- Top Bar Mock -->
+                        <div class="flex justify-between items-center pb-4 border-b border-white/5">
+                            <div class="flex gap-2">
+                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
                             </div>
-                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Veridex Console</span>
+                            <div class="glass px-4 py-1.5 rounded-full text-[10px] font-semibold text-gray-400 tracking-widest uppercase">Veridex Console</div>
                         </div>
 
-                        <!-- Card UI Mock Elements -->
-                        <div class="space-y-4">
-                            <!-- Alert ROP Status -->
-                            <div class="bg-red-500/10 border border-red-500/20 p-4 rounded-2xl flex items-center justify-between">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 bg-red-500/20 text-red-400 rounded-xl flex items-center justify-center"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <!-- Content Mock -->
+                        <div class="flex-1 space-y-4">
+                            <!-- Alert Card -->
+                            <div class="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 flex items-center justify-between transform transition hover:scale-[1.02]">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center text-red-400">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                    </div>
                                     <div>
-                                        <p class="text-[10px] font-black text-red-400 uppercase tracking-wider">Stok Kritis Terdeteksi</p>
-                                        <p class="text-xs font-bold text-white">SKU-209: Kawat Tembaga (< ROP)</p>
+                                        <h4 class="text-sm font-semibold text-white">Stok Kritis: SKU-9281</h4>
+                                        <p class="text-xs text-red-400/80">Stok di bawah Reorder Point</p>
                                     </div>
                                 </div>
-                                <span class="px-2 py-0.5 rounded text-[8px] font-black bg-red-650 text-white uppercase animate-pulse">Kritis</span>
+                                <button class="px-3 py-1.5 bg-red-500 text-white text-[10px] font-bold rounded-lg shadow-[0_0_15px_rgba(239,68,68,0.5)]">Buat RFQ</button>
                             </div>
 
-                            <!-- Bid recommendation -->
-                            <div class="bg-slate-800/80 border border-slate-700 p-4 rounded-2xl space-y-2.5">
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Rekomendasi Penawaran SPH (AI)</p>
+                            <!-- Stat Cards Grid -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="glass-card rounded-2xl p-5 border border-white/5">
+                                    <p class="text-xs text-gray-400 mb-2">Total PO Aktif</p>
+                                    <div class="flex items-end justify-between">
+                                        <h3 class="text-3xl font-bold text-white">124</h3>
+                                        <span class="text-xs text-green-400 flex items-center gap-1"><i class="fa-solid fa-arrow-up"></i> 12%</span>
+                                    </div>
+                                </div>
+                                <div class="glass-card rounded-2xl p-5 border border-white/5">
+                                    <p class="text-xs text-gray-400 mb-2">Efisiensi Biaya</p>
+                                    <div class="flex items-end justify-between">
+                                        <h3 class="text-3xl font-bold text-white">18.5%</h3>
+                                        <span class="text-xs text-green-400 flex items-center gap-1"><i class="fa-solid fa-arrow-up"></i> 4%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Vendor Score Mock -->
+                            <div class="glass-card rounded-2xl p-5 border border-white/5 space-y-3">
                                 <div class="flex justify-between items-center">
-                                    <span class="text-xs font-bold text-white">1. PT Sinar Logam Utama</span>
-                                    <span class="text-xs font-black text-emerald-400">Score: 94.8%</span>
+                                    <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Top Vendor Matching</h4>
+                                    <span class="text-xs text-brand-500 font-medium">AI Evaluated</span>
                                 </div>
-                                <div class="w-full bg-slate-700 h-1.5 rounded-full overflow-hidden">
-                                    <div class="bg-emerald-500 h-full rounded-full" style="width: 95%"></div>
-                                </div>
-                            </div>
-
-                            <!-- 3-way matching status -->
-                            <div class="bg-slate-800/80 border border-slate-700 p-4 rounded-2xl flex justify-between items-center">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center"><i class="fa-solid fa-file-shield"></i></div>
+                                <div class="space-y-3">
                                     <div>
-                                        <p class="text-xs font-bold text-white">AP Matching Status</p>
-                                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">PO #00912 vs DO vs Invoice</p>
+                                        <div class="flex justify-between text-sm mb-1">
+                                            <span class="text-gray-200">PT Sinar Logam</span>
+                                            <span class="text-green-400 font-semibold">98%</span>
+                                        </div>
+                                        <div class="h-1.5 w-full bg-dark-700 rounded-full overflow-hidden">
+                                            <div class="h-full bg-gradient-to-r from-green-500 to-emerald-400 rounded-full w-[98%]"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between text-sm mb-1">
+                                            <span class="text-gray-200">CV Baja Utama</span>
+                                            <span class="text-yellow-400 font-semibold">82%</span>
+                                        </div>
+                                        <div class="h-1.5 w-full bg-dark-700 rounded-full overflow-hidden">
+                                            <div class="h-full bg-gradient-to-r from-yellow-500 to-amber-400 rounded-full w-[82%]"></div>
+                                        </div>
                                     </div>
                                 </div>
-                                <span class="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-[8px] font-black text-emerald-400 uppercase">Matched</span>
                             </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Floating Elements -->
+                    <div class="absolute -right-6 top-20 glass-card p-4 rounded-xl border border-white/10 shadow-2xl flex items-center gap-3 animate-blob">
+                        <div class="w-8 h-8 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-400">3-Way Matching</p>
+                            <p class="text-sm font-bold text-white">Verified</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- VALUE PROPOSITION / ABOUT -->
+        <section id="about" class="py-24 relative z-10 border-t border-white/5">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto mb-20 reveal">
+                    <h2 class="text-brand-500 font-semibold tracking-widest text-sm uppercase mb-4">Filosofi Kami</h2>
+                    <h3 class="text-3xl md:text-5xl font-bold mb-6">Membangun Standar Baru <br><span class="text-gray-500">dalam Pengadaan Digital.</span></h3>
+                    <p class="text-gray-400 text-lg leading-relaxed">Kami percaya bahwa pengadaan yang luar biasa bukan hanya soal harga terendah, melainkan tentang transparansi, akurasi data, dan keandalan sistem operasi.</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Pillar 1 -->
+                    <div class="glass-card p-10 rounded-[32px] reveal group">
+                        <div class="w-16 h-16 rounded-2xl bg-dark-700 border border-white/10 flex items-center justify-center mb-8 group-hover:bg-brand-500/20 group-hover:text-brand-500 transition-colors">
+                            <i class="fa-solid fa-shield-check text-2xl text-gray-300 group-hover:text-brand-500 transition-colors"></i>
+                        </div>
+                        <h4 class="text-2xl font-bold text-white mb-4">Verified Trust</h4>
+                        <p class="text-gray-400 leading-relaxed">Kurasi vendor berlapis memastikan Anda hanya bermitra dengan entitas tervalidasi yang memenuhi standar kepatuhan hukum dan kapabilitas operasional.</p>
+                    </div>
+
+                    <!-- Pillar 2 -->
+                    <div class="glass-card p-10 rounded-[32px] reveal group" style="transition-delay: 100ms;">
+                        <div class="w-16 h-16 rounded-2xl bg-dark-700 border border-white/10 flex items-center justify-center mb-8 group-hover:bg-purple-500/20 transition-colors">
+                            <i class="fa-solid fa-chart-pie text-2xl text-gray-300 group-hover:text-purple-400 transition-colors"></i>
+                        </div>
+                        <h4 class="text-2xl font-bold text-white mb-4">Data-Driven Rank</h4>
+                        <p class="text-gray-400 leading-relaxed">Algoritma mengevaluasi performa vendor secara real-time berdasarkan akurasi waktu pengiriman, kualitas, dan daya saing harga untuk setiap kuotasi.</p>
+                    </div>
+
+                    <!-- Pillar 3 -->
+                    <div class="glass-card p-10 rounded-[32px] reveal group" style="transition-delay: 200ms;">
+                        <div class="w-16 h-16 rounded-2xl bg-dark-700 border border-white/10 flex items-center justify-center mb-8 group-hover:bg-blue-500/20 transition-colors">
+                            <i class="fa-solid fa-lock text-2xl text-gray-300 group-hover:text-blue-400 transition-colors"></i>
+                        </div>
+                        <h4 class="text-2xl font-bold text-white mb-4">Flawless Matching</h4>
+                        <p class="text-gray-400 leading-relaxed">Sistem 3-Way Matching mengeliminasi penipuan dan human-error dengan memvalidasi kesesuaian antara PO, Dokumen Penerimaan, dan Invoice.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURES SECTION -->
+        <section id="features" class="py-24 relative z-10 border-t border-white/5 bg-dark-800/50">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20 reveal">
+                    <div class="max-w-2xl">
+                        <h2 class="text-brand-500 font-semibold tracking-widest text-sm uppercase mb-4">Fitur Platform</h2>
+                        <h3 class="text-3xl md:text-5xl font-bold">Orkestrasi Penuh <br><span class="text-gray-500">Rantai Pasok Anda.</span></h3>
+                    </div>
+                    <p class="text-gray-400 text-lg max-w-md">Solusi menyeluruh dari manajemen gudang hingga kontrol finansial, dirancang untuk Enterprise modern.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Feat 1 -->
+                    <div class="glass-card rounded-[32px] p-8 md:p-12 reveal flex flex-col md:flex-row gap-8 items-center group">
+                        <div class="flex-1 space-y-4">
+                            <div class="w-12 h-12 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center text-xl mb-6">
+                                <i class="fa-solid fa-boxes-stacked"></i>
+                            </div>
+                            <h4 class="text-2xl font-bold text-white">Intelligent Inventory</h4>
+                            <p class="text-gray-400">Pemantauan stok real-time, kalkulasi Reorder Point (ROP) otomatis, dan deteksi dini barang kritis untuk mencegah operasional terhenti.</p>
+                        </div>
+                        <div class="w-full md:w-48 h-48 rounded-2xl bg-dark-700 border border-white/5 relative overflow-hidden group-hover:border-brand-500/30 transition-colors flex items-center justify-center">
+                            <!-- Minimalist graph visualization -->
+                            <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-brand-500/20 to-transparent"></div>
+                            <svg class="w-full h-24 stroke-brand-500 fill-none" viewBox="0 0 100 50" preserveAspectRatio="none">
+                                <path d="M0,40 Q10,30 20,40 T40,20 T60,35 T80,10 T100,25" stroke-width="2" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Feat 2 -->
+                    <div class="glass-card rounded-[32px] p-8 md:p-12 reveal flex flex-col md:flex-row gap-8 items-center group" style="transition-delay: 100ms;">
+                        <div class="flex-1 space-y-4">
+                            <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl mb-6">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                            <h4 class="text-2xl font-bold text-white">AI Bidding Evaluation</h4>
+                            <p class="text-gray-400">Menganalisis Surat Penawaran Harga (SPH) dari puluhan vendor dalam hitungan detik dan merekomendasikan opsi paling optimal secara objektif.</p>
+                        </div>
+                        <div class="w-full md:w-48 h-48 rounded-2xl bg-dark-700 border border-white/5 flex flex-col gap-2 p-4 justify-center group-hover:border-purple-500/30 transition-colors">
+                            <div class="h-8 w-full bg-dark-600 rounded-lg overflow-hidden flex">
+                                <div class="w-[85%] h-full bg-purple-500/80"></div>
+                            </div>
+                            <div class="h-8 w-full bg-dark-600 rounded-lg overflow-hidden flex">
+                                <div class="w-[60%] h-full bg-purple-500/50"></div>
+                            </div>
+                            <div class="h-8 w-full bg-dark-600 rounded-lg overflow-hidden flex">
+                                <div class="w-[45%] h-full bg-purple-500/30"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feat 3 -->
+                    <div class="glass-card rounded-[32px] p-8 md:p-12 reveal flex flex-col md:flex-row gap-8 items-center group">
+                        <div class="flex-1 space-y-4">
+                            <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl mb-6">
+                                <i class="fa-solid fa-barcode"></i>
+                            </div>
+                            <h4 class="text-2xl font-bold text-white">Warehouse Scanning</h4>
+                            <p class="text-gray-400">Integrasi pemindai barcode untuk penerimaan barang (Inbound) yang cepat dan bebas kesalahan pencatatan manual.</p>
+                        </div>
+                        <div class="w-full md:w-48 h-48 rounded-2xl bg-dark-700 border border-white/5 flex items-center justify-center group-hover:border-blue-500/30 transition-colors relative overflow-hidden">
+                            <i class="fa-solid fa-qrcode text-6xl text-dark-500"></i>
+                            <div class="absolute top-0 left-0 w-full h-1 bg-blue-400 shadow-[0_0_20px_rgba(96,165,250,1)] animate-[pulse_2s_ease-in-out_infinite]"></div>
+                        </div>
+                    </div>
+
+                    <!-- Feat 4 -->
+                    <div class="glass-card rounded-[32px] p-8 md:p-12 reveal flex flex-col md:flex-row gap-8 items-center group" style="transition-delay: 100ms;">
+                        <div class="flex-1 space-y-4">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-6">
+                                <i class="fa-solid fa-file-invoice-dollar"></i>
+                            </div>
+                            <h4 class="text-2xl font-bold text-white">Automated Finance AP</h4>
+                            <p class="text-gray-400">Mencegah kebocoran anggaran dengan 3-Way Matching otomatis antara Purchase Order, Delivery Order, dan Invoice sebelum pembayaran.</p>
+                        </div>
+                        <div class="w-full md:w-48 h-48 rounded-2xl bg-dark-700 border border-white/5 flex items-center justify-center gap-3 p-4 group-hover:border-emerald-500/30 transition-colors">
+                            <div class="w-10 h-14 bg-dark-600 rounded flex flex-col p-1 gap-1"><div class="w-full h-2 bg-emerald-500/20 rounded"></div><div class="w-1/2 h-2 bg-emerald-500/20 rounded"></div></div>
+                            <i class="fa-solid fa-link text-emerald-500/50"></i>
+                            <div class="w-10 h-14 bg-dark-600 rounded flex flex-col p-1 gap-1"><div class="w-full h-2 bg-emerald-500/40 rounded"></div><div class="w-1/2 h-2 bg-emerald-500/40 rounded"></div></div>
+                            <i class="fa-solid fa-link text-emerald-500/50"></i>
+                            <div class="w-10 h-14 bg-dark-600 rounded flex flex-col p-1 gap-1"><div class="w-full h-2 bg-emerald-500/80 rounded"></div><div class="w-1/2 h-2 bg-emerald-500/80 rounded"></div></div>
                         </div>
                     </div>
                 </div>
@@ -195,277 +455,183 @@ if (isset($_SESSION['role'])) {
         </section>
 
 
-        <!-- COMPANY PROFILE SECTION -->
-        <section id="about" class="py-20 max-w-7xl mx-auto px-6 space-y-12">
-            <div class="text-center max-w-2xl mx-auto space-y-3">
-                <span class="text-red-500 text-xs font-black uppercase tracking-widest">Company Profile</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 uppercase">Membangun Standar Baru dalam Pengadaan Digital</h2>
-                <p class="text-slate-500 text-sm font-medium leading-relaxed">
-                    Kami percaya bahwa pengadaan yang baik bukan hanya tentang mendapatkan harga terbaik, tetapi juga tentang menciptakan proses yang transparan, terukur, dan dapat dipertanggungjawabkan di setiap tahap pengambilan keputusan.
-                </p>
-            </div>
-
-            <!-- Core Pillars -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Pillar 1 -->
-                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm space-y-4 feature-card">
-                    <div class="w-12 h-12 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-clipboard-check"></i></div>
-                    <h3 class="text-lg font-black text-slate-800 uppercase tracking-tight">Verified (Kepercayaan)</h3>
-                    <p class="text-xs text-slate-500 font-medium leading-relaxed">
-                        Setiap profil rekanan vendor melalui proses kurasi ketat untuk menjamin kepatuhan (compliance), kelayakan operasional, serta legalitas perusahaan sebelum bermitra.
-                    </p>
-                </div>
-                <!-- Pillar 2 -->
-                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm space-y-4 feature-card">
-                    <div class="w-12 h-12 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-ranking-star"></i></div>
-                    <h3 class="text-lg font-black text-slate-800 uppercase tracking-tight">Ranked (Kinerja)</h3>
-                    <p class="text-xs text-slate-500 font-medium leading-relaxed">
-                        Sistem memberikan evaluasi performa vendor secara real-time berdasarkan akurasi waktu pengiriman barang, kualitas item inbound, serta daya saing harga penawaran.
-                    </p>
-                </div>
-                <!-- Pillar 3 -->
-                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm space-y-4 feature-card">
-                    <div class="w-12 h-12 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-file-shield"></i></div>
-                    <h3 class="text-lg font-black text-slate-800 uppercase tracking-tight">Trusted (Keamanan)</h3>
-                    <p class="text-xs text-slate-500 font-medium leading-relaxed">
-                        Proses validasi tiga arah (3-Way Matching) memastikan pelepasan dana tagihan finansial hanya terjadi pada item yang sesuai antara pesanan pembelian, tanda terima gudang, dan invoice penagihan.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- INTERACTIVE EDUCATION: P2P CYCLE ROADMAP -->
-        <section id="p2p" class="py-20 gradient-bg-dark text-white">
-            <div class="max-w-7xl mx-auto px-6 space-y-12">
-                <div class="text-center max-w-2xl mx-auto space-y-3">
-                    <span class="text-red-500 text-xs font-black uppercase tracking-widest">Edukasi Rantai Pasok</span>
-                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight uppercase">Siklus Procure-to-Pay (P2P)</h2>
-                    <p class="text-slate-400 text-xs sm:text-sm font-medium leading-relaxed">
-                        Pahami bagaimana proses pengadaan berjalan secara otomatis dan akuntabel di dalam ekosistem Veridex dari awal perencanaan stok hingga pelepasan pembayaran.
-                    </p>
-                </div>
-
-                <!-- Step-by-Step roadmap -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- Step 1 -->
-                    <div class="bg-white/5 border border-white/10 p-6 rounded-3xl space-y-4 step-node">
-                        <div class="flex justify-between items-start">
-                            <span class="text-3xl font-black text-slate-700/80">01</span>
-                            <span class="px-2.5 py-1 bg-red-500/10 text-red-400 text-[8px] font-black uppercase tracking-widest rounded-lg border border-red-500/20">Planning</span>
-                        </div>
-                        <h4 class="text-sm font-black uppercase tracking-wider">Perencanaan & ROP</h4>
-                        <p class="text-[11px] text-slate-450 font-medium leading-relaxed">
-                            Sistem secara real-time memonitor tingkat persediaan barang. Saat stok berada di bawah batas **Reorder Point (ROP)**, status item berubah menjadi Kritis untuk mencegah kehabisan stok (*out of stock*).
-                        </p>
-                    </div>
-                    <!-- Step 2 -->
-                    <div class="bg-white/5 border border-white/10 p-6 rounded-3xl space-y-4 step-node">
-                        <div class="flex justify-between items-start">
-                            <span class="text-3xl font-black text-slate-700/80">02</span>
-                            <span class="px-2.5 py-1 bg-amber-500/10 text-amber-400 text-[8px] font-black uppercase tracking-widest rounded-lg border border-amber-500/20">Quotation</span>
-                        </div>
-                        <h4 class="text-sm font-black uppercase tracking-wider">Penawaran RFQ & SPH</h4>
-                        <p class="text-[11px] text-slate-450 font-medium leading-relaxed">
-                            Staf Procurement merilis **Request for Quotation (RFQ)**. Rekanan vendor menanggapi dengan mengunggah dokumen **Surat Penawaran Harga (SPH)** berisi harga bersaing dan kapasitas kirim.
-                        </p>
-                    </div>
-                    <!-- Step 3 -->
-                    <div class="bg-white/5 border border-white/10 p-6 rounded-3xl space-y-4 step-node">
-                        <div class="flex justify-between items-start">
-                            <span class="text-3xl font-black text-slate-700/80">03</span>
-                            <span class="px-2.5 py-1 bg-indigo-500/10 text-indigo-400 text-[8px] font-black uppercase tracking-widest rounded-lg border border-indigo-500/20">Approval</span>
-                        </div>
-                        <h4 class="text-sm font-black uppercase tracking-wider">Persetujuan & Terbit PO</h4>
-                        <p class="text-[11px] text-slate-450 font-medium leading-relaxed">
-                            Manager Procurement mengevaluasi SPH dengan panduan skor AI, melakukan persetujuan (approval) secara digital, dan menerbitkan dokumen **Purchase Order (PO)** sebagai janji pembelian resmi.
-                        </p>
-                    </div>
-                    <!-- Step 4 -->
-                    <div class="bg-white/5 border border-white/10 p-6 rounded-3xl space-y-4 step-node">
-                        <div class="flex justify-between items-start">
-                            <span class="text-3xl font-black text-slate-700/80">04</span>
-                            <span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 text-[8px] font-black uppercase tracking-widest rounded-lg border border-emerald-500/20">Matching</span>
-                        </div>
-                        <h4 class="text-sm font-black uppercase tracking-wider">Inbound & 3-Way Matching</h4>
-                        <p class="text-[11px] text-slate-450 font-medium leading-relaxed">
-                            Gudang memverifikasi kiriman barang masuk (*Inbound*). Sistem Finance secara otomatis mencocokkan tiga dokumen utama: **PO asli**, **Surat Jalan Gudang**, dan **Invoice Penagihan** sebelum pembayaran dilepas.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Safety Stock / Safety Point Explanation -->
-                <div class="bg-white/5 border border-white/10 p-6 md:p-8 rounded-[2rem] grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-                    <div class="md:col-span-2 space-y-3">
-                        <h4 class="text-lg font-black text-red-400 uppercase tracking-tight"><i class="fa-solid fa-triangle-exclamation mr-2"></i> Mengapa Safety Stock Sangat Krusial?</h4>
-                        <p class="text-xs text-slate-450 leading-relaxed font-medium">
-                            **Safety Stock (Stok Pengaman)** adalah persediaan ekstra yang disimpan guna mengantisipasi fluktuasi permintaan yang mendadak atau keterlambatan pengiriman oleh vendor (*Lead Time Delay*). Tanpa stok pengaman, perusahaan berisiko mengalami kerugian operasional akibat henti produksi.
-                        </p>
-                        <p class="text-xs text-slate-450 leading-relaxed font-medium">
-                            **Reorder Point (ROP)** adalah batas titik di mana pemesanan ulang harus segera dilakukan. ROP mengintegrasikan tingkat konsumsi harian dan waktu tunggu kirim, ditambah stok pengaman agar barang baru tiba sebelum stok pengaman tersentuh.
-                        </p>
-                    </div>
-                    <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-3 text-center">
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Rumus Standar ROP</p>
-                        <div class="text-lg font-black bg-slate-800 p-4 rounded-xl border border-slate-700 font-mono tracking-wide text-white">
-                            ROP = (d &times; L) + SS
-                        </div>
-                        <div class="text-[10px] text-slate-500 leading-tight">
-                            <span class="text-slate-400 font-bold">d</span>: Permintaan Harian • <span class="text-slate-400 font-bold">L</span>: Lead Time (Hari) • <span class="text-slate-400 font-bold">SS</span>: Safety Stock
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- INTERACTIVE CALCULATOR SECTION -->
-        <section id="simulator" class="py-20 bg-slate-100 relative">
-            <div class="max-w-4xl mx-auto px-6 space-y-10">
-                <div class="text-center space-y-3">
-                    <span class="text-red-500 text-xs font-black uppercase tracking-widest">ROP Simulator</span>
-                    <h2 class="text-3xl font-extrabold tracking-tight text-slate-900 uppercase">Simulasi Reorder Point Interaktif</h2>
-                    <p class="text-slate-500 text-xs sm:text-sm font-medium leading-relaxed max-w-xl mx-auto">
-                        Cobalah masukkan data operasional Anda di bawah ini untuk melihat bagaimana sistem otomatisasi Veridex merekomendasikan titik pemesanan ulang secara cerdas.
-                    </p>
-                </div>
-
-                <!-- Calculator Card -->
-                <div class="simulator-glass p-6 md:p-10 rounded-[2.5rem] shadow-xl space-y-8">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        
-                        <!-- Input 1 -->
-                        <div class="space-y-2">
-                            <label for="calc-demand" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest">Permintaan Harian (Unit/Hari)</label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 font-black"><i class="fa-solid fa-boxes-stacked"></i></span>
-                                <input type="number" 
-                                       id="calc-demand" 
-                                       value="10" 
-                                       oninput="calculateROP()"
-                                       class="w-full border border-slate-200 bg-white/70 pl-10 pr-4 py-3 rounded-xl font-bold text-slate-700 focus:outline-none focus:border-red-500 transition">
+        <!-- SIMULATOR SECTION -->
+        <section id="simulator" class="py-24 relative z-10 border-t border-white/5">
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="glass-card rounded-[40px] p-8 md:p-16 relative overflow-hidden reveal">
+                    <!-- Decorative glowing sphere -->
+                    <div class="absolute -right-32 -top-32 w-96 h-96 bg-brand-500/20 rounded-full blur-[100px]"></div>
+                    
+                    <div class="grid lg:grid-cols-2 gap-16 relative z-10">
+                        <div class="space-y-6">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-xs font-semibold text-gray-300">
+                                <i class="fa-solid fa-calculator text-brand-500"></i> Interactive Tool
                             </div>
-                        </div>
-
-                        <!-- Input 2 -->
-                        <div class="space-y-2">
-                            <label for="calc-leadtime" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest">Lead Time Vendor (Hari)</label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 font-black"><i class="fa-regular fa-clock"></i></span>
-                                <input type="number" 
-                                       id="calc-leadtime" 
-                                       value="5" 
-                                       oninput="calculateROP()"
-                                       class="w-full border border-slate-200 bg-white/70 pl-10 pr-4 py-3 rounded-xl font-bold text-slate-700 focus:outline-none focus:border-red-500 transition">
-                            </div>
-                        </div>
-
-                        <!-- Input 3 -->
-                        <div class="space-y-2">
-                            <label for="calc-safetystock" class="block text-[11px] font-black text-slate-400 uppercase tracking-widest">Safety Stock (Unit)</label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 font-black"><i class="fa-solid fa-shield-halved"></i></span>
-                                <input type="number" 
-                                       id="calc-safetystock" 
-                                       value="15" 
-                                       oninput="calculateROP()"
-                                       class="w-full border border-slate-200 bg-white/70 pl-10 pr-4 py-3 rounded-xl font-bold text-slate-700 focus:outline-none focus:border-red-500 transition">
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- Calculator Results Output (Interactive Visuals) -->
-                    <div class="bg-slate-900 rounded-3xl p-6 md:p-8 text-white relative overflow-hidden flex flex-col md:flex-row justify-between items-center gap-6">
-                        <!-- BG pattern deco -->
-                        <div class="absolute -right-20 -bottom-20 w-44 h-44 bg-red-500 rounded-full blur-3xl opacity-25"></div>
-                        
-                        <div class="relative z-10 space-y-2 text-center md:text-left">
-                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Rekomendasi Titik ROP</span>
-                            <h3 class="text-3xl font-black flex items-baseline justify-center md:justify-start gap-2">
-                                <span id="calc-result" class="text-4xl text-red-500 font-mono">65</span> <span class="text-sm font-medium text-slate-400">Unit Terhitung</span>
-                            </h3>
-                            <p class="text-[11px] text-slate-400 max-w-sm">
-                                Lakukan pemesanan RFQ baru sesegera mungkin ketika stok fisik di gudang Anda menyusut hingga menyentuh angka batas di atas.
+                            <h2 class="text-4xl font-bold text-white leading-tight">Simulasikan <br>Kebutuhan ROP Anda</h2>
+                            <p class="text-gray-400 text-lg leading-relaxed">
+                                Reorder Point (ROP) mencegah bisnis Anda dari kehabisan stok. Masukkan data operasional harian untuk melihat bagaimana algoritma menentukan titik pemesanan ulang yang ideal.
                             </p>
-                        </div>
-
-                        <!-- Status badge -->
-                        <div class="shrink-0 relative z-10 text-center md:text-right space-y-2 bg-slate-800 border border-slate-700 p-5 rounded-2xl min-w-[180px]">
-                            <span class="block text-[9px] font-black text-slate-400 uppercase tracking-widest">Status Simulasi</span>
-                            <div class="inline-flex items-center gap-2 px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full text-[10px] font-black text-green-400 uppercase tracking-wider" id="calc-status">
-                                <span class="w-2 h-2 rounded-full bg-green-400 animate-ping"></span> ROP Aman
+                            
+                            <div class="space-y-5 pt-4">
+                                <div class="glass p-4 rounded-2xl flex gap-4 items-start">
+                                    <div class="w-8 h-8 rounded-full bg-dark-700 flex items-center justify-center shrink-0 mt-1">1</div>
+                                    <div>
+                                        <h5 class="text-white font-semibold mb-1">Demand (Permintaan)</h5>
+                                        <p class="text-sm text-gray-400">Rata-rata konsumsi item per hari.</p>
+                                    </div>
+                                </div>
+                                <div class="glass p-4 rounded-2xl flex gap-4 items-start">
+                                    <div class="w-8 h-8 rounded-full bg-dark-700 flex items-center justify-center shrink-0 mt-1">2</div>
+                                    <div>
+                                        <h5 class="text-white font-semibold mb-1">Lead Time (Waktu Tunggu)</h5>
+                                        <p class="text-sm text-gray-400">Durasi dari PO dibuat hingga barang tiba di gudang.</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
+                        <!-- Calculator Interface -->
+                        <div class="bg-dark-900 border border-white/10 rounded-[32px] p-8 shadow-2xl relative">
+                            <div class="space-y-6">
+                                <!-- Inputs -->
+                                <div>
+                                    <label class="flex justify-between text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
+                                        <span>Permintaan Harian (Unit)</span>
+                                        <span id="val-demand" class="text-white">10</span>
+                                    </label>
+                                    <input type="range" id="calc-demand" min="1" max="100" value="10" oninput="updateSimulator()" class="w-full h-2 bg-dark-700 rounded-lg appearance-none cursor-pointer accent-brand-500">
+                                </div>
+
+                                <div>
+                                    <label class="flex justify-between text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
+                                        <span>Lead Time (Hari)</span>
+                                        <span id="val-leadtime" class="text-white">5</span>
+                                    </label>
+                                    <input type="range" id="calc-leadtime" min="1" max="30" value="5" oninput="updateSimulator()" class="w-full h-2 bg-dark-700 rounded-lg appearance-none cursor-pointer accent-brand-500">
+                                </div>
+
+                                <div>
+                                    <label class="flex justify-between text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
+                                        <span>Safety Stock (Unit)</span>
+                                        <span id="val-safetystock" class="text-white">15</span>
+                                    </label>
+                                    <input type="range" id="calc-safetystock" min="0" max="200" value="15" oninput="updateSimulator()" class="w-full h-2 bg-dark-700 rounded-lg appearance-none cursor-pointer accent-brand-500">
+                                </div>
+
+                                <div class="h-px w-full bg-white/10 my-6"></div>
+
+                                <!-- Result -->
+                                <div class="flex items-end justify-between">
+                                    <div>
+                                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Reorder Point</p>
+                                        <div class="flex items-baseline gap-2">
+                                            <span id="calc-result" class="text-5xl font-black text-brand-500 font-mono tracking-tighter">65</span>
+                                            <span class="text-gray-500 font-medium">Unit</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div id="calc-status" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-xs font-bold text-green-400">
+                                            <span class="w-2 h-2 rounded-full bg-green-400 animate-ping"></span> Stok Aman
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- P2P CYCLE ROADMAP -->
+        <section id="p2p" class="py-24 relative z-10 border-t border-white/5">
+            <div class="max-w-7xl mx-auto px-6 text-center">
+                <div class="max-w-3xl mx-auto mb-20 reveal">
+                    <h2 class="text-brand-500 font-semibold tracking-widest text-sm uppercase mb-4">Edukasi P2P</h2>
+                    <h3 class="text-3xl md:text-5xl font-bold mb-6">Siklus Procure-to-Pay</h3>
+                    <p class="text-gray-400 text-lg">Alur kerja digital mulus yang mengeliminasi bottleneck birokrasi, mendigitalkan kertas kerja, dan mempercepat pengambilan keputusan.</p>
+                </div>
 
-        <!-- PLATFORM FEATURES SECTION -->
-        <section id="features" class="py-20 max-w-7xl mx-auto px-6 space-y-12">
-            <div class="text-center max-w-2xl mx-auto space-y-3">
-                <span class="text-red-500 text-xs font-black uppercase tracking-widest">Fitur Platform</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 uppercase">Satu Platform untuk Seluruh Siklus Pengadaan</h2>
-                <p class="text-slate-500 text-sm font-medium leading-relaxed">
-                    Dari perencanaan kebutuhan hingga validasi pembayaran, setiap proses terhubung dalam satu alur kerja yang dirancang untuk meningkatkan efisiensi dan akuntabilitas operasional.
-                </p>
-            </div>
+                <!-- Roadmap Nodes -->
+                <div class="relative max-w-5xl mx-auto">
+                    <!-- Connecting Line -->
+                    <div class="hidden lg:block absolute top-1/2 left-0 w-full h-0.5 bg-dark-700 -translate-y-1/2 z-0">
+                        <div class="h-full bg-gradient-to-r from-brand-500 via-purple-500 to-blue-500 w-full opacity-50"></div>
+                    </div>
 
-            <!-- Features Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- feature 1 -->
-                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-3 feature-card">
-                    <div class="w-10 h-10 bg-red-50 text-red-500 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-chart-line"></i></div>
-                    <h4 class="font-black text-slate-850 uppercase text-sm">Dashboard ROP (Procurement)</h4>
-                    <p class="text-[11px] text-slate-500 font-medium leading-relaxed">
-                        Memantau status inventory secara otomatis, menyortir stok kritis, dan menerbitkan RFQ penawaran harga dengan praktis.
-                    </p>
-                </div>
-                <!-- feature 2 -->
-                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-3 feature-card">
-                    <div class="w-10 h-10 bg-red-50 text-red-500 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-barcode"></i></div>
-                    <h4 class="font-black text-slate-850 uppercase text-sm">Scan Barcode (Gudang)</h4>
-                    <p class="text-[11px] text-slate-500 font-medium leading-relaxed">
-                        Memproses penerimaan barang masuk (*Inbound*) dan pengeluaran barang keluar (*Outbound*) secara instan menggunakan kamera barcode scanner.
-                    </p>
-                </div>
-                <!-- feature 3 -->
-                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-3 feature-card">
-                    <div class="w-10 h-10 bg-red-50 text-red-500 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-file-shield"></i></div>
-                    <h4 class="font-black text-slate-850 uppercase text-sm">3-Way Matching (Finance)</h4>
-                    <p class="text-[11px] text-slate-500 font-medium leading-relaxed">
-                        Verifikasi keabsahan invoice tagihan secara otomatis dengan mencocokkan dokumen PO dan DO pengiriman barang di gudang.
-                    </p>
-                </div>
-                <!-- feature 4 -->
-                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-3 feature-card">
-                    <div class="w-10 h-10 bg-red-50 text-red-500 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-building-circle-check"></i></div>
-                    <h4 class="font-black text-slate-850 uppercase text-sm">Bidding Area (Vendor)</h4>
-                    <p class="text-[11px] text-slate-500 font-medium leading-relaxed">
-                        Memungkinkan rekanan vendor melihat RFQ yang dibuka, mengajukan SPH penawaran harga, mengunggah invoice penagihan secara terpadu.
-                    </p>
+                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-6 relative z-10">
+                        <!-- Step 1 -->
+                        <div class="glass-card p-8 rounded-3xl reveal text-left relative group">
+                            <div class="absolute -inset-0.5 bg-gradient-to-br from-brand-500 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-100 transition duration-500 blur-sm pointer-events-none"></div>
+                            <div class="relative bg-dark-800 p-8 rounded-3xl h-full border border-white/5">
+                                <span class="text-5xl font-black text-dark-600 absolute top-4 right-4">01</span>
+                                <div class="w-12 h-12 rounded-xl bg-dark-700 border border-white/10 flex items-center justify-center text-brand-500 mb-6">
+                                    <i class="fa-solid fa-clipboard-list"></i>
+                                </div>
+                                <h4 class="text-xl font-bold text-white mb-3">Planning</h4>
+                                <p class="text-sm text-gray-400 leading-relaxed">Sistem mendeteksi stok mencapai ROP dan otomatis memberikan notifikasi untuk pembuatan Request for Quotation (RFQ).</p>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="glass-card p-8 rounded-3xl reveal text-left relative group" style="transition-delay: 100ms;">
+                            <div class="absolute -inset-0.5 bg-gradient-to-br from-purple-500 to-blue-600 rounded-3xl opacity-0 group-hover:opacity-100 transition duration-500 blur-sm pointer-events-none"></div>
+                            <div class="relative bg-dark-800 p-8 rounded-3xl h-full border border-white/5">
+                                <span class="text-5xl font-black text-dark-600 absolute top-4 right-4">02</span>
+                                <div class="w-12 h-12 rounded-xl bg-dark-700 border border-white/10 flex items-center justify-center text-purple-400 mb-6">
+                                    <i class="fa-solid fa-handshake"></i>
+                                </div>
+                                <h4 class="text-xl font-bold text-white mb-3">Sourcing</h4>
+                                <p class="text-sm text-gray-400 leading-relaxed">Vendor mengajukan Surat Penawaran Harga (SPH). AI merekomendasikan pilihan terbaik berdasarkan harga, kualitas, & SLA.</p>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="glass-card p-8 rounded-3xl reveal text-left relative group" style="transition-delay: 200ms;">
+                            <div class="absolute -inset-0.5 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-3xl opacity-0 group-hover:opacity-100 transition duration-500 blur-sm pointer-events-none"></div>
+                            <div class="relative bg-dark-800 p-8 rounded-3xl h-full border border-white/5">
+                                <span class="text-5xl font-black text-dark-600 absolute top-4 right-4">03</span>
+                                <div class="w-12 h-12 rounded-xl bg-dark-700 border border-white/10 flex items-center justify-center text-blue-400 mb-6">
+                                    <i class="fa-solid fa-file-signature"></i>
+                                </div>
+                                <h4 class="text-xl font-bold text-white mb-3">Procurement</h4>
+                                <p class="text-sm text-gray-400 leading-relaxed">Persetujuan digital multi-tier dari manajemen untuk penerbitan Purchase Order (PO) resmi ke pihak vendor.</p>
+                            </div>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="glass-card p-8 rounded-3xl reveal text-left relative group" style="transition-delay: 300ms;">
+                            <div class="absolute -inset-0.5 bg-gradient-to-br from-emerald-500 to-green-500 rounded-3xl opacity-0 group-hover:opacity-100 transition duration-500 blur-sm pointer-events-none"></div>
+                            <div class="relative bg-dark-800 p-8 rounded-3xl h-full border border-white/5">
+                                <span class="text-5xl font-black text-dark-600 absolute top-4 right-4">04</span>
+                                <div class="w-12 h-12 rounded-xl bg-dark-700 border border-white/10 flex items-center justify-center text-emerald-400 mb-6">
+                                    <i class="fa-solid fa-money-check-dollar"></i>
+                                </div>
+                                <h4 class="text-xl font-bold text-white mb-3">Payment</h4>
+                                <p class="text-sm text-gray-400 leading-relaxed">Penerimaan barang fisik (Inbound) dan pencocokan 3-Way Matching otomatis sebelum persetujuan invoice Finance.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-
-        <!-- DYNAMIC CTA CALL TO ACTION -->
-        <section class="py-16 bg-slate-900 text-white relative overflow-hidden">
-            <!-- Glow orb bg -->
-            <div class="glow-orb w-[350px] h-[350px] bg-red-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20"></div>
-
-            <div class="max-w-4xl mx-auto px-6 text-center space-y-6 relative z-10">
-                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight uppercase">Tingkatkan Kinerja Pengadaan Anda</h2>
-                <p class="text-slate-400 text-xs sm:text-sm font-medium leading-relaxed max-w-xl mx-auto">
-                    Kelola pengadaan dengan visibilitas yang lebih baik, kontrol yang lebih kuat, dan pengambilan keputusan yang didukung oleh data yang akurat.
-                </p>
-                <div class="pt-2">
-                    <a href="<?= $dashboard_link ?>" class="inline-flex items-center px-8 py-4 bg-red-600 hover:bg-red-700 text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-red-500/20 hover:shadow-xl hover:shadow-red-500/30 transition-all active:scale-[0.98]">
-                        Masuk Dashboard Utama <i class="fa-solid fa-chevron-right ml-2"></i>
-                    </a>
+        <!-- CTA SECTION -->
+        <section class="py-24 relative z-10">
+            <div class="max-w-5xl mx-auto px-6">
+                <div class="glass-card rounded-[40px] p-12 md:p-20 text-center relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-r from-brand-500/10 to-purple-600/10 group-hover:opacity-100 transition-opacity opacity-50"></div>
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50"></div>
+                    
+                    <div class="relative z-10 max-w-2xl mx-auto space-y-8">
+                        <h2 class="text-4xl md:text-5xl font-bold text-white">Siap Mengoptimasi <br>Pengadaan Anda?</h2>
+                        <p class="text-gray-400 text-lg">Bergabung dengan ekosistem Veridex dan rasakan kontrol, transparansi, dan efisiensi level enterprise.</p>
+                        
+                        <div class="pt-4">
+                            <a href="<?= $dashboard_link ?>" class="inline-flex items-center gap-3 px-8 py-4 bg-white text-dark-900 rounded-full font-bold hover:bg-gray-200 transition-all transform hover:scale-105 shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+                                Akses Dashboard Sekarang <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -473,61 +639,93 @@ if (isset($_SESSION['role'])) {
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-slate-950 text-slate-500 py-12 border-t border-slate-900">
-        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="text-center md:text-left space-y-1.5">
-                <span class="text-lg font-black text-red-500">VERIDEX</span>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Procurement Excellence Ecosystem</p>
+    <footer class="relative z-10 border-t border-white/5 bg-dark-900 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <div>
+                    <a href="#" class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center">
+                            <i class="fa-solid fa-layer-group text-white text-sm"></i>
+                        </div>
+                        <span class="text-xl font-bold tracking-tight text-white">VERIDEX</span>
+                    </a>
+                    <p class="text-gray-400 max-w-xs text-sm leading-relaxed">
+                        Enterprise Procurement Intelligence Platform. Merestrukturisasi kompleksitas rantai pasok menjadi kesederhanaan operasional.
+                    </p>
+                </div>
+                <div class="flex md:justify-end items-center gap-6">
+                    <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+                        <i class="fa-brands fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+                        <i class="fa-brands fa-twitter"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+                        <i class="fa-solid fa-envelope"></i>
+                    </a>
+                </div>
             </div>
-
-            <div class="text-center md:text-right space-y-2 text-xs">
-                <p>&copy; 2026 Veridex. Hak Cipta Dilindungi Undang-Undang.</p>
-                <p class="text-[10px] text-slate-600 font-bold uppercase tracking-widest">Procurement Excellence • Transparency • Control</p>
+            
+            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+                <p>&copy; 2026 Veridex Platform. Hak Cipta Dilindungi.</p>
+                <div class="flex gap-6">
+                    <a href="#" class="hover:text-gray-300 transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-gray-300 transition-colors">Terms of Service</a>
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- INTERACTIVE CALCULATOR JAVASCRIPT -->
+    <!-- Scripts for Interactivity & Animations -->
     <script>
-        function calculateROP() {
-            const demandInput = document.getElementById("calc-demand");
-            const leadtimeInput = document.getElementById("calc-leadtime");
-            const safetystockInput = document.getElementById("calc-safetystock");
-            
-            const resultElement = document.getElementById("calc-result");
-            const statusElement = document.getElementById("calc-status");
-            
-            if (!demandInput || !leadtimeInput || !safetystockInput || !resultElement || !statusElement) return;
-
-            const demand = parseFloat(demandInput.value) || 0;
-            const leadtime = parseFloat(leadtimeInput.value) || 0;
-            const safetystock = parseFloat(safetystockInput.value) || 0;
-
-            // ROP Formula: (d * L) + SS
-            const rop = (demand * leadtime) + safetystock;
-            
-            resultElement.innerText = rop;
-
-            // Dynamic status and visual update
-            if (rop <= 0) {
-                statusElement.className = "inline-flex items-center gap-2 px-3 py-1 bg-slate-500/10 border border-slate-500/20 rounded-full text-[10px] font-black text-slate-400 uppercase tracking-wider";
-                statusElement.innerHTML = "No Data";
-            } else if (rop < 40) {
-                statusElement.className = "inline-flex items-center gap-2 px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full text-[10px] font-black text-green-400 uppercase tracking-wider";
-                statusElement.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-400 animate-ping"></span> ROP Aman';
-            } else if (rop >= 40 && rop < 80) {
-                statusElement.className = "inline-flex items-center gap-2 px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 rounded-full text-[10px] font-black text-yellow-400 uppercase tracking-wider";
-                statusElement.innerHTML = '<span class="w-2 h-2 rounded-full bg-yellow-400 animate-ping"></span> ROP Siaga';
-            } else {
-                statusElement.className = "inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 border border-red-500/20 rounded-full text-[10px] font-black text-red-400 uppercase tracking-wider";
-                statusElement.innerHTML = '<span class="w-2 h-2 rounded-full bg-red-400 animate-ping"></span> ROP Kritis';
+        // Reveal on Scroll
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
             }
         }
+        window.addEventListener("scroll", reveal);
+        reveal(); // Trigger on load
 
-        // Initialize calculator once
-        window.addEventListener("DOMContentLoaded", () => {
-            calculateROP();
-        });
+        // Simulator Logic
+        function updateSimulator() {
+            const demand = parseFloat(document.getElementById("calc-demand").value);
+            const leadtime = parseFloat(document.getElementById("calc-leadtime").value);
+            const safetystock = parseFloat(document.getElementById("calc-safetystock").value);
+            
+            // Update labels
+            document.getElementById("val-demand").innerText = demand;
+            document.getElementById("val-leadtime").innerText = leadtime;
+            document.getElementById("val-safetystock").innerText = safetystock;
+
+            // Calculate
+            const rop = (demand * leadtime) + safetystock;
+            
+            // Animate number count up (simple version)
+            document.getElementById("calc-result").innerText = rop;
+
+            // Update status
+            const statusEl = document.getElementById("calc-status");
+            if (rop < 40) {
+                statusEl.className = "inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-xs font-bold text-green-400";
+                statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-400 animate-ping"></span> Stok Aman';
+            } else if (rop < 80) {
+                statusEl.className = "inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-xs font-bold text-yellow-400";
+                statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-yellow-400 animate-ping"></span> Stok Siaga';
+            } else {
+                statusEl.className = "inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-xs font-bold text-red-400";
+                statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-red-400 animate-ping"></span> Perlu Restock';
+            }
+        }
+        
+        // Initialize Simulator
+        document.addEventListener('DOMContentLoaded', updateSimulator);
     </script>
 </body>
 </html>

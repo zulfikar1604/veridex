@@ -26,7 +26,7 @@ include 'header_meta.php';
 
     <div class="flex-1 flex overflow-hidden">
         <?php 
-        $active_menu = 'rop'; 
+        $active = 'rop'; 
          include 'sidebar_gudang.php'; 
     ?>
 

@@ -53,7 +53,7 @@ if (!isset($GLOBALS['alpine_loaded'])) {
 ?>
 
 <!-- UNIFIED HEADER & NAVBAR (Integrated / Connected Dark Theme) -->
-<header class="bg-slate-900 text-white border-b border-slate-800 px-6 py-3.5 shrink-0 flex justify-between items-center gap-4 z-35 w-full">
+<header class="bg-slate-900 text-white border-b border-slate-800 px-6 py-3 shrink-0 flex justify-between items-center gap-4 z-35 w-full">
     
     <!-- Sisi Kiri: Hamburger + Judul Halaman -->
     <div class="flex items-center gap-3">
@@ -61,7 +61,7 @@ if (!isset($GLOBALS['alpine_loaded'])) {
             <i class="fa-solid fa-bars text-base"></i>
         </button>
         <div>
-            <h2 class="text-lg md:text-xl font-black text-white uppercase tracking-tighter line-clamp-1">
+            <h2 class="text-base md:text-lg font-black text-white uppercase tracking-tighter line-clamp-1">
                 <?= htmlspecialchars($page_title ?? 'Veridex System', ENT_QUOTES, 'UTF-8') ?>
             </h2>
             <?php if (isset($page_subtitle) && $page_subtitle !== ''): ?>
@@ -104,11 +104,11 @@ if (!isset($GLOBALS['alpine_loaded'])) {
                     <p class="text-xs font-bold text-white max-w-[140px] truncate"><?= htmlspecialchars($_SESSION['username'] ?? 'User Account', ENT_QUOTES, 'UTF-8') ?></p>
                 </div>
                 <!-- Avatar Circle -->
-                <div class="w-10 h-10 rounded-xl bg-slate-800 text-white flex items-center justify-center border border-slate-700 relative shrink-0 overflow-hidden">
+                <div class="w-9 h-9 rounded-xl bg-slate-800 text-white flex items-center justify-center border border-slate-700 relative shrink-0 overflow-hidden">
                     <?php if (!empty($_SESSION['profile_photo'])): ?>
                         <img src="<?= htmlspecialchars($_SESSION['profile_photo'], ENT_QUOTES, 'UTF-8') ?>" alt="Profile" class="w-full h-full object-cover">
                     <?php else: ?>
-                        <i class="fa-solid <?= $avatar_icon ?> text-sm group-hover:scale-110 transition-transform"></i>
+                        <i class="fa-solid <?= $avatar_icon ?> text-xs group-hover:scale-110 transition-transform"></i>
                     <?php endif; ?>
                     <span class="absolute bottom-0 right-0 w-2 h-2 bg-green-500 rounded-full z-10 border border-slate-800"></span>
                 </div>
@@ -174,103 +174,17 @@ if (!isset($GLOBALS['alpine_loaded'])) {
     </div>
 </header>
 
-<!-- GLOBAL DASHBOARD CARD & ICON AESTHETICS -->
+<!-- GLOBAL DASHBOARD CARD AESTHETICS (Minimalist & Elegant) -->
 <style>
-    /* 1. Transition resets for all dashboard cards and icons */
+    /* Subtle hover lift for dashboard cards */
     .bg-white.rounded-3xl, 
-    .bg-white.rounded-2xl,
-    .bg-white.p-6,
-    .bg-white.p-8 {
-        transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.35s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s ease;
+    .bg-white.rounded-2xl {
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     }
-
-    /* Card hover lift effect */
     .bg-white.rounded-3xl:hover, 
     .bg-white.rounded-2xl:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 16px 32px -8px rgba(15, 23, 42, 0.08), 0 4px 12px -4px rgba(15, 23, 42, 0.04);
-        border-color: rgba(226, 232, 240, 0.8) !important;
-    }
-
-    /* 2. Badge Icon Containers (w-10 h-10 rounded-xl) inside cards */
-    .bg-white .w-10.h-10.rounded-xl,
-    .bg-white .w-12.h-12.rounded-xl {
-        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    }
-    .bg-white .w-10.h-10.rounded-xl i,
-    .bg-white .w-12.h-12.rounded-xl i {
-        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
-        display: inline-block;
-    }
-
-    /* 3. Color & Motion triggers when card is hovered */
-    /* Red Badge Hover (e.g. PO Butuh Persetujuan) */
-    .bg-white:hover .w-10.h-10.bg-red-100,
-    .bg-white:hover .w-12.h-12.bg-red-100 {
-        background-color: #ef4444 !important; /* bg-red-500 */
-        color: #ffffff !important;
-        transform: scale(1.12) rotate(-6deg);
-        box-shadow: 0 8px 16px -4px rgba(239, 68, 68, 0.4);
-    }
-    .bg-white:hover .w-10.h-10.bg-red-100 i,
-    .bg-white:hover .w-12.h-12.bg-red-100 i {
-        animation: cardPenWrite 0.6s ease both;
-    }
-
-    /* Blue Badge Hover (e.g. RFQ Aktif) */
-    .bg-white:hover .w-10.h-10.bg-blue-100,
-    .bg-white:hover .w-12.h-12.bg-blue-100 {
-        background-color: #3b82f6 !important; /* bg-blue-500 */
-        color: #ffffff !important;
-        transform: scale(1.12) rotate(6deg);
-        box-shadow: 0 8px 16px -4px rgba(59, 130, 246, 0.4);
-    }
-    .bg-white:hover .w-10.h-10.bg-blue-100 i,
-    .bg-white:hover .w-12.h-12.bg-blue-100 i {
-        animation: cardMegaBlast 0.6s ease both;
-    }
-
-    /* Green Badge Hover (e.g. Total Vendor Mitra) */
-    .bg-white:hover .w-10.h-10.bg-green-100,
-    .bg-white:hover .w-12.h-12.bg-green-100 {
-        background-color: #22c55e !important; /* bg-green-500 */
-        color: #ffffff !important;
-        transform: scale(1.12) translateY(-3px);
-        box-shadow: 0 8px 16px -4px rgba(34, 197, 94, 0.4);
-    }
-    .bg-white:hover .w-10.h-10.bg-green-100 i,
-    .bg-white:hover .w-12.h-12.bg-green-100 i {
-        animation: cardBuildingPulse 0.6s ease both;
-    }
-
-    /* 4. Giant Background Icon Animations (Gudang/Procurement dashboards) */
-    .bg-white i[class*="absolute"] {
-        transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease !important;
-        will-change: transform, opacity;
-    }
-    .bg-white:hover i[class*="absolute"] {
-        transform: scale(1.15) rotate(-6deg) translate(-2px, -2px);
-        opacity: 0.85 !important;
-    }
-
-    /* 5. Keyframes definitions */
-    @keyframes cardPenWrite {
-        0% { transform: rotate(0) scale(1); }
-        30% { transform: rotate(-15deg) translateX(-1px) scale(1.15); }
-        70% { transform: rotate(5deg) translateX(1px) scale(1.15); }
-        100% { transform: rotate(0) scale(1); }
-    }
-    @keyframes cardMegaBlast {
-        0%, 100% { transform: rotate(0) scale(1); }
-        15% { transform: rotate(-12deg) scale(1.15); }
-        30% { transform: rotate(10deg) scale(1.15); }
-        45% { transform: rotate(-8deg) scale(1.15); }
-        60% { transform: rotate(6deg) scale(1.15); }
-        75% { transform: rotate(-4deg) scale(1.15); }
-    }
-    @keyframes cardBuildingPulse {
-        0%, 100% { transform: scale(1) translateY(0); }
-        50% { transform: scale(1.25) translateY(-2px); }
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05);
     }
 </style>
 

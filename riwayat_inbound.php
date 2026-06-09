@@ -36,7 +36,7 @@ include 'header_meta.php';
 
     <div class="flex-1 flex overflow-hidden">
         <?php 
-        $active_menu = 'riwayat_inbound'; 
+        $active = 'riwayat_inbound'; 
          include 'sidebar_gudang.php'; 
     ?>
 

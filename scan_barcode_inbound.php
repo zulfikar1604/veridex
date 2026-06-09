@@ -58,7 +58,7 @@ include 'header_meta.php';
 
     <div class="flex-1 flex overflow-hidden">
         <?php 
-        $active_menu = 'inbound'; 
+        $active = 'inbound'; 
          include 'sidebar_gudang.php'; 
     ?>
 

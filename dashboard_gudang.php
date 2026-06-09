@@ -39,15 +39,15 @@ include 'header_meta.php';
 
     <div class="flex-1 flex overflow-hidden">
         <?php 
-        $active_menu = 'inventory'; 
+        $active = 'inventory'; 
          include 'sidebar_gudang.php'; 
     ?>
 
-        <main class="flex-1 overflow-y-auto p-6 md:p-8 space-y-8">
+        <main class="flex-1 overflow-y-auto p-5 md:p-6 space-y-6 animate-fade-in-up">
             <!-- GREETING BANNER -->
-            <div class="bg-gradient-to-r from-indigo-500/10 to-transparent p-6 rounded-3xl border border-indigo-500/20 flex justify-between items-center flex-wrap gap-4 mb-6">
+            <div class="bg-gradient-to-r from-indigo-500/10 to-transparent p-5 rounded-2xl border border-indigo-500/20 flex justify-between items-center flex-wrap gap-4 mb-6">
                 <div>
-                    <h3 class="text-lg font-black text-slate-800 uppercase tracking-tight">Pusat Kendali Gudang</h3>
+                    <h3 class="text-base font-black text-slate-800 uppercase tracking-tight">Pusat Kendali Gudang</h3>
                     <p class="text-xs text-slate-500 font-medium mt-1">Selamat bertugas, <?= htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8') ?>. Kelola logistik masuk dan keluar sistem.</p>
                 </div>
                 <div class="bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100 text-xs font-bold text-slate-600">
@@ -55,33 +55,33 @@ include 'header_meta.php';
                 </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 border-l-[8px] border-l-red-500 relative overflow-hidden flex flex-col justify-center min-h-[140px]">
-                    <i class="fa-solid fa-triangle-exclamation absolute -right-4 -bottom-4 text-9xl text-red-50 opacity-50 pointer-events-none"></i>
+                <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100 border-l-[8px] border-l-red-500 relative overflow-hidden flex flex-col justify-center min-h-[140px]">
+                    <i class="fa-solid fa-triangle-exclamation absolute -right-4 -bottom-4 text-6xl text-slate-100 text-red-50 opacity-50 pointer-events-none"></i>
                     <div class="relative z-10">
                         <p class="text-xs font-bold text-red-600 uppercase tracking-widest mb-1">STOK KRITIS (< 7)</p>
-                        <h3 class="text-4xl font-black text-slate-800 flex items-baseline gap-2">
+                        <h3 class="text-3xl font-black text-slate-800 flex items-baseline gap-2">
                             <?= str_pad($kritis, 2, '0', STR_PAD_LEFT) ?> <span class="text-sm font-medium text-slate-400 italic normal-case">SKU</span>
                         </h3>
                         <p class="text-xs font-bold text-red-500 mt-2 italic">Segera Buat Pengadaan</p>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 border-l-[8px] border-l-yellow-400 relative overflow-hidden flex flex-col justify-center min-h-[140px]">
-                    <i class="fa-solid fa-clock-rotate-left absolute -right-2 -bottom-2 text-8xl text-yellow-50 opacity-80 pointer-events-none"></i>
+                <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100 border-l-[8px] border-l-yellow-400 relative overflow-hidden flex flex-col justify-center min-h-[140px]">
+                    <i class="fa-solid fa-clock-rotate-left absolute -right-2 -bottom-2 text-5xl text-slate-100 text-yellow-50 opacity-80 pointer-events-none"></i>
                     <div class="relative z-10">
                         <p class="text-xs font-bold text-yellow-500 uppercase tracking-widest mb-1">PERINGATAN (7 - 10)</p>
-                        <h3 class="text-4xl font-black text-slate-800 flex items-baseline gap-2">
+                        <h3 class="text-3xl font-black text-slate-800 flex items-baseline gap-2">
                             <?= str_pad($warning, 2, '0', STR_PAD_LEFT) ?> <span class="text-sm font-medium text-slate-400 italic normal-case">SKU</span>
                         </h3>
                         <p class="text-xs font-bold text-yellow-600 mt-2 italic">Pantau Pemakaian Rutin</p>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 border-l-[8px] border-l-green-500 relative overflow-hidden flex flex-col justify-center min-h-[140px]">
-                    <i class="fa-solid fa-circle-check absolute -right-4 -bottom-4 text-9xl text-green-50 opacity-60 pointer-events-none"></i>
+                <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100 border-l-[8px] border-l-green-500 relative overflow-hidden flex flex-col justify-center min-h-[140px]">
+                    <i class="fa-solid fa-circle-check absolute -right-4 -bottom-4 text-6xl text-slate-100 text-green-50 opacity-60 pointer-events-none"></i>
                     <div class="relative z-10">
                         <p class="text-xs font-bold text-green-500 uppercase tracking-widest mb-1">STOK AMAN (> 10)</p>
-                        <h3 class="text-4xl font-black text-slate-800 flex items-baseline gap-2">
+                        <h3 class="text-3xl font-black text-slate-800 flex items-baseline gap-2">
                             <?= str_pad($aman, 2, '0', STR_PAD_LEFT) ?> <span class="text-sm font-medium text-slate-400 italic normal-case">SKU</span>
                         </h3>
                         <p class="text-xs font-bold text-green-600 mt-2 italic">Ketersediaan Terjamin</p>

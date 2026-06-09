@@ -105,11 +105,11 @@ include 'header_meta.php';
     <div class="flex-1 flex overflow-hidden">
         <?php include 'sidebar_procurement.php'; ?>
 
-        <main class="flex-1 overflow-y-auto p-6 md:p-8 space-y-6">
+        <main class="flex-1 overflow-y-auto p-5 md:p-6 space-y-6 animate-fade-in-up">
             <!-- GREETING BANNER -->
-            <div class="bg-gradient-to-r from-red-500/10 to-transparent p-6 rounded-3xl border border-red-500/20 flex justify-between items-center flex-wrap gap-4 mb-6">
+            <div class="bg-gradient-to-r from-red-500/10 to-transparent p-5 rounded-2xl border border-red-500/20 flex justify-between items-center flex-wrap gap-4 mb-6">
                 <div>
-                    <h3 class="text-lg font-black text-slate-800 uppercase tracking-tight">Selamat Datang Kembali, <?= htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8') ?>!</h3>
+                    <h3 class="text-base font-black text-slate-800 uppercase tracking-tight">Selamat Datang Kembali, <?= htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8') ?>!</h3>
                     <p class="text-xs text-slate-500 font-medium mt-1">Sistem siap memantau performa pengadaan strategis dan status persetujuan hari ini.</p>
                 </div>
                 <div class="bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100 text-xs font-bold text-slate-600">
@@ -125,7 +125,7 @@ include 'header_meta.php';
                         <h3 class="text-2xl font-black mb-1">Rp <span class="text-3xl"><?= number_format($total_spend, 0, ',', '.') ?></span></h3>
                         <p class="text-xs text-slate-300 font-medium">Nilai PO yang sudah dibayar</p>
                     </div>
-                    <i class="fa-solid fa-rupiah-sign absolute -bottom-4 -right-2 text-7xl text-white opacity-5 group-hover:scale-110 transition-transform duration-500"></i>
+                    <i class="fa-solid fa-rupiah-sign absolute -bottom-4 -right-2 text-6xl text-white opacity-5 group-hover:scale-110 transition-transform duration-500"></i>
                 </div>
                 <!-- Card 2 -->
                 <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col justify-center">
@@ -139,7 +139,7 @@ include 'header_meta.php';
                         <?php endif; ?>
                     </div>
                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">PO Butuh Persetujuan</p>
-                    <h3 class="text-4xl font-black text-slate-800"><?= $total_pending_po ?> <span class="text-sm font-bold text-slate-400">Dokumen</span></h3>
+                    <h3 class="text-3xl font-black text-slate-800"><?= $total_pending_po ?> <span class="text-sm font-bold text-slate-400">Dokumen</span></h3>
                 </div>
                 <!-- Card 3 -->
                 <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col justify-center">
@@ -147,7 +147,7 @@ include 'header_meta.php';
                         <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-lg"><i class="fa-solid fa-bullhorn"></i></div>
                     </div>
                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">RFQ Aktif (Terbuka)</p>
-                    <h3 class="text-4xl font-black text-slate-800"><?= $total_open_rfq ?> <span class="text-sm font-bold text-slate-400">Permintaan</span></h3>
+                    <h3 class="text-3xl font-black text-slate-800"><?= $total_open_rfq ?> <span class="text-sm font-bold text-slate-400">Permintaan</span></h3>
                 </div>
                 <!-- Card 4 -->
                 <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col justify-center">
@@ -155,7 +155,7 @@ include 'header_meta.php';
                         <div class="w-10 h-10 rounded-xl bg-green-100 text-green-600 flex items-center justify-center text-lg"><i class="fa-solid fa-building"></i></div>
                     </div>
                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Vendor Mitra</p>
-                    <h3 class="text-4xl font-black text-slate-800"><?= $total_vendors ?> <span class="text-sm font-bold text-slate-400">Perusahaan</span></h3>
+                    <h3 class="text-3xl font-black text-slate-800"><?= $total_vendors ?> <span class="text-sm font-bold text-slate-400">Perusahaan</span></h3>
                 </div>
             </div>
 

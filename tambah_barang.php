@@ -4,7 +4,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Gudang') {
     header("Location: login.php");
     exit;
 }
-$active_menu = 'inventory'; 
+$active = 'inventory'; 
 include 'header_meta.php';
 ?>
 <body class="bg-slate-50 h-screen flex overflow-hidden">

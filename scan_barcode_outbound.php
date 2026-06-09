@@ -73,7 +73,7 @@ include 'header_meta.php';
 
     <div class="flex-1 flex overflow-hidden">
         <?php 
-        $active_menu = 'outbound'; 
+        $active = 'outbound'; 
          include 'sidebar_gudang.php'; 
     ?>
 
