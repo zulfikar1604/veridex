@@ -134,6 +134,20 @@ $affected2 = mysqli_affected_rows($conn);
 $results[] = "✅ Rename status 'Pending Approval' to 'Pending Manager': $affected2 baris diperbarui";
 
 // ============================================================
+// 9. Tabel Chat Messages (Messaging System)
+// ============================================================
+run_sql($conn, "
+    CREATE TABLE IF NOT EXISTS chat_messages (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        po_number VARCHAR(50) NOT NULL,
+        sender_role VARCHAR(50) NOT NULL,
+        sender_name VARCHAR(100) NOT NULL,
+        message TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+", "Tabel chat_messages", $results, $errors);
+
+// ============================================================
 // Output Hasil
 // ============================================================
 ?>

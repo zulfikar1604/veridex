@@ -23,27 +23,21 @@ if ($po_id > 0) {
     "));
 }
 
+$page_title = "Upload Bukti Bayar";
+$page_subtitle = "Unggah Bukti Pelunasan PO";
+if ($po) {
+    $page_subtitle = "Unggah Bukti Pelunasan " . htmlspecialchars($po['po_number']);
+}
 include 'header_meta.php';
 ?>
-<body class="bg-slate-50 h-screen flex overflow-hidden">
-    <?php include 'sidebar_finance.php'; ?>
+<body class="bg-slate-50 flex flex-col h-screen overflow-hidden text-slate-800">
 
-    <main class="flex-1 flex flex-col h-full overflow-hidden">
-        <div class="p-4 md:p-4 md:p-6 pb-0 md:pb-0 md:pb-0">
-            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex justify-between items-center flex-wrap gap-4">
-                <div class="flex items-center gap-3">
-                <button onclick="toggleSidebar()" class="sidebar-toggle-btn" title="Toggle Sidebar"><i class="fa-solid fa-bars text-sm"></i></button>
-                <h2 class="text-2xl font-black text-slate-800 tracking-tight uppercase">Upload Bukti Bayar</h2>
-            </div>
-                    <?php if($po): ?>
-                    <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1"><?= htmlspecialchars($po['po_number']) ?></p>
-                    <?php endif; ?>
-                </div>
-                <div class="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center font-black shadow-md">F</div>
-            </div>
-        </div>
+    <?php include 'navbar.php'; ?>
 
-        <div class="flex-1 overflow-y-auto p-6 flex items-center justify-center">
+    <div class="flex-1 flex overflow-hidden">
+        <?php include 'sidebar_finance.php'; ?>
+
+        <main class="flex-1 overflow-y-auto p-6 md:p-8 flex items-center justify-center">
             <?php if($po): ?>
             <div class="bg-white p-10 rounded-[3rem] border shadow-sm w-full max-w-2xl" x-data="{ submitting: false }">
                 <!-- Detail PO -->
@@ -110,8 +104,8 @@ include 'header_meta.php';
                 </a>
             </div>
             <?php endif; ?>
-        </div>
     </main>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</div>
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>
 </html>

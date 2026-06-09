@@ -19,20 +19,14 @@ $query_invoice = mysqli_query($conn, "
     ORDER BY i.created_at DESC
 ") or handle_db_error($conn);
 ?>
-
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Invoice Archive | Veridex</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
+<?php
+$page_title = "Arsip Invoice";
+$page_subtitle = "Riwayat Tagihan & Pembayaran";
+include 'header_meta.php';
+?>
 <body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
 
     <?php
-    $page_title = "Arsip Invoice";
-    $page_subtitle = "Riwayat Tagihan & Pembayaran";
     include 'navbar.php';
 ?>
 

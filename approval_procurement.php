@@ -21,20 +21,15 @@ $query_pending = mysqli_query($conn, "
 ") or handle_db_error($conn);
 ?>
 
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Manager Approval Dashboard | Veridex</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
+<?php
+$page_title = "PO Validation";
+$page_subtitle = "Daftar Pengadaan Menunggu Persetujuan";
+$navbar_badge = '<span class="hidden sm:inline-block bg-slate-800 text-slate-300 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border border-slate-700/50">Pending: ' . mysqli_num_rows($query_pending) . ' Requests</span>';
+include 'header_meta.php';
+?>
 <body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
 
     <?php
-    $page_title = "PO Validation";
-    $page_subtitle = "Daftar Pengadaan Menunggu Persetujuan";
-    $navbar_badge = '<div class="bg-white px-6 py-3 rounded-2xl border border-slate-100 shadow-sm"><span class="text-[10px] font-black text-slate-400 uppercase block">Pending Tasks</span><span class="text-xl font-black text-red-600">' . mysqli_num_rows($query_pending) . ' Requests</span></div>';
     include 'navbar.php';
 ?>
 
@@ -108,19 +103,7 @@ $query_pending = mysqli_query($conn, "
         </main>
     </div>
 
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('main-sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            if (!sidebar) return;
-            if (window.innerWidth >= 768) {
-                sidebar.classList.toggle('sidebar-collapsed');
-            } else {
-                sidebar.classList.toggle('sidebar-open');
-                if (overlay) overlay.classList.toggle('overlay-open');
-            }
-        }
-    </script>
+
 
 </body>
 </html>

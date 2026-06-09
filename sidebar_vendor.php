@@ -8,6 +8,18 @@ $_badge_invoice = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c F
 ?>
 <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
 <aside id="main-sidebar" class="w-[280px] bg-[#111827] text-white flex flex-col h-full shadow-2xl shrink-0">
+    <script>
+        // Apply collapsed state immediately on load to prevent layout flash
+        (function() {
+            if (window.innerWidth >= 768) {
+                const savedState = localStorage.getItem('sidebar-collapsed');
+                const isCollapsed = savedState === 'true' || (savedState === null && window.innerWidth < 1024);
+                if (isCollapsed) {
+                    document.getElementById('main-sidebar').classList.add('sidebar-collapsed');
+                }
+            }
+        })();
+    </script>
     <div class="flex justify-between items-center p-6 md:p-6 md:p-8 border-b border-slate-800">
         <div>
         <h1 class="text-3xl font-black text-red-500 tracking-wider">VERIDEX</h1>
@@ -32,7 +44,7 @@ $_badge_invoice = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c F
             <?php if($_badge_delivery > 0): ?><span class="bg-blue-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center"><?= $_badge_delivery ?></span><?php endif; ?>
         </a>
         
-        <a href="chat_vendor.php" class="flex items-center px-4 py-3.5 rounded-xl transition-all <?= ($active == 'chat') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' ?>">
+        <a href="diskusi_vendor.php" class="flex items-center px-4 py-3.5 rounded-xl transition-all <?= ($active == 'chat') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium' ?>">
             <i class="fa-solid fa-comment-dots w-6 text-center mr-3 text-lg"></i> 
             <span>Messaging Center</span>
         </a>

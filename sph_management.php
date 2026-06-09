@@ -20,21 +20,15 @@ $query_sph = mysqli_query($conn, "
     ORDER BY s.created_at DESC
 ") or handle_db_error($conn);
 ?>
-
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>SPH Management | Veridex</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
+<?php
+$page_title = "Surat Penawaran Harga";
+$page_subtitle = "Evaluasi & Arsip Penawaran Masuk";
+$navbar_badge = '<span class="bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">Total SPH: ' . mysqli_num_rows($query_sph) . '</span>';
+include 'header_meta.php';
+?>
 <body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
 
     <?php
-    $page_title = "Surat Penawaran Harga";
-    $page_subtitle = "Evaluasi & Arsip Penawaran Masuk";
-    $navbar_badge = '<span class="bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">Total SPH: ' . mysqli_num_rows($query_sph) . '</span>';
     include 'navbar.php';
 ?>
 

@@ -26,7 +26,7 @@ $query_list_po = mysqli_query($conn, "
 
 include 'header_meta.php'; 
 ?>
-<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
+<body class="bg-slate-50 flex flex-col h-dvh overflow-hidden">
 
     <?php
     $page_title = "Vendor Messaging";
@@ -37,11 +37,11 @@ include 'header_meta.php';
     <div class="flex-1 flex overflow-hidden">
         <?php include 'sidebar_vendor.php'; ?>
 
-        <main class="flex-1 p-6 md:p-8 flex flex-col overflow-hidden">
-            <div class="bg-white rounded-3xl border shadow-xl flex h-full max-w-6xl mx-auto w-full overflow-hidden">
+        <main class="flex-1 p-2 md:p-8 flex flex-col overflow-hidden">
+            <div class="bg-white rounded-2xl md:rounded-3xl border shadow-xl flex flex-1 min-h-0 max-w-6xl mx-auto w-full overflow-hidden no-hover-lift">
                 
                 <!-- Sidebar Kiri: Daftar PO -->
-                <div class="w-1/3 border-r border-slate-100 flex flex-col bg-slate-50/50">
+                <div class="<?= ($selected_po == '') ? 'w-full' : 'hidden md:flex' ?> md:w-1/3 border-r border-slate-100 flex-col bg-slate-50/50">
                     <div class="p-5 border-b border-slate-100 bg-white">
                         <h3 class="font-black text-slate-800 uppercase tracking-widest text-xs"><i class="fa-solid fa-list mr-2 text-red-500"></i>Percakapan PO</h3>
                     </div>
@@ -51,7 +51,7 @@ include 'header_meta.php';
                             <?php while($row = mysqli_fetch_assoc($query_list_po)): 
                                 $is_active = ($selected_po == $row['po_number']) ? 'bg-red-50 border-l-4 border-red-500' : 'hover:bg-white border-l-4 border-transparent';
                             ?>
-                                <a href="chat_vendor.php?po=<?= urlencode($row['po_number']) ?>" class="block p-4 border-b border-slate-100 transition <?= $is_active ?>">
+                                <a href="diskusi_vendor.php?po=<?= urlencode($row['po_number']) ?>" class="block p-4 border-b border-slate-100 transition <?= $is_active ?>">
                                     <div class="flex justify-between items-start mb-1">
                                         <span class="font-black text-slate-800 text-sm"><?= htmlspecialchars($row['po_number']) ?></span>
                                         <?php if($row['msg_count'] > 0): ?>
@@ -77,7 +77,7 @@ include 'header_meta.php';
                 </div>
 
                 <!-- Panel Kanan: Chat -->
-                <div class="w-2/3 flex flex-col bg-white">
+                <div class="<?= ($selected_po == '') ? 'hidden md:flex' : 'w-full' ?> md:w-2/3 flex-col bg-white">
                     <?php if ($selected_po == ''): ?>
                         <div class="flex-1 flex flex-col items-center justify-center text-center p-8 bg-slate-50/30">
                             <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center text-slate-300 mb-4">
@@ -89,7 +89,10 @@ include 'header_meta.php';
                     <?php else: ?>
                         <!-- Header Chat -->
                         <div class="p-5 border-b border-slate-100 bg-white font-bold flex justify-between items-center text-slate-700 z-10 shadow-sm">
-                            <div>
+                            <div class="flex items-center">
+                                <a href="diskusi_vendor.php" class="md:hidden mr-3 text-slate-500 hover:text-red-500 transition-colors" title="Kembali ke Daftar">
+                                    <i class="fa-solid fa-arrow-left text-lg"></i>
+                                </a>
                                 <i class="fa-solid fa-file-signature text-red-500 mr-2"></i> 
                                 <span>Diskusi PO: <span id="current-po" class="text-slate-900 font-black"><?= htmlspecialchars($selected_po) ?></span></span>
                             </div>
@@ -137,8 +140,17 @@ include 'header_meta.php';
         
         let lastMessageCount = 0;
 
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
         function loadChats() {
-            fetch(`api_chat.php?action=fetch&po_number=${encodeURIComponent(poNumber)}`)
+            fetch(`api_diskusi.php?action=fetch&po_number=${encodeURIComponent(poNumber)}`)
                 .then(response => response.json())
                 .then(data => {
                     if(loadingChat) loadingChat.style.display = 'none';
@@ -160,12 +172,12 @@ include 'header_meta.php';
 
                                 let chatHtml = `
                                     <div class="flex flex-col ${alignment}">
-                                        <div class="text-[10px] font-bold text-slate-400 mb-1 ${nameAlign} uppercase tracking-widest">
-                                            ${chat.sender_role} <span class="normal-case font-normal text-slate-300 ml-1">(${chat.sender_name})</span>
+                                        <div class="text-[10px] font-bold text-slate-500 mb-1 ${nameAlign} uppercase tracking-widest">
+                                            ${chat.sender_role} <span class="normal-case font-semibold text-slate-600 ml-1">(${chat.sender_name})</span>
                                         </div>
-                                        <div class="${bubbleColor} p-4 rounded-2xl max-w-[80%] shadow-md relative group">
-                                            ${chat.message}
-                                            <div class="text-[8px] opacity-50 mt-2 text-right">${chatTime}</div>
+                                        <div class="${bubbleColor} p-4 rounded-2xl max-w-[85%] md:max-w-[70%] shadow-md relative group break-words">
+                                            ${escapeHtml(chat.message)}
+                                            <div class="text-[8px] opacity-60 mt-2 text-right font-medium">${chatTime}</div>
                                         </div>
                                     </div>
                                 `;
@@ -175,7 +187,10 @@ include 'header_meta.php';
                         chatBox.scrollTop = chatBox.scrollHeight;
                     }
                 })
-                .catch(error => console.error('Error fetching chat:', error));
+                .catch(error => {
+                    console.error('Error fetching chat:', error);
+                    if(loadingChat) loadingChat.style.display = 'none';
+                });
         }
 
         formChat.addEventListener('submit', function(e) {
@@ -191,7 +206,7 @@ include 'header_meta.php';
             formData.append('message', messageText);
             formData.append('po_number', poNumber);
 
-            fetch('api_chat.php?action=send', {
+            fetch('api_diskusi.php?action=send', {
                 method: 'POST',
                 body: formData
             }).then(response => response.text())
@@ -205,6 +220,13 @@ include 'header_meta.php';
                 btnKirim.disabled = false;
                 btnKirim.innerHTML = '<i class="fa-solid fa-paper-plane text-lg"></i>';
             });
+        });
+
+        // Scroll to bottom when input is focused to handle mobile keyboards smoothly
+        inputPesan.addEventListener('focus', () => {
+            setTimeout(() => {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 100);
         });
 
         loadChats();

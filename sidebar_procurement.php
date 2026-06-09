@@ -1,5 +1,17 @@
 <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
 <aside id="main-sidebar" class="w-[280px] bg-slate-900 text-white flex flex-col shadow-xl h-full shrink-0">
+    <script>
+        // Apply collapsed state immediately on load to prevent layout flash
+        (function() {
+            if (window.innerWidth >= 768) {
+                const savedState = localStorage.getItem('sidebar-collapsed');
+                const isCollapsed = savedState === 'true' || (savedState === null && window.innerWidth < 1024);
+                if (isCollapsed) {
+                    document.getElementById('main-sidebar').classList.add('sidebar-collapsed');
+                }
+            }
+        })();
+    </script>
     <div class="flex justify-between items-center p-6 border-b border-slate-800">
         <div>
         <h1 class="text-2xl font-black text-red-500">VERIDEX</h1>
@@ -60,7 +72,7 @@
              <i class="fa-solid fa-file-signature w-6"></i> Buat PO
             </a>
             
-            <a href="chat_procurement.php" class="w-full p-3 text-left flex items-center transition-all <?= ($active == 'chat') ? 'bg-red-500 text-white rounded-lg font-bold shadow-lg shadow-red-500/30' : 'text-slate-300 hover:bg-slate-800' ?>">
+            <a href="diskusi_procurement.php" class="w-full p-3 text-left flex items-center transition-all <?= ($active == 'chat') ? 'bg-red-500 text-white rounded-lg font-bold shadow-lg shadow-red-500/30' : 'text-slate-300 hover:bg-slate-800' ?>">
                 <i class="fa-solid fa-comments w-6"></i> Messaging System
             </a>
 

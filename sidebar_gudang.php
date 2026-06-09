@@ -1,5 +1,17 @@
 <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
 <aside id="main-sidebar" class="w-[280px] bg-[#111827] text-white flex flex-col h-full shadow-2xl shrink-0">
+    <script>
+        // Apply collapsed state immediately on load to prevent layout flash
+        (function() {
+            if (window.innerWidth >= 768) {
+                const savedState = localStorage.getItem('sidebar-collapsed');
+                const isCollapsed = savedState === 'true' || (savedState === null && window.innerWidth < 1024);
+                if (isCollapsed) {
+                    document.getElementById('main-sidebar').classList.add('sidebar-collapsed');
+                }
+            }
+        })();
+    </script>
     <div class="flex justify-between items-center p-6 md:p-6 md:p-8 border-b border-slate-800">
         <div>
         <h1 class="text-3xl font-black text-red-500 tracking-wider">VERIDEX</h1>

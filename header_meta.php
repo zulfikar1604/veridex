@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Veridex | Verified. Ranked. Trusted.</title>
+    <title><?= isset($page_title) ? htmlspecialchars($page_title) . ' | Veridex' : 'Veridex | Verified. Ranked. Trusted.' ?></title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
@@ -121,6 +121,17 @@
             background: rgba(239,68,68,0.2);
             color: #fca5a5;
         }
+
+        /* Prevent horizontal layout overflow stretching */
+        main.flex-1 {
+            min-width: 0 !important;
+        }
+
+        /* Disable hover lift for specific layout elements */
+        .no-hover-lift:hover {
+            transform: none !important;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1) !important;
+        }
     </style>
 
     <script>
@@ -129,7 +140,8 @@
             const overlay = document.getElementById('sidebar-overlay');
             if (!sidebar) return;
             if (window.innerWidth >= 768) {
-                sidebar.classList.toggle('sidebar-collapsed');
+                const isCollapsed = sidebar.classList.toggle('sidebar-collapsed');
+                localStorage.setItem('sidebar-collapsed', isCollapsed ? 'true' : 'false');
             } else {
                 sidebar.classList.toggle('sidebar-open');
                 if (overlay) overlay.classList.toggle('overlay-open');
