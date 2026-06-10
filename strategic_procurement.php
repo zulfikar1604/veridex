@@ -156,18 +156,19 @@ include 'header_meta.php';
                          class="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 rounded-3xl shadow-sm overflow-hidden">
                          
                         <!-- Header Master -->
-                        <div class="bg-slate-900 p-6 flex justify-between items-center flex-wrap gap-4">
-                            <div class="flex items-center gap-3">
-                <button onclick="toggleSidebar()" class="sidebar-toggle-btn" title="Toggle Sidebar"><i class="fa-solid fa-bars text-sm"></i></button>
-                <h3 class="text-xl font-black text-white uppercase"><?= htmlspecialchars($item['nama_barang']) ?></h3>
-            </div>
+                        <div class="bg-slate-900 p-6 flex justify-between items-center flex-wrap gap-4 text-white">
+                            <div>
+                                <div class="flex items-center gap-3">
+                                    <button onclick="toggleSidebar()" class="sidebar-toggle-btn" title="Toggle Sidebar"><i class="fa-solid fa-bars text-sm"></i></button>
+                                    <h3 class="text-xl font-black uppercase"><?= htmlspecialchars($item['nama_barang']) ?></h3>
+                                </div>
                                 <div class="flex gap-3 mt-1">
-                                    <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-bold uppercase">SKU: <?= $item['sku'] ?></span>
+                                    <span class="text-[10px] bg-slate-850 text-slate-300 px-2 py-0.5 rounded font-bold uppercase">SKU: <?= $item['sku'] ?></span>
                                 </div>
                             </div>
                             <div class="text-right">
-                                <span class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block">Stok Saat Ini</span>
-                                <span class="text-xl font-black text-red-500"><?= $item['stok_saat_ini'] ?> <span class="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500">/ <?= $item['stok_kritis'] ?></span></span>
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Stok Saat Ini</span>
+                                <span class="text-xl font-black text-red-500"><?= $item['stok_saat_ini'] ?> <span class="text-sm text-slate-400">/ <?= $item['stok_kritis'] ?></span></span>
                             </div>
                         </div>
 
@@ -237,7 +238,7 @@ include 'header_meta.php';
                                         </div>
 
                                         <div class="p-5">
-                                            <div class="grid grid-cols-1 lg:grid-cols-1 md:grid-cols-2 gap-5">
+                                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
                                                 <!-- TBE Section -->
                                                 <div class="space-y-3">
                                                     <div class="flex items-center justify-between flex-wrap gap-4">

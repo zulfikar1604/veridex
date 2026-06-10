@@ -30,18 +30,36 @@ mysqli_begin_transaction($conn);
 
 try {
     // 1. Update status vendor
-    $query = "UPDATE vendors SET status = '$status' WHERE id = $vendor_id";
-    if (!mysqli_query($conn, $query)) {
-        throw new Exception('Gagal mengubah status vendor');
+    $stmt_update_vendor = mysqli_prepare($conn, "UPDATE vendors SET status = ? WHERE id = ?");
+    if ($stmt_update_vendor) {
+        mysqli_stmt_bind_param($stmt_update_vendor, "si", $status, $vendor_id);
+        $success = mysqli_stmt_execute($stmt_update_vendor);
+        mysqli_stmt_close($stmt_update_vendor);
+        
+        if (!$success) {
+            throw new Exception('Gagal mengubah status vendor.');
+        }
+    } else {
+        throw new Exception('Gagal memproses perbaruan status vendor.');
     }
     
     // 2. Jika disetujui (Approve), buatkan akun user otomatis di tabel users
     $message_suffix = "";
     if ($action === 'Approve') {
         // Ambil nama perusahaan, email, dan password untuk generate akun login
-        $v_res = mysqli_query($conn, "SELECT nama_perusahaan, email, password FROM vendors WHERE id = $vendor_id");
-        if ($v_res && mysqli_num_rows($v_res) > 0) {
-            $vendor_data = mysqli_fetch_assoc($v_res);
+        $stmt_vendor_info = mysqli_prepare($conn, "SELECT nama_perusahaan, email, password FROM vendors WHERE id = ?");
+        $vendor_data = null;
+        if ($stmt_vendor_info) {
+            mysqli_stmt_bind_param($stmt_vendor_info, "i", $vendor_id);
+            mysqli_stmt_execute($stmt_vendor_info);
+            $result = mysqli_stmt_get_result($stmt_vendor_info);
+            $vendor_data = mysqli_fetch_assoc($result);
+            mysqli_stmt_close($stmt_vendor_info);
+        } else {
+            throw new Exception('Gagal mengambil data vendor.');
+        }
+
+        if ($vendor_data) {
             $company_name = $vendor_data['nama_perusahaan'];
             $email = trim($vendor_data['email'] ?? '');
             
@@ -66,26 +84,55 @@ try {
             }
             
             // Hindari duplikasi username dengan menambahkan suffix ID jika sudah ada
-            $check_u = mysqli_query($conn, "SELECT id FROM users WHERE username = '$username'");
-            if (mysqli_num_rows($check_u) > 0) {
+            $stmt_check_username = mysqli_prepare($conn, "SELECT id FROM users WHERE username = ?");
+            $has_username = false;
+            if ($stmt_check_username) {
+                mysqli_stmt_bind_param($stmt_check_username, "s", $username);
+                mysqli_stmt_execute($stmt_check_username);
+                $res_check = mysqli_stmt_get_result($stmt_check_username);
+                $has_username = mysqli_num_rows($res_check) > 0;
+                mysqli_stmt_close($stmt_check_username);
+            } else {
+                throw new Exception('Gagal memeriksa ketersediaan username.');
+            }
+
+            if ($has_username) {
                 $username .= "_" . $vendor_id;
             }
             
             // Cek apakah vendor ini sudah memiliki akun
-            $check_v = mysqli_query($conn, "SELECT id FROM users WHERE vendor_id = $vendor_id");
-            if (mysqli_num_rows($check_v) === 0) {
+            $stmt_check_user = mysqli_prepare($conn, "SELECT id FROM users WHERE vendor_id = ?");
+            $has_user = false;
+            if ($stmt_check_user) {
+                mysqli_stmt_bind_param($stmt_check_user, "i", $vendor_id);
+                mysqli_stmt_execute($stmt_check_user);
+                $res_check_user = mysqli_stmt_get_result($stmt_check_user);
+                $has_user = mysqli_num_rows($res_check_user) > 0;
+                mysqli_stmt_close($stmt_check_user);
+            } else {
+                throw new Exception('Gagal memeriksa akun user vendor.');
+            }
+
+            if (!$has_user) {
                 // Masukkan data user baru
-                $insert_user = "INSERT INTO users (username, password, role, vendor_id) 
-                                VALUES ('$username', '$password', 'Vendor', $vendor_id)";
-                if (!mysqli_query($conn, $insert_user)) {
-                    throw new Exception('Gagal membuat akun user vendor: ' . mysqli_error($conn));
+                $stmt_insert_user = mysqli_prepare($conn, "INSERT INTO users (username, password, role, vendor_id) VALUES (?, ?, 'Vendor', ?)");
+                if ($stmt_insert_user) {
+                    mysqli_stmt_bind_param($stmt_insert_user, "ssi", $username, $password, $vendor_id);
+                    $success_insert = mysqli_stmt_execute($stmt_insert_user);
+                    mysqli_stmt_close($stmt_insert_user);
+                    
+                    if (!$success_insert) {
+                        throw new Exception('Gagal membuat akun user vendor.');
+                    }
+                    $message_suffix = ". Akun Login Dibuat -> Username: " . $username . " | Password: " . $plain_pass_for_email;
+                } else {
+                    throw new Exception('Gagal mempersiapkan pembuatan akun user vendor.');
                 }
-                $message_suffix = ". Akun Login Dibuat -> Username: " . $username . " | Password: " . $plain_pass_for_email;
             } else {
                 $message_suffix = ". Akun user sudah terdaftar di sistem.";
             }
         } else {
-            throw new Exception('Data vendor tidak ditemukan');
+            throw new Exception('Data vendor tidak ditemukan.');
         }
     }
     

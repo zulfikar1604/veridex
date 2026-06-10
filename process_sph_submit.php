@@ -35,13 +35,24 @@ $nomor_sph = "SPH/V" . $vendor_id . "/" . date('Y/m') . "/" . rand(1000, 9999);
 
 
 // Cek RFQ masih open dan vendor diundang
-$rfq = mysqli_fetch_assoc(mysqli_query($conn, "
+$stmt_rfq = mysqli_prepare($conn, "
     SELECT r.*, rv.id as invitation_id, rv.has_submitted, i.id as inv_id
     FROM rfq_requests r
     JOIN rfq_vendors rv ON r.id = rv.rfq_id
     JOIN inventory i ON r.inventory_id = i.id
-    WHERE r.id = $rfq_id AND rv.vendor_id = $vendor_id AND r.status = 'Open'
-"));
+    WHERE r.id = ? AND rv.vendor_id = ? AND r.status = 'Open'
+");
+$rfq = null;
+if ($stmt_rfq) {
+    mysqli_stmt_bind_param($stmt_rfq, "ii", $rfq_id, $vendor_id);
+    mysqli_stmt_execute($stmt_rfq);
+    $result_rfq = mysqli_stmt_get_result($stmt_rfq);
+    $rfq = mysqli_fetch_assoc($result_rfq);
+    mysqli_stmt_close($stmt_rfq);
+} else {
+    echo json_encode(['success' => false, 'message' => 'Gagal memproses pemeriksaan RFQ.']);
+    exit;
+}
 
 if (!$rfq) {
     echo json_encode(['success' => false, 'message' => 'RFQ tidak ditemukan atau Anda tidak diundang']);
@@ -66,24 +77,34 @@ mysqli_begin_transaction($conn);
 
 try {
     // Insert ke sph_submissions
-    $nomor_safe = mysqli_real_escape_string($conn, $nomor_sph);
-    $incoterm_safe = mysqli_real_escape_string($conn, $incoterm);
-    $payment_term_safe = mysqli_real_escape_string($conn, $payment_term);
-    $keterangan_safe = mysqli_real_escape_string($conn, $keterangan);
-    $diskon_jenis_safe = mysqli_real_escape_string($conn, $diskon_jenis);
-    
-    $dok_safe = $dokumen_path ? "'" . mysqli_real_escape_string($conn, $dokumen_path) . "'" : "NULL";
     $inventory_id = $rfq['inv_id'];
 
-    $sql = "INSERT INTO sph_submissions (rfq_id, vendor_id, inventory_id, nomor_sph, harga_penawaran, biaya_pengiriman, diskon_jenis, diskon_nilai, incoterm, payment_term, keterangan, dokumen_sph, status, created_at) 
-            VALUES ($rfq_id, $vendor_id, $inventory_id, '$nomor_safe', $harga_penawaran, $biaya_pengiriman, '$diskon_jenis_safe', $diskon_nilai, '$incoterm_safe', '$payment_term_safe', '$keterangan_safe', $dok_safe, 'Pending Review', NOW())";
-    
-    if (!mysqli_query($conn, $sql)) {
-        throw new Exception(mysqli_error($conn));
+    $stmt_insert = mysqli_prepare($conn, "INSERT INTO sph_submissions (rfq_id, vendor_id, inventory_id, nomor_sph, harga_penawaran, biaya_pengiriman, diskon_jenis, diskon_nilai, incoterm, payment_term, keterangan, dokumen_sph, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending Review', NOW())");
+    if ($stmt_insert) {
+        mysqli_stmt_bind_param($stmt_insert, "iiisddsddsss", $rfq_id, $vendor_id, $inventory_id, $nomor_sph, $harga_penawaran, $biaya_pengiriman, $diskon_jenis, $diskon_nilai, $incoterm, $payment_term, $keterangan, $dokumen_path);
+        $success_insert = mysqli_stmt_execute($stmt_insert);
+        mysqli_stmt_close($stmt_insert);
+        
+        if (!$success_insert) {
+            throw new Exception("Gagal menyimpan Surat Penawaran Harga.");
+        }
+    } else {
+        throw new Exception("Gagal mempersiapkan penyimpanan Surat Penawaran Harga.");
     }
 
     // Mark vendor sebagai sudah submit
-    mysqli_query($conn, "UPDATE rfq_vendors SET has_submitted = 1 WHERE rfq_id = $rfq_id AND vendor_id = $vendor_id");
+    $stmt_update = mysqli_prepare($conn, "UPDATE rfq_vendors SET has_submitted = 1 WHERE rfq_id = ? AND vendor_id = ?");
+    if ($stmt_update) {
+        mysqli_stmt_bind_param($stmt_update, "ii", $rfq_id, $vendor_id);
+        $success_update = mysqli_stmt_execute($stmt_update);
+        mysqli_stmt_close($stmt_update);
+        
+        if (!$success_update) {
+            throw new Exception("Gagal memperbarui status undangan RFQ.");
+        }
+    } else {
+        throw new Exception("Gagal mempersiapkan pembaruan status undangan RFQ.");
+    }
 
     mysqli_commit($conn);
     echo json_encode(['success' => true, 'message' => 'Surat Penawaran Harga berhasil dikirim! Menunggu evaluasi tim Procurement.']);

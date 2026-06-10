@@ -63,23 +63,23 @@ while($v = mysqli_fetch_assoc($query_vendors)) {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
-            .stamp-img {
-                mix-blend-mode: normal !important;
-                opacity: 0.95 !important;
+            .stamp-css {
+                mix-blend-mode: multiply !important;
+                opacity: 0.8 !important;
                 display: block !important;
                 visibility: visible !important;
             }
         }
     </style>
 </head>
-<body class="text-slate-800 dark:text-white">
+<body class="text-slate-800">
 
     <div class="fixed top-4 right-4 no-print flex gap-2">
         <button onclick="window.print()" class="bg-red-600 text-white px-6 py-2 rounded-lg font-bold shadow hover:bg-red-700">
             <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
             Print PDF
         </button>
-        <button onclick="window.close()" class="bg-slate-200 text-slate-700 dark:text-slate-200 px-6 py-2 rounded-lg font-bold shadow hover:bg-slate-300">Tutup</button>
+        <button onclick="window.close()" class="bg-slate-200 text-slate-700 px-6 py-2 rounded-lg font-bold shadow hover:bg-slate-300">Tutup</button>
     </div>
 
     <div class="print-area">
@@ -87,20 +87,20 @@ while($v = mysqli_fetch_assoc($query_vendors)) {
         <div class="flex justify-between items-start border-b-4 border-slate-900 pb-6 mb-8">
             <div>
                 <h1 class="text-4xl font-black text-red-600 tracking-tighter uppercase">VERIDEX</h1>
-                <p class="text-xs font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 tracking-widest mt-1">PROCUREMENT SYSTEM</p>
-                <div class="mt-4 text-sm text-slate-600 dark:text-slate-300">
+                <p class="text-xs font-bold text-slate-500 tracking-widest mt-1">PROCUREMENT SYSTEM</p>
+                <div class="mt-4 text-sm text-slate-600">
                     <p>Jl. Jend. Sudirman No. 123, Jakarta 12190</p>
                     <p>Tel: (021) 555-0123 | Email: procurement@veridex.co.id</p>
                 </div>
             </div>
             <div class="text-right">
-                <h2 class="text-3xl font-black text-slate-800 dark:text-white uppercase mb-2">Request For Quotation</h2>
-                <div class="inline-block bg-slate-100 p-3 rounded-lg text-left border border-slate-200 dark:border-slate-700">
+                <h2 class="text-3xl font-black text-slate-800 uppercase mb-2">Request For Quotation</h2>
+                <div class="inline-block bg-slate-100 p-3 rounded-lg text-left border border-slate-200">
                     <div class="overflow-x-auto w-full">
 <table class="text-sm">
-                        <tr><td class="font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 pr-4">RFQ Number</td><td class="font-black"><?= htmlspecialchars($rfq['rfq_number']) ?></td></tr>
-                        <tr><td class="font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 pr-4">Date Issued</td><td class="font-bold"><?= date('d F Y', strtotime($rfq['created_at'])) ?></td></tr>
-                        <tr><td class="font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 pr-4">Submission Deadline</td><td class="font-black text-red-600"><?= date('d F Y H:i', strtotime($rfq['deadline'])) ?></td></tr>
+                        <tr><td class="font-bold text-slate-500 pr-4">RFQ Number</td><td class="font-black"><?= htmlspecialchars($rfq['rfq_number']) ?></td></tr>
+                        <tr><td class="font-bold text-slate-500 pr-4">Date Issued</td><td class="font-bold"><?= date('d F Y', strtotime($rfq['created_at'])) ?></td></tr>
+                        <tr><td class="font-bold text-slate-500 pr-4">Submission Deadline</td><td class="font-black text-red-600"><?= date('d F Y H:i', strtotime($rfq['deadline'])) ?></td></tr>
                     </table>
 </div>
                 </div>
@@ -109,11 +109,11 @@ while($v = mysqli_fetch_assoc($query_vendors)) {
 
         <div class="mb-8">
             <h3 class="font-black text-lg mb-2 uppercase">Kepada Yth. Vendor Terpilih,</h3>
-            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Kami mengundang perusahaan Anda untuk berpartisipasi dalam proses pengadaan (Bidding) untuk kebutuhan material/barang di Veridex. Silakan submit Surat Penawaran Harga (SPH) beserta dokumen pendukung sebelum batas waktu yang ditentukan.</p>
+            <p class="text-sm text-slate-600 leading-relaxed">Kami mengundang perusahaan Anda untuk berpartisipasi dalam proses pengadaan (Bidding) untuk kebutuhan material/barang di Veridex. Silakan submit Surat Penawaran Harga (SPH) beserta dokumen pendukung sebelum batas waktu yang ditentukan.</p>
         </div>
 
         <!-- Items Table -->
-        <h3 class="font-black text-md mb-3 uppercase tracking-widest text-slate-500 dark:text-slate-400 dark:text-slate-500">Spesifikasi Kebutuhan:</h3>
+        <h3 class="font-black text-md mb-3 uppercase tracking-widest text-slate-500">Spesifikasi Kebutuhan:</h3>
         <div class="overflow-x-auto w-full">
 <table class="w-full mb-8 border border-slate-300">
             <thead class="bg-slate-900 text-white">
@@ -128,13 +128,13 @@ while($v = mysqli_fetch_assoc($query_vendors)) {
                 <tr>
                     <td class="py-4 px-4 text-center font-bold">1</td>
                     <td class="py-4 px-4">
-                        <div class="font-bold text-slate-800 dark:text-white"><?= htmlspecialchars($rfq['nama_barang']) ?></div>
+                        <div class="font-bold text-slate-800"><?= htmlspecialchars($rfq['nama_barang']) ?></div>
                         <?php if($rfq['catatan']): ?>
-                        <div class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1 italic">Catatan: <?= htmlspecialchars($rfq['catatan']) ?></div>
+                        <div class="text-xs text-slate-500 mt-1 italic">Catatan: <?= htmlspecialchars($rfq['catatan']) ?></div>
                         <?php endif; ?>
                     </td>
-                    <td class="py-4 px-4 text-center text-slate-500 dark:text-slate-400 dark:text-slate-500 font-mono"><?= htmlspecialchars($rfq['sku']) ?></td>
-                    <td class="py-4 px-4 text-center font-black text-lg"><?= htmlspecialchars($rfq['jumlah_kebutuhan']) ?> <span class="text-xs text-slate-400 dark:text-slate-500 font-normal"><?= htmlspecialchars($rfq['unit']) ?></span></td>
+                    <td class="py-4 px-4 text-center text-slate-500 font-mono"><?= htmlspecialchars($rfq['sku']) ?></td>
+                    <td class="py-4 px-4 text-center font-black text-lg"><?= htmlspecialchars($rfq['jumlah_kebutuhan']) ?> <span class="text-xs text-slate-400 font-normal"><?= htmlspecialchars($rfq['unit']) ?></span></td>
                 </tr>
                 <tr class="h-32"><td colspan="4"></td></tr>
             </tbody>
@@ -144,8 +144,8 @@ while($v = mysqli_fetch_assoc($query_vendors)) {
         <!-- Terms and Signatures -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
             <div>
-                <h3 class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Instruksi Bidding:</h3>
-                <ul class="text-xs text-slate-600 dark:text-slate-300 list-decimal pl-4 space-y-2">
+                <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Instruksi Bidding:</h3>
+                <ul class="text-xs text-slate-600 list-decimal pl-4 space-y-2">
                     <li>Submit SPH melalui sistem e-Procurement Veridex di tab <b>Bidding Area</b>.</li>
                     <li>Harga penawaran harus sudah termasuk pajak (jika ada) dan biaya pengiriman sampai ke gudang.</li>
                     <li>Lampirkan dokumen spesifikasi teknis (TBE) bersama dengan dokumen SPH.</li>
@@ -155,18 +155,18 @@ while($v = mysqli_fetch_assoc($query_vendors)) {
             
             <div class="flex justify-end gap-12">
                 <div class="text-center w-40 relative">
-                    <p class="text-xs font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase mb-12">Diterbitkan Oleh</p>
-                    <div class="absolute -top-2 -left-6 w-[6rem] h-[6rem] border-[3px] border-red-600 rounded-full p-1 opacity-80 pointer-events-none z-0" style="transform: rotate(5deg);">
-                        <div class="w-full h-full border border-red-600 rounded-full flex flex-col items-center justify-center text-red-600">
-                            <span class="text-[10px] font-black uppercase tracking-widest leading-none">VERIDEX</span>
-                            <div class="border-y border-red-600 w-full text-center py-1 my-1">
+                    <p class="text-xs font-bold text-slate-500 uppercase mb-12">Diterbitkan Oleh</p>
+                    <div class="absolute -top-4 -left-2 w-24 h-24 border-4 border-red-600 rounded-full p-1 opacity-80 pointer-events-none z-0 stamp-css" style="transform: rotate(5deg);">
+                        <div class="w-full h-full border-2 border-red-600 rounded-full flex flex-col items-center justify-center text-red-600">
+                            <span class="text-[11px] font-black uppercase tracking-widest leading-none">VERIDEX</span>
+                            <div class="border-y-2 border-red-600 w-full text-center py-1 my-1">
                                 <span class="text-[10px] font-black uppercase tracking-widest leading-none">OFFICIAL</span>
                             </div>
-                            <span class="text-[6px] font-bold uppercase tracking-widest leading-none">PROCUREMENT</span>
+                            <span class="text-[7px] font-bold uppercase tracking-widest leading-none">PROCUREMENT</span>
                         </div>
                     </div>
                     <div class="border-b border-slate-400 pb-1 font-bold text-sm relative z-10"><?= htmlspecialchars($rfq['creator_name'] ?? 'Procurement') ?></div>
-                    <p class="text-[10px] mt-1 text-slate-500 dark:text-slate-400 dark:text-slate-500">Veridex Procurement</p>
+                    <p class="text-[10px] mt-1 text-slate-500">Veridex Procurement</p>
                 </div>
             </div>
         </div>

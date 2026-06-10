@@ -31,12 +31,23 @@ if ($rfq_id <= 0 || $harga_penawaran <= 0) {
 }
 
 // Cek RFQ dan SPH existing
-$sph = mysqli_fetch_assoc(mysqli_query($conn, "
+$stmt_check = mysqli_prepare($conn, "
     SELECT s.id, s.status, r.deadline 
     FROM sph_submissions s
     JOIN rfq_requests r ON s.rfq_id = r.id
-    WHERE s.rfq_id = $rfq_id AND s.vendor_id = $vendor_id
-"));
+    WHERE s.rfq_id = ? AND s.vendor_id = ?
+");
+$sph = null;
+if ($stmt_check) {
+    mysqli_stmt_bind_param($stmt_check, "ii", $rfq_id, $vendor_id);
+    mysqli_stmt_execute($stmt_check);
+    $result_check = mysqli_stmt_get_result($stmt_check);
+    $sph = mysqli_fetch_assoc($result_check);
+    mysqli_stmt_close($stmt_check);
+} else {
+    echo json_encode(['success' => false, 'message' => 'Gagal memproses pemeriksaan SPH.']);
+    exit;
+}
 
 if (!$sph) {
     echo json_encode(['success' => false, 'message' => 'Data penawaran tidak ditemukan']);
@@ -54,25 +65,20 @@ if (!empty($sph['deadline']) && strtotime($sph['deadline']) < time()) {
     exit;
 }
 
-$incoterm_safe = mysqli_real_escape_string($conn, $incoterm);
-$payment_term_safe = mysqli_real_escape_string($conn, $payment_term);
-$keterangan_safe = mysqli_real_escape_string($conn, $keterangan);
-$diskon_jenis_safe = mysqli_real_escape_string($conn, $diskon_jenis);
 $sph_id = $sph['id'];
 
-$sql = "UPDATE sph_submissions SET 
-            harga_penawaran = $harga_penawaran,
-            biaya_pengiriman = $biaya_pengiriman,
-            diskon_jenis = '$diskon_jenis_safe',
-            diskon_nilai = $diskon_nilai,
-            incoterm = '$incoterm_safe',
-            payment_term = '$payment_term_safe',
-            keterangan = '$keterangan_safe'
-        WHERE id = $sph_id AND vendor_id = $vendor_id";
-
-if (mysqli_query($conn, $sql)) {
-    echo json_encode(['success' => true, 'message' => 'Surat Penawaran Harga berhasil diperbarui!']);
+$stmt_update = mysqli_prepare($conn, "UPDATE sph_submissions SET harga_penawaran = ?, biaya_pengiriman = ?, diskon_jenis = ?, diskon_nilai = ?, incoterm = ?, payment_term = ?, keterangan = ? WHERE id = ? AND vendor_id = ?");
+if ($stmt_update) {
+    mysqli_stmt_bind_param($stmt_update, "ddsdsssii", $harga_penawaran, $biaya_pengiriman, $diskon_jenis, $diskon_nilai, $incoterm, $payment_term, $keterangan, $sph_id, $vendor_id);
+    $success = mysqli_stmt_execute($stmt_update);
+    mysqli_stmt_close($stmt_update);
+    
+    if ($success) {
+        echo json_encode(['success' => true, 'message' => 'Surat Penawaran Harga berhasil diperbarui!']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Gagal menyimpan perubahan SPH.']);
+    }
 } else {
-    echo json_encode(['success' => false, 'message' => 'Gagal memperbarui SPH: ' . mysqli_error($conn)]);
+    echo json_encode(['success' => false, 'message' => 'Gagal memproses perbaruan SPH.']);
 }
 ?>

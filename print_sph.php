@@ -59,38 +59,42 @@ $tanggal_cetak = date('d F Y', strtotime($sph['created_at']));
         @media print {
             body { background: white; margin: 0; padding: 0; }
             .no-print { display: none; }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen py-8">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen py-8 text-slate-800">
 
     <div class="fixed top-4 right-4 no-print flex gap-2 z-50">
         <button onclick="window.print()" class="bg-red-600 text-white px-6 py-2 rounded-lg font-bold shadow hover:bg-red-700">
             <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
             Print PDF
         </button>
-        <button onclick="window.close()" class="bg-slate-200 text-slate-700 dark:text-slate-200 px-6 py-2 rounded-lg font-bold shadow hover:bg-slate-300">Tutup</button>
+        <button onclick="window.close()" class="bg-slate-200 text-slate-700 px-6 py-2 rounded-lg font-bold shadow hover:bg-slate-300">Tutup</button>
     </div>
 
-    <div class="bg-white dark:bg-[#1e293b] p-12 w-[21cm] min-h-[29.7cm] border border-gray-300 shadow-xl relative mt-12">
+    <div class="bg-white p-12 w-[21cm] min-h-[29.7cm] border border-gray-300 shadow-xl relative mt-12">
         
         <!-- Header Vendor -->
         <div class="border-b-4 border-slate-800 pb-6 mb-8 text-center">
-            <h1 class="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-widest"><?= htmlspecialchars($sph['nama_perusahaan']) ?></h1>
-            <p class="text-sm text-slate-600 dark:text-slate-300 mt-2"><?= htmlspecialchars($sph['alamat']) ?></p>
-            <p class="text-sm text-slate-600 dark:text-slate-300">Email: <?= htmlspecialchars($sph['email']) ?> | Telepon: <?= htmlspecialchars($sph['pic_kontak']) ?></p>
+            <h1 class="text-3xl font-black text-slate-800 uppercase tracking-widest"><?= htmlspecialchars($sph['nama_perusahaan']) ?></h1>
+            <p class="text-sm text-slate-600 mt-2"><?= htmlspecialchars($sph['alamat']) ?></p>
+            <p class="text-sm text-slate-600">Email: <?= htmlspecialchars($sph['email']) ?> | Telepon: <?= htmlspecialchars($sph['pic_kontak']) ?></p>
         </div>
 
         <!-- Judul Surat -->
         <div class="text-center mb-10">
-            <h2 class="text-2xl font-black text-slate-800 dark:text-white uppercase underline underline-offset-4">SURAT PENAWARAN HARGA (SPH)</h2>
-            <p class="text-md font-bold text-slate-600 dark:text-slate-300 mt-2">Nomor: <?= htmlspecialchars($sph['nomor_sph']) ?></p>
+            <h2 class="text-2xl font-black text-slate-800 uppercase underline underline-offset-4">SURAT PENAWARAN HARGA (SPH)</h2>
+            <p class="text-md font-bold text-slate-600 mt-2">Nomor: <?= htmlspecialchars($sph['nomor_sph']) ?></p>
         </div>
 
         <div class="flex justify-between items-start mb-8 text-sm">
             <div>
                 <p>Kepada Yth,</p>
-                <p class="font-black text-slate-800 dark:text-white mt-1">Tim Procurement - PT Veridex</p>
+                <p class="font-black text-slate-800 mt-1">Tim Procurement - PT Veridex</p>
                 <p>Kawasan Terpadu Industri Raya No. 45</p>
             </div>
             <div class="text-right">
@@ -121,7 +125,7 @@ $tanggal_cetak = date('d F Y', strtotime($sph['created_at']));
                     <td class="border border-slate-400 p-3 text-center">1</td>
                     <td class="border border-slate-400 p-3">
                         <strong><?= htmlspecialchars($sph['nama_barang']) ?></strong><br>
-                        <span class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500"><?= htmlspecialchars($sph['sku']) ?></span>
+                        <span class="text-xs text-slate-500"><?= htmlspecialchars($sph['sku']) ?></span>
                     </td>
                     <td class="border border-slate-400 p-3 text-center">
                         <?= $sph['jumlah_kebutuhan'] ?> <?= htmlspecialchars($sph['unit']) ?>
@@ -129,15 +133,15 @@ $tanggal_cetak = date('d F Y', strtotime($sph['created_at']));
                     <td class="border border-slate-400 p-3 text-right">
                         <?= number_format($sph['harga_penawaran'], 0, ',', '.') ?>
                     </td>
-                    <td class="border border-slate-400 p-3 text-right font-bold text-slate-800 dark:text-white">
+                    <td class="border border-slate-400 p-3 text-right font-bold text-slate-800">
                         <?= number_format($subtotal, 0, ',', '.') ?>
                     </td>
                 </tr>
             </tbody>
             <tfoot>
-                <tr class="bg-slate-50 dark:bg-slate-900">
+                <tr class="bg-slate-50">
                     <td colspan="4" class="border border-slate-400 p-3 text-right font-black uppercase">Subtotal</td>
-                    <td class="border border-slate-400 p-3 text-right font-black text-slate-800 dark:text-white">
+                    <td class="border border-slate-400 p-3 text-right font-black text-slate-800">
                         Rp <?= number_format($subtotal, 0, ',', '.') ?>
                     </td>
                 </tr>
@@ -152,9 +156,9 @@ $tanggal_cetak = date('d F Y', strtotime($sph['created_at']));
                         - Rp <?= number_format($diskon, 0, ',', '.') ?>
                     </td>
                 </tr>
-                <tr class="bg-slate-50 dark:bg-slate-900">
+                <tr class="bg-slate-50">
                     <td colspan="4" class="border border-slate-400 p-3 text-right font-black uppercase">Biaya Pengiriman</td>
-                    <td class="border border-slate-400 p-3 text-right font-black text-slate-800 dark:text-white">
+                    <td class="border border-slate-400 p-3 text-right font-black text-slate-800">
                         Rp <?= number_format($biaya_pengiriman, 0, ',', '.') ?>
                     </td>
                 </tr>
@@ -170,7 +174,7 @@ $tanggal_cetak = date('d F Y', strtotime($sph['created_at']));
 
         <div class="mb-12 text-sm leading-relaxed">
             <p><strong>Syarat & Ketentuan:</strong></p>
-            <ul class="list-disc list-inside mt-2 text-slate-600 dark:text-slate-300 space-y-1">
+            <ul class="list-disc list-inside mt-2 text-slate-600 space-y-1">
                 <li><strong>Incoterm:</strong> <?= htmlspecialchars($sph['incoterm'] ?: '-') ?></li>
                 <li><strong>Payment Term:</strong> <?= htmlspecialchars($sph['payment_term'] ?: '-') ?></li>
                 <li><strong>Catatan/Keterangan:</strong> <?= nl2br(htmlspecialchars($sph['keterangan'] ?: '-')) ?></li>
@@ -182,8 +186,8 @@ $tanggal_cetak = date('d F Y', strtotime($sph['created_at']));
             <div>
                 <p>Hormat Kami,</p>
                 <div class="h-20"></div> <!-- Ruang tanda tangan -->
-                <p class="font-black text-slate-800 dark:text-white underline"><?= htmlspecialchars($sph['pic_nama']) ?></p>
-                <p class="text-slate-500 dark:text-slate-400 dark:text-slate-500">Perwakilan Vendor</p>
+                <p class="font-black text-slate-800 underline"><?= htmlspecialchars($sph['pic_nama']) ?></p>
+                <p class="text-slate-500">Perwakilan Vendor</p>
             </div>
         </div>
 

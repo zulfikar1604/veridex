@@ -74,10 +74,10 @@ include 'header_meta.php';
                                 <span class="font-black text-slate-800 dark:text-white"><?= $rfq['jumlah_kebutuhan'] ?></span>
                             </td>
                             <td class="p-6 text-center">
-                                <span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black"><?= $rfq['total_vendor'] ?> Vendor</span>
+                                <span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black whitespace-nowrap inline-block"><?= $rfq['total_vendor'] ?> Vendor</span>
                             </td>
                             <td class="p-6 text-center">
-                                <span class="bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full text-[10px] font-black"><?= $rfq['total_sph'] ?> SPH</span>
+                                <span class="bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full text-[10px] font-black whitespace-nowrap inline-block"><?= $rfq['total_sph'] ?> SPH</span>
                             </td>
                             <td class="p-6 text-center">
                                 <?php if(!empty($rfq['deadline'])): ?>
@@ -91,14 +91,14 @@ include 'header_meta.php';
                             </td>
                             <td class="p-6 text-center">
                                 <?php if($is_expired): ?>
-                                <span class="px-3 py-1 border rounded-lg text-[9px] font-black uppercase bg-amber-50 text-amber-600 border-amber-200">Expired</span>
+                                <span class="px-3 py-1 border rounded-lg text-[9px] font-black uppercase bg-amber-50 text-amber-600 border-amber-200 whitespace-nowrap inline-block">Expired</span>
                                 <?php else: ?>
-                                <span class="px-3 py-1 border rounded-lg text-[9px] font-black uppercase <?= $sc ?>"><?= htmlspecialchars($rfq['status']) ?></span>
+                                <span class="px-3 py-1 border rounded-lg text-[9px] font-black uppercase <?= $sc ?> whitespace-nowrap inline-block"><?= htmlspecialchars($rfq['status']) ?></span>
                                 <?php endif; ?>
                             </td>
                             <td class="p-6 text-right">
-                                <a href="print_rfq.php?id=<?= $rfq['id'] ?>" target="_blank" class="px-3 py-1.5 bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-blue-600 hover:border-blue-200 rounded-lg text-[9px] font-black uppercase transition shadow-sm" title="Cetak RFQ">
-                                    <i class="fa-solid fa-print mr-1"></i> Print
+                                <a href="print_rfq.php?id=<?= $rfq['id'] ?>" target="_blank" class="px-3 py-1.5 bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-blue-600 hover:border-blue-200 rounded-lg text-[9px] font-black uppercase transition shadow-sm whitespace-nowrap inline-flex items-center justify-center gap-1" title="Cetak RFQ">
+                                    <i class="fa-solid fa-print"></i> Print
                                 </a>
                             </td>
                         </tr>

@@ -38,7 +38,7 @@ session_start();
     </header>
     
     <main class="flex-1 w-full max-w-7xl mx-auto px-6 py-12 flex items-center">
-        <div class="grid lg:grid-cols-1 md:grid-cols-2 gap-16 items-center w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
             
             <div class="space-y-8 animate-[fade-in-right_1s_ease-out]">
                 <div>

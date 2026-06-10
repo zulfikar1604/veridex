@@ -56,7 +56,18 @@ switch ($action) {
         }
 
         // Pastikan TBE sudah di-score terlebih dahulu
-        $check = mysqli_fetch_assoc(mysqli_query($conn, "SELECT tbe_score FROM sph_submissions WHERE id = $sph_id"));
+        $stmt_check = mysqli_prepare($conn, "SELECT tbe_score FROM sph_submissions WHERE id = ?");
+        $check = null;
+        if ($stmt_check) {
+            mysqli_stmt_bind_param($stmt_check, "i", $sph_id);
+            mysqli_stmt_execute($stmt_check);
+            $result = mysqli_stmt_get_result($stmt_check);
+            $check = mysqli_fetch_assoc($result);
+            mysqli_stmt_close($stmt_check);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Gagal memproses pemeriksaan TBE.']);
+            exit;
+        }
         if (!$check || $check['tbe_score'] === null) {
             echo json_encode(['success' => false, 'message' => 'TBE harus di-score terlebih dahulu']);
             exit;
@@ -89,8 +100,19 @@ switch ($action) {
         }
 
         // Validasi: Vendor harus sudah "Evaluated" atau "Selected" untuk item ini di RFQ terpilih
-        $check_eval = mysqli_query($conn, "SELECT id FROM sph_submissions WHERE rfq_id = $rfq_id AND vendor_id = $vendor_1 AND status IN ('Evaluated', 'Selected', 'Rejected')");
-        if (mysqli_num_rows($check_eval) === 0) {
+        $stmt_eval = mysqli_prepare($conn, "SELECT id FROM sph_submissions WHERE rfq_id = ? AND vendor_id = ? AND status IN ('Evaluated', 'Selected', 'Rejected')");
+        $has_eval = false;
+        if ($stmt_eval) {
+            mysqli_stmt_bind_param($stmt_eval, "ii", $rfq_id, $vendor_1);
+            mysqli_stmt_execute($stmt_eval);
+            $res_eval = mysqli_stmt_get_result($stmt_eval);
+            $has_eval = mysqli_num_rows($res_eval) > 0;
+            mysqli_stmt_close($stmt_eval);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Gagal memproses pemeriksaan evaluasi vendor utama.']);
+            exit;
+        }
+        if (!$has_eval) {
             echo json_encode(['success' => false, 'message' => 'Vendor utama belum menyelesaikan evaluasi TBE/CBE']);
             exit;
         }
@@ -104,8 +126,19 @@ switch ($action) {
 
         // Jika vendor_2 dipilih, validasi juga
         if ($vendor_2 > 0) {
-            $check_eval2 = mysqli_query($conn, "SELECT id FROM sph_submissions WHERE rfq_id = $rfq_id AND vendor_id = $vendor_2 AND status IN ('Evaluated', 'Selected', 'Rejected')");
-            if (mysqli_num_rows($check_eval2) === 0) {
+            $stmt_eval2 = mysqli_prepare($conn, "SELECT id FROM sph_submissions WHERE rfq_id = ? AND vendor_id = ? AND status IN ('Evaluated', 'Selected', 'Rejected')");
+            $has_eval2 = false;
+            if ($stmt_eval2) {
+                mysqli_stmt_bind_param($stmt_eval2, "ii", $rfq_id, $vendor_2);
+                mysqli_stmt_execute($stmt_eval2);
+                $res_eval2 = mysqli_stmt_get_result($stmt_eval2);
+                $has_eval2 = mysqli_num_rows($res_eval2) > 0;
+                mysqli_stmt_close($stmt_eval2);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Gagal memproses pemeriksaan evaluasi vendor pendamping.']);
+                exit;
+            }
+            if (!$has_eval2) {
                 echo json_encode(['success' => false, 'message' => 'Vendor pendamping belum menyelesaikan evaluasi TBE/CBE']);
                 exit;
             }
@@ -136,13 +169,35 @@ switch ($action) {
             }
 
             // Reject vendor lain yang tidak terpilih
-            $reject_ids = [$vendor_1];
-            if ($vendor_2 > 0) $reject_ids[] = $vendor_2;
-            $reject_list = implode(',', $reject_ids);
-            mysqli_query($conn, "UPDATE sph_submissions SET status = 'Rejected' WHERE rfq_id = $rfq_id AND vendor_id NOT IN ($reject_list) AND status IN ('Evaluated', 'Selected', 'Rejected')");
+            if ($vendor_2 > 0) {
+                $stmt_reject = mysqli_prepare($conn, "UPDATE sph_submissions SET status = 'Rejected' WHERE rfq_id = ? AND vendor_id != ? AND vendor_id != ? AND status IN ('Evaluated', 'Selected', 'Rejected')");
+                if ($stmt_reject) {
+                    mysqli_stmt_bind_param($stmt_reject, "iii", $rfq_id, $vendor_1, $vendor_2);
+                    mysqli_stmt_execute($stmt_reject);
+                    mysqli_stmt_close($stmt_reject);
+                } else {
+                    throw new Exception('Gagal mempersiapkan penolakan vendor lain.');
+                }
+            } else {
+                $stmt_reject = mysqli_prepare($conn, "UPDATE sph_submissions SET status = 'Rejected' WHERE rfq_id = ? AND vendor_id != ? AND status IN ('Evaluated', 'Selected', 'Rejected')");
+                if ($stmt_reject) {
+                    mysqli_stmt_bind_param($stmt_reject, "ii", $rfq_id, $vendor_1);
+                    mysqli_stmt_execute($stmt_reject);
+                    mysqli_stmt_close($stmt_reject);
+                } else {
+                    throw new Exception('Gagal mempersiapkan penolakan vendor lain.');
+                }
+            }
 
             // Tutup RFQ yang sedang berjalan agar item ini bisa dipesan ulang di masa depan
-            mysqli_query($conn, "UPDATE rfq_requests SET status = 'Closed', closed_at = NOW() WHERE id = $rfq_id");
+            $stmt_close_rfq = mysqli_prepare($conn, "UPDATE rfq_requests SET status = 'Closed', closed_at = NOW() WHERE id = ?");
+            if ($stmt_close_rfq) {
+                mysqli_stmt_bind_param($stmt_close_rfq, "i", $rfq_id);
+                mysqli_stmt_execute($stmt_close_rfq);
+                mysqli_stmt_close($stmt_close_rfq);
+            } else {
+                throw new Exception('Gagal mempersiapkan penutupan RFQ.');
+            }
 
             mysqli_commit($conn);
             echo json_encode(['success' => true, 'message' => 'Vendor berhasil dipilih. Silakan lanjut ke halaman Buat PO untuk men-generate Purchase Order.']);

@@ -27,28 +27,39 @@ $vendor = mysqli_fetch_assoc($query);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil Vendor - <?= htmlspecialchars($vendor['nama_perusahaan']) ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
         @media print {
-            body { background-color: #ffffff; }
+            body { background-color: #ffffff; margin: 0; padding: 0; }
             .no-print { display: none !important; }
             .print-border { border-color: #000 !important; }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .stamp-css {
+                mix-blend-mode: multiply !important;
+                opacity: 0.8 !important;
+                display: block !important;
+                visibility: visible !important;
+            }
         }
     </style>
 </head>
-<body class="p-8">
+<body class="p-8 text-slate-800">
 
-    <div class="max-w-4xl mx-auto bg-white dark:bg-[#1e293b] p-12 shadow-2xl rounded-2xl print:shadow-none print:rounded-none">
+    <div class="max-w-4xl mx-auto bg-white p-12 shadow-2xl rounded-2xl print:shadow-none print:rounded-none border border-slate-200 print:border-none">
         
         <!-- Header / Kop -->
         <div class="flex justify-between items-center border-b-4 border-slate-900 pb-6 mb-8 print-border">
             <div>
                 <h1 class="text-3xl font-black text-slate-900 uppercase tracking-tighter">Profil Mitra Pengadaan</h1>
-                <p class="text-sm font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">Sistem Registrasi Veridex</p>
+                <p class="text-sm font-bold text-slate-500 uppercase tracking-widest mt-1">Sistem Registrasi Veridex</p>
             </div>
             <div class="text-right">
-                <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">ID Vendor</p>
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">ID Vendor</p>
                 <p class="text-2xl font-black text-slate-900">VND-<?= str_pad($vendor['id'], 4, '0', STR_PAD_LEFT) ?></p>
             </div>
         </div>
@@ -65,43 +76,43 @@ $vendor = mysqli_fetch_assoc($query);
         <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12 mb-10">
             
             <div class="col-span-2">
-                <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Alamat Lengkap Perusahaan</p>
-                <p class="font-medium text-slate-800 dark:text-white text-base leading-relaxed border-b border-slate-200 dark:border-slate-700 pb-2"><?= nl2br(htmlspecialchars($vendor['alamat'])) ?></p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Alamat Lengkap Perusahaan</p>
+                <p class="font-medium text-slate-800 text-base leading-relaxed border-b border-slate-200 pb-2"><?= nl2br(htmlspecialchars($vendor['alamat'])) ?></p>
             </div>
 
             <div>
-                <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Nama Penanggung Jawab (PIC)</p>
-                <p class="font-bold text-slate-800 dark:text-white text-lg border-b border-slate-200 dark:border-slate-700 pb-2"><?= htmlspecialchars($vendor['pic_nama']) ?></p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Nama Penanggung Jawab (PIC)</p>
+                <p class="font-bold text-slate-800 text-lg border-b border-slate-200 pb-2"><?= htmlspecialchars($vendor['pic_nama']) ?></p>
             </div>
 
             <div>
-                <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Nomor Kontak (WhatsApp / Telp)</p>
-                <p class="font-bold text-slate-800 dark:text-white text-lg border-b border-slate-200 dark:border-slate-700 pb-2"><?= htmlspecialchars($vendor['pic_kontak']) ?></p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Nomor Kontak (WhatsApp / Telp)</p>
+                <p class="font-bold text-slate-800 text-lg border-b border-slate-200 pb-2"><?= htmlspecialchars($vendor['pic_kontak']) ?></p>
             </div>
 
             <div>
-                <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Email Resmi</p>
-                <p class="font-bold text-slate-800 dark:text-white text-lg border-b border-slate-200 dark:border-slate-700 pb-2"><?= htmlspecialchars($vendor['email']) ?></p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Email Resmi</p>
+                <p class="font-bold text-slate-800 text-lg border-b border-slate-200 pb-2"><?= htmlspecialchars($vendor['email']) ?></p>
             </div>
 
             <div>
-                <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Status Kemitraan Saat Ini</p>
-                <p class="font-black text-slate-800 dark:text-white text-lg border-b border-slate-200 dark:border-slate-700 pb-2 uppercase"><?= htmlspecialchars($vendor['status']) ?></p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Status Kemitraan Saat Ini</p>
+                <p class="font-black text-slate-800 text-lg border-b border-slate-200 pb-2 uppercase"><?= htmlspecialchars($vendor['status']) ?></p>
             </div>
 
         </div>
 
         <!-- Legalitas -->
-        <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-8 rounded-xl print-border mb-12">
-            <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest mb-6 border-b border-slate-200 dark:border-slate-700 pb-2">Informasi Legalitas & Perizinan</h3>
+        <div class="bg-slate-50 border border-slate-200 p-8 rounded-xl print-border mb-12">
+            <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest mb-6 border-b border-slate-200 pb-2">Informasi Legalitas & Perizinan</h3>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                    <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Nomor Induk Berusaha (NIB)</p>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Nomor Induk Berusaha (NIB)</p>
                     <p class="font-black text-xl text-slate-900 tracking-wider"><?= htmlspecialchars($vendor['nib'] ?? 'Tidak ada data') ?></p>
                 </div>
                 <div>
-                    <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">NPWP Perusahaan</p>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">NPWP Perusahaan</p>
                     <p class="font-black text-xl text-slate-900 tracking-wider"><?= htmlspecialchars($vendor['npwp'] ?? 'Tidak ada data') ?></p>
                 </div>
             </div>
@@ -110,24 +121,35 @@ $vendor = mysqli_fetch_assoc($query);
         <!-- Tanda Tangan -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-center pt-8">
             <div>
-                <p class="text-sm font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-20">Pihak Vendor</p>
+                <p class="text-sm font-bold text-slate-500 mb-20">Pihak Vendor</p>
                 <p class="font-black text-slate-900 underline underline-offset-4 decoration-2"><?= htmlspecialchars($vendor['pic_nama']) ?></p>
-                <p class="text-xs font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1 uppercase"><?= htmlspecialchars($vendor['nama_perusahaan']) ?></p>
+                <p class="text-xs font-bold text-slate-500 mt-1 uppercase"><?= htmlspecialchars($vendor['nama_perusahaan']) ?></p>
             </div>
-            <div>
-                <p class="text-sm font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-20">Diverifikasi Oleh</p>
-                <p class="font-black text-slate-900 underline underline-offset-4 decoration-2">Tim Procurement</p>
-                <p class="text-xs font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1 uppercase">Veridex SCM</p>
+            <div class="relative">
+                <p class="text-sm font-bold text-slate-500 mb-20">Diverifikasi Oleh</p>
+                <?php if($vendor['status'] === 'Verified'): ?>
+                <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-24 h-24 border-4 border-red-600 rounded-full p-1 opacity-80 pointer-events-none z-0 stamp-css" style="transform: rotate(-10deg) translateX(-50%);">
+                    <div class="w-full h-full border-2 border-red-600 rounded-full flex flex-col items-center justify-center text-red-600">
+                        <span class="text-[11px] font-black uppercase tracking-widest leading-none">VERIDEX</span>
+                        <div class="border-y-2 border-red-600 w-full text-center py-1 my-1">
+                            <span class="text-[10px] font-black uppercase tracking-widest leading-none">VERIFIED</span>
+                        </div>
+                        <span class="text-[7px] font-bold uppercase tracking-widest leading-none">PROCUREMENT</span>
+                    </div>
+                </div>
+                <?php endif; ?>
+                <p class="font-black text-slate-900 underline underline-offset-4 decoration-2 relative z-10">Tim Procurement</p>
+                <p class="text-xs font-bold text-slate-500 mt-1 uppercase relative z-10">Veridex SCM</p>
             </div>
         </div>
 
-        <div class="mt-16 text-center text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest border-t border-slate-200 dark:border-slate-700 pt-4 print-border">
+        <div class="mt-16 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest border-t border-slate-200 pt-4 print-border">
             Dokumen ini di-generate secara otomatis oleh sistem Veridex pada <?= date('d M Y H:i:s') ?>
         </div>
     </div>
 
     <!-- Tombol Cetak (Sembunyi saat diprint) -->
-    <div class="fixed bottom-8 right-8 no-print flex gap-4">
+    <div class="fixed bottom-8 right-8 no-print flex gap-4 z-50">
         <button onclick="window.close()" class="bg-slate-800 text-white px-6 py-3 rounded-xl font-black uppercase tracking-widest shadow-xl hover:bg-slate-700 hover:-translate-y-1 transition-all">Tutup</button>
         <button onclick="window.print()" class="bg-red-600 text-white px-6 py-3 rounded-xl font-black uppercase tracking-widest shadow-xl hover:bg-red-700 hover:-translate-y-1 transition-all">
             <i class="fa-solid fa-print mr-2"></i> Cetak Profil

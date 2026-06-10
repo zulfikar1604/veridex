@@ -26,9 +26,18 @@ if ($po_id <= 0) {
 }
 
 // Pastikan PO berstatus 'Payment Approved'
-$check = mysqli_fetch_assoc(mysqli_query($conn, 
-    "SELECT id, status FROM purchase_orders WHERE id = $po_id AND status = 'Payment Approved'"
-));
+$stmt_check = mysqli_prepare($conn, "SELECT id, status FROM purchase_orders WHERE id = ? AND status = 'Payment Approved'");
+$check = null;
+if ($stmt_check) {
+    mysqli_stmt_bind_param($stmt_check, "i", $po_id);
+    mysqli_stmt_execute($stmt_check);
+    $result_check = mysqli_stmt_get_result($stmt_check);
+    $check = mysqli_fetch_assoc($result_check);
+    mysqli_stmt_close($stmt_check);
+} else {
+    echo json_encode(['success' => false, 'message' => 'Gagal memproses data Purchase Order.']);
+    exit;
+}
 
 if (!$check) {
     echo json_encode(['success' => false, 'message' => 'PO tidak ditemukan atau belum di-approve untuk pembayaran']);
@@ -67,24 +76,46 @@ if (isset($_FILES['bukti_bayar']) && $_FILES['bukti_bayar']['error'] === UPLOAD_
     exit;
 }
 
-// Update PO
-$notes_safe = mysqli_real_escape_string($conn, $payment_notes);
-$bukti_safe = mysqli_real_escape_string($conn, $bukti_path);
+// Update PO and Invoice in a transaction
+mysqli_begin_transaction($conn);
 
-$sql = "UPDATE purchase_orders SET 
-    status = 'Payment Completed', 
-    bukti_bayar_file = '$bukti_safe',
-    payment_notes = '$notes_safe',
-    payment_completed_at = NOW()
-    WHERE id = $po_id";
+try {
+    $stmt_update_po = mysqli_prepare($conn, "UPDATE purchase_orders SET status = 'Payment Completed', bukti_bayar_file = ?, payment_notes = ?, payment_completed_at = NOW() WHERE id = ?");
+    if ($stmt_update_po) {
+        mysqli_stmt_bind_param($stmt_update_po, "ssi", $bukti_path, $payment_notes, $po_id);
+        $success_po = mysqli_stmt_execute($stmt_update_po);
+        mysqli_stmt_close($stmt_update_po);
+        
+        if (!$success_po) {
+            throw new Exception("Gagal mengupdate Purchase Order.");
+        }
+    } else {
+        throw new Exception("Gagal memproses update Purchase Order.");
+    }
 
-if (mysqli_query($conn, $sql)) {
     // Sinkronisasi status invoice ke 'Paid' agar vendor melihat update yang sama
     $user_id = $_SESSION['user_id'] ?? 0;
-    mysqli_query($conn, "UPDATE invoices SET status = 'Paid', paid_at = NOW(), paid_by = $user_id WHERE po_id = $po_id");
-    
+    $stmt_update_inv = mysqli_prepare($conn, "UPDATE invoices SET status = 'Paid', paid_at = NOW(), paid_by = ? WHERE po_id = ?");
+    if ($stmt_update_inv) {
+        mysqli_stmt_bind_param($stmt_update_inv, "ii", $user_id, $po_id);
+        $success_inv = mysqli_stmt_execute($stmt_update_inv);
+        mysqli_stmt_close($stmt_update_inv);
+        
+        if (!$success_inv) {
+            throw new Exception("Gagal mengupdate Invoice.");
+        }
+    } else {
+        throw new Exception("Gagal memproses update Invoice.");
+    }
+
+    mysqli_commit($conn);
     echo json_encode(['success' => true, 'message' => 'Pembayaran berhasil diproses! Siklus P2P selesai.']);
-} else {
-    echo json_encode(['success' => false, 'message' => 'Gagal menyimpan pembayaran: ' . mysqli_error($conn)]);
+} catch (Exception $e) {
+    mysqli_rollback($conn);
+    // Hapus file yang sudah diupload jika transaksi database gagal
+    if ($bukti_path && file_exists(__DIR__ . '/' . $bukti_path)) {
+        @unlink(__DIR__ . '/' . $bukti_path);
+    }
+    echo json_encode(['success' => false, 'message' => 'Gagal menyimpan pembayaran: ' . $e->getMessage()]);
 }
 ?>

@@ -24,12 +24,23 @@ if ($rfq_id <= 0) {
 }
 
 // Cek RFQ dan SPH existing
-$sph = mysqli_fetch_assoc(mysqli_query($conn, "
+$stmt_check = mysqli_prepare($conn, "
     SELECT s.id, s.status, r.deadline 
     FROM sph_submissions s
     JOIN rfq_requests r ON s.rfq_id = r.id
-    WHERE s.rfq_id = $rfq_id AND s.vendor_id = $vendor_id
-"));
+    WHERE s.rfq_id = ? AND s.vendor_id = ?
+");
+$sph = null;
+if ($stmt_check) {
+    mysqli_stmt_bind_param($stmt_check, "ii", $rfq_id, $vendor_id);
+    mysqli_stmt_execute($stmt_check);
+    $result_check = mysqli_stmt_get_result($stmt_check);
+    $sph = mysqli_fetch_assoc($result_check);
+    mysqli_stmt_close($stmt_check);
+} else {
+    echo json_encode(['success' => false, 'message' => 'Gagal memproses pemeriksaan SPH.']);
+    exit;
+}
 
 if (!$sph) {
     echo json_encode(['success' => false, 'message' => 'Data penawaran tidak ditemukan']);
@@ -52,13 +63,31 @@ $sph_id = $sph['id'];
 mysqli_begin_transaction($conn);
 try {
     // Delete SPH
-    if (!mysqli_query($conn, "DELETE FROM sph_submissions WHERE id = $sph_id AND vendor_id = $vendor_id")) {
-        throw new Exception(mysqli_error($conn));
+    $stmt_delete = mysqli_prepare($conn, "DELETE FROM sph_submissions WHERE id = ? AND vendor_id = ?");
+    if ($stmt_delete) {
+        mysqli_stmt_bind_param($stmt_delete, "ii", $sph_id, $vendor_id);
+        $success_delete = mysqli_stmt_execute($stmt_delete);
+        mysqli_stmt_close($stmt_delete);
+        
+        if (!$success_delete) {
+            throw new Exception("Gagal menghapus SPH.");
+        }
+    } else {
+        throw new Exception("Gagal mempersiapkan penghapusan SPH.");
     }
 
     // Update vendor has_submitted back to 0
-    if (!mysqli_query($conn, "UPDATE rfq_vendors SET has_submitted = 0 WHERE rfq_id = $rfq_id AND vendor_id = $vendor_id")) {
-        throw new Exception(mysqli_error($conn));
+    $stmt_update = mysqli_prepare($conn, "UPDATE rfq_vendors SET has_submitted = 0 WHERE rfq_id = ? AND vendor_id = ?");
+    if ($stmt_update) {
+        mysqli_stmt_bind_param($stmt_update, "ii", $rfq_id, $vendor_id);
+        $success_update = mysqli_stmt_execute($stmt_update);
+        mysqli_stmt_close($stmt_update);
+        
+        if (!$success_update) {
+            throw new Exception("Gagal mengupdate status pendaftaran vendor.");
+        }
+    } else {
+        throw new Exception("Gagal mempersiapkan update status pendaftaran vendor.");
     }
 
     mysqli_commit($conn);

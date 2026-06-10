@@ -27,9 +27,18 @@ if ($po_id <= 0 || empty($invoice_number)) {
 }
 
 // Pastikan PO milik vendor ini dan statusnya 'Goods Received'
-$check = mysqli_fetch_assoc(mysqli_query($conn, 
-    "SELECT id, status FROM purchase_orders WHERE id = $po_id AND vendor_id = $vendor_id AND status = 'Goods Received'"
-));
+$stmt_check = mysqli_prepare($conn, "SELECT id, status FROM purchase_orders WHERE id = ? AND vendor_id = ? AND status = 'Goods Received'");
+$check = null;
+if ($stmt_check) {
+    mysqli_stmt_bind_param($stmt_check, "ii", $po_id, $vendor_id);
+    mysqli_stmt_execute($stmt_check);
+    $result_check = mysqli_stmt_get_result($stmt_check);
+    $check = mysqli_fetch_assoc($result_check);
+    mysqli_stmt_close($stmt_check);
+} else {
+    echo json_encode(['success' => false, 'message' => 'Gagal memproses pemeriksaan Purchase Order.']);
+    exit;
+}
 
 if (!$check) {
     echo json_encode(['success' => false, 'message' => 'PO tidak ditemukan atau barang belum diterima gudang']);
@@ -65,23 +74,45 @@ if (isset($_FILES['invoice_file']) && $_FILES['invoice_file']['error'] === UPLOA
     }
 }
 
-// Update PO
-$inv_num_safe = mysqli_real_escape_string($conn, $invoice_number);
-$inv_file_safe = $invoice_path ? "'" . mysqli_real_escape_string($conn, $invoice_path) . "'" : "NULL";
+// Update PO and sync to Invoices in a transaction
+mysqli_begin_transaction($conn);
 
-$sql = "UPDATE purchase_orders SET 
-    status = 'Invoice Submitted', 
-    invoice_number = '$inv_num_safe',
-    invoice_file = $inv_file_safe,
-    invoice_submitted_at = NOW()
-    WHERE id = $po_id";
+try {
+    $stmt_update_po = mysqli_prepare($conn, "UPDATE purchase_orders SET status = 'Invoice Submitted', invoice_number = ?, invoice_file = ?, invoice_submitted_at = NOW() WHERE id = ?");
+    if ($stmt_update_po) {
+        mysqli_stmt_bind_param($stmt_update_po, "ssi", $invoice_number, $invoice_path, $po_id);
+        $success_po = mysqli_stmt_execute($stmt_update_po);
+        mysqli_stmt_close($stmt_update_po);
+        
+        if (!$success_po) {
+            throw new Exception("Gagal mengupdate Purchase Order.");
+        }
+    } else {
+        throw new Exception("Gagal memproses update Purchase Order.");
+    }
 
-if (mysqli_query($conn, $sql)) {
     // Sync invoice number ke tabel invoices untuk dashboard Finance
-    mysqli_query($conn, "UPDATE invoices SET invoice_number = '$inv_num_safe' WHERE po_id = $po_id");
-    
+    $stmt_sync_inv = mysqli_prepare($conn, "UPDATE invoices SET invoice_number = ? WHERE po_id = ?");
+    if ($stmt_sync_inv) {
+        mysqli_stmt_bind_param($stmt_sync_inv, "si", $invoice_number, $po_id);
+        $success_inv = mysqli_stmt_execute($stmt_sync_inv);
+        mysqli_stmt_close($stmt_sync_inv);
+        
+        if (!$success_inv) {
+            throw new Exception("Gagal sinkronisasi data Invoice.");
+        }
+    } else {
+        throw new Exception("Gagal memproses sinkronisasi Invoice.");
+    }
+
+    mysqli_commit($conn);
     echo json_encode(['success' => true, 'message' => 'Invoice berhasil disubmit. Menunggu verifikasi Finance.']);
-} else {
-    echo json_encode(['success' => false, 'message' => 'Gagal menyimpan invoice: ' . mysqli_error($conn)]);
+} catch (Exception $e) {
+    mysqli_rollback($conn);
+    // Hapus file yang sudah diupload jika transaksi database gagal
+    if ($invoice_path && file_exists(__DIR__ . '/' . $invoice_path)) {
+        @unlink(__DIR__ . '/' . $invoice_path);
+    }
+    echo json_encode(['success' => false, 'message' => 'Gagal menyimpan invoice: ' . $e->getMessage()]);
 }
 ?>
