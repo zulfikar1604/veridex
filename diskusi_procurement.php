@@ -23,7 +23,7 @@ $query_list_po = mysqli_query($conn, "
 ") or handle_db_error($conn);
 
 ?>
-<body class="bg-slate-50 flex flex-col h-dvh overflow-hidden">
+<body class="bg-slate-50 dark:bg-[#0f172a] flex flex-col h-dvh overflow-hidden">
 
     <?php
     $page_title = "Messaging System";
@@ -35,32 +35,32 @@ $query_list_po = mysqli_query($conn, "
         <?php include 'sidebar_procurement.php'; ?>
 
         <main class="flex-1 p-2 md:p-8 flex flex-col overflow-hidden">
-            <div class="bg-white rounded-2xl md:rounded-3xl border shadow-xl flex flex-1 min-h-0 max-w-6xl mx-auto w-full overflow-hidden no-hover-lift">
+            <div class="bg-white dark:bg-[#1e293b] rounded-2xl md:rounded-3xl border shadow-xl flex flex-1 min-h-0 max-w-6xl mx-auto w-full overflow-hidden no-hover-lift">
                 
                 <!-- Left Sidebar: Conversations -->
-                <div class="<?= ($selected_po == '') ? 'w-full' : 'hidden md:flex' ?> md:w-1/3 border-r border-slate-100 flex-col bg-slate-50/50">
-                    <div class="p-5 border-b border-slate-100 bg-white">
-                        <h3 class="font-black text-slate-800 uppercase tracking-widest text-xs"><i class="fa-solid fa-list mr-2 text-red-500"></i>Daftar Percakapan</h3>
+                <div class="<?= ($selected_po == '') ? 'w-full' : 'hidden md:flex' ?> md:w-1/3 border-r border-slate-100 dark:border-slate-800 flex-col bg-slate-50 dark:bg-slate-900/50">
+                    <div class="p-5 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-[#1e293b]">
+                        <h3 class="font-black text-slate-800 dark:text-white uppercase tracking-widest text-xs"><i class="fa-solid fa-list mr-2 text-red-500"></i>Daftar Percakapan</h3>
                     </div>
                     
                     <div class="flex-1 overflow-y-auto">
                         <?php if (mysqli_num_rows($query_list_po) > 0): ?>
                             <?php while($row = mysqli_fetch_assoc($query_list_po)): 
                                 // Tandai mana yang sedang aktif
-                                $is_active = ($selected_po == $row['po_number']) ? 'bg-red-50 border-l-4 border-red-500' : 'hover:bg-white border-l-4 border-transparent';
+                                $is_active = ($selected_po == $row['po_number']) ? 'bg-red-50 border-l-4 border-red-500' : 'hover:bg-white dark:bg-[#1e293b] border-l-4 border-transparent';
                             ?>
-                                <a href="diskusi_procurement.php?po=<?= $row['po_number'] ?>" class="block p-4 border-b border-slate-100 transition <?= $is_active ?>">
+                                <a href="diskusi_procurement.php?po=<?= $row['po_number'] ?>" class="block p-4 border-b border-slate-100 dark:border-slate-800 transition <?= $is_active ?>">
                                     <div class="flex justify-between items-start mb-1">
-                                        <span class="font-black text-slate-800 text-sm"><?= htmlspecialchars($row['po_number']) ?></span>
-                                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-slate-200 px-2 py-0.5 rounded"><?= $row['status'] ?></span>
+                                        <span class="font-black text-slate-800 dark:text-white text-sm"><?= htmlspecialchars($row['po_number']) ?></span>
+                                        <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest bg-slate-200 px-2 py-0.5 rounded"><?= $row['status'] ?></span>
                                     </div>
                                     <p class="text-xs font-bold text-red-600 uppercase truncate">
-                                        <i class="fa-solid fa-building mr-1 text-slate-400"></i> <?= htmlspecialchars($row['nama_perusahaan']) ?>
+                                        <i class="fa-solid fa-building mr-1 text-slate-400 dark:text-slate-500"></i> <?= htmlspecialchars($row['nama_perusahaan']) ?>
                                     </p>
                                 </a>
                             <?php endwhile; ?>
                         <?php else: ?>
-                            <div class="p-6 text-center text-slate-400 text-xs italic font-medium">
+                            <div class="p-6 text-center text-slate-400 dark:text-slate-500 text-xs italic font-medium">
                                 Belum ada Purchase Order (PO) yang dibuat.
                             </div>
                         <?php endif; ?>
@@ -68,19 +68,19 @@ $query_list_po = mysqli_query($conn, "
                 </div>
 
                 <!-- Right Pane: Chat Box -->
-                <div class="<?= ($selected_po == '') ? 'hidden md:flex' : 'w-full' ?> md:w-2/3 flex-col bg-white">
+                <div class="<?= ($selected_po == '') ? 'hidden md:flex' : 'w-full' ?> md:w-2/3 flex-col bg-white dark:bg-[#1e293b]">
                     <?php if ($selected_po == ''): ?>
-                        <div class="flex-1 flex flex-col items-center justify-center text-center p-8 bg-slate-50/30">
+                        <div class="flex-1 flex flex-col items-center justify-center text-center p-8 bg-slate-50 dark:bg-slate-900/30">
                             <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center text-slate-300 mb-4">
                                 <i class="fa-regular fa-comments text-4xl"></i>
                             </div>
-                            <h3 class="text-lg font-black text-slate-700 uppercase tracking-widest">Pilih Obrolan</h3>
-                            <p class="text-slate-400 text-sm mt-2 font-medium">Silakan pilih nomor PO dari daftar di sebelah kiri untuk memulai diskusi teknis dengan Vendor.</p>
+                            <h3 class="text-lg font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest">Pilih Obrolan</h3>
+                            <p class="text-slate-400 dark:text-slate-500 text-sm mt-2 font-medium">Silakan pilih nomor PO dari daftar di sebelah kiri untuk memulai diskusi teknis dengan Vendor.</p>
                         </div>
                     <?php else: ?>
-                        <div class="p-5 border-b border-slate-100 bg-white font-bold flex justify-between items-center text-slate-700 z-10 shadow-sm">
+                        <div class="p-5 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-[#1e293b] font-bold flex justify-between items-center text-slate-700 dark:text-slate-200 z-10 shadow-sm">
                             <div class="flex items-center">
-                                <a href="diskusi_procurement.php" class="md:hidden mr-3 text-slate-500 hover:text-red-500 transition-colors" title="Kembali ke Daftar">
+                                <a href="diskusi_procurement.php" class="md:hidden mr-3 text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-red-500 transition-colors" title="Kembali ke Daftar">
                                     <i class="fa-solid fa-arrow-left text-lg"></i>
                                 </a>
                                 <i class="fa-solid fa-file-signature text-red-500 mr-2"></i> 
@@ -91,18 +91,18 @@ $query_list_po = mysqli_query($conn, "
                             </span>
                         </div>
                         
-                        <div id="chat-box" class="flex-1 p-6 overflow-y-auto space-y-6 text-sm bg-slate-50/50 relative">
-                            <div id="loading-chat" class="absolute inset-0 flex items-center justify-center bg-slate-50/80 z-10 backdrop-blur-sm">
-                                <div class="text-slate-500 font-bold animate-pulse flex flex-col items-center">
+                        <div id="chat-box" class="flex-1 p-6 overflow-y-auto space-y-6 text-sm bg-slate-50 dark:bg-slate-900/50 relative">
+                            <div id="loading-chat" class="absolute inset-0 flex items-center justify-center bg-slate-50 dark:bg-slate-900/80 z-10 backdrop-blur-sm">
+                                <div class="text-slate-500 dark:text-slate-400 dark:text-slate-500 font-bold animate-pulse flex flex-col items-center">
                                     <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3 text-red-500"></i>
                                     Menyinkronkan Data...
                                 </div>
                             </div>
                         </div>
                         
-                        <form id="form-chat" class="p-4 border-t border-slate-100 bg-white flex gap-3 items-center">
+                        <form id="form-chat" class="p-4 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-[#1e293b] flex gap-3 items-center">
                             <input type="text" id="input-pesan" placeholder="Ketik pesan untuk vendor..." autocomplete="off" required
-                                   class="flex-1 border-2 border-slate-100 p-4 rounded-xl outline-none focus:border-red-500 focus:bg-red-50/30 transition-all font-medium text-slate-700">
+                                   class="flex-1 border-2 border-slate-100 dark:border-slate-800 p-4 rounded-xl outline-none focus:border-red-500 focus:bg-red-50/30 transition-all font-medium text-slate-700 dark:text-slate-200">
                             
                             <button type="submit" id="btn-kirim" class="bg-slate-900 text-white p-4 rounded-xl shadow-lg hover:bg-red-600 hover:-translate-y-1 transition-all w-16 flex items-center justify-center">
                                 <i class="fa-solid fa-paper-plane text-lg"></i>
@@ -149,7 +149,7 @@ $query_list_po = mysqli_query($conn, "
                         chatBox.innerHTML = ''; 
                         
                         if(data.length === 0) {
-                            chatBox.innerHTML = '<div class="text-center text-slate-400 italic mt-10 font-medium">Belum ada percakapan untuk PO ini. Mulai sapa vendor Anda!</div>';
+                            chatBox.innerHTML = '<div class="text-center text-slate-400 dark:text-slate-500 italic mt-10 font-medium">Belum ada percakapan untuk PO ini. Mulai sapa vendor Anda!</div>';
                         } else {
                             data.forEach(chat => {
                                 let isMe = (chat.sender_role === myRole);
@@ -161,8 +161,8 @@ $query_list_po = mysqli_query($conn, "
 
                                 let chatHtml = `
                                     <div class="flex flex-col ${alignment}">
-                                        <div class="text-[10px] font-bold text-slate-500 mb-1 ${nameAlign} uppercase tracking-widest">
-                                            ${chat.sender_role} <span class="normal-case font-semibold text-slate-600 ml-1">(${chat.sender_name})</span>
+                                        <div class="text-[10px] font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-1 ${nameAlign} uppercase tracking-widest">
+                                            ${chat.sender_role} <span class="normal-case font-semibold text-slate-600 dark:text-slate-300 ml-1">(${chat.sender_name})</span>
                                         </div>
                                         <div class="${bubbleColor} p-4 rounded-2xl max-w-[85%] md:max-w-[70%] shadow-md relative group break-words">
                                             ${escapeHtml(chat.message)}

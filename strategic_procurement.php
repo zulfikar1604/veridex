@@ -48,7 +48,7 @@ $page_title = "Strategic Procurement";
 $page_subtitle = "Analisis & Evaluasi Bid Vendor";
 include 'header_meta.php';
 ?>
-<body class="bg-slate-50 flex flex-col h-screen overflow-hidden text-slate-800">
+<body class="bg-slate-50 dark:bg-[#0f172a] flex flex-col h-screen overflow-hidden text-slate-800 dark:text-white">
 
     <?php
     include 'navbar.php';
@@ -153,7 +153,7 @@ include 'header_meta.php';
                                 }
                             }
                          }" 
-                         class="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
+                         class="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 rounded-3xl shadow-sm overflow-hidden">
                          
                         <!-- Header Master -->
                         <div class="bg-slate-900 p-6 flex justify-between items-center flex-wrap gap-4">
@@ -166,8 +166,8 @@ include 'header_meta.php';
                                 </div>
                             </div>
                             <div class="text-right">
-                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Stok Saat Ini</span>
-                                <span class="text-xl font-black text-red-500"><?= $item['stok_saat_ini'] ?> <span class="text-sm text-slate-500">/ <?= $item['stok_kritis'] ?></span></span>
+                                <span class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block">Stok Saat Ini</span>
+                                <span class="text-xl font-black text-red-500"><?= $item['stok_saat_ini'] ?> <span class="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500">/ <?= $item['stok_kritis'] ?></span></span>
                             </div>
                         </div>
 
@@ -178,29 +178,29 @@ include 'header_meta.php';
                                 
                                 <!-- Step 1 -->
                                 <button @click="step = 1" class="relative z-10 flex flex-col items-center gap-2 group cursor-pointer transition-all">
-                                    <div class="w-10 h-10 rounded-full border-4 flex items-center justify-center font-black text-sm transition-colors bg-white"
-                                         :class="step === 1 ? 'border-red-600 text-red-600' : (<?= $any_cbe_done ? 'true' : 'false' ?> ? 'border-green-500 text-green-500' : 'border-slate-200 text-slate-400')">
+                                    <div class="w-10 h-10 rounded-full border-4 flex items-center justify-center font-black text-sm transition-colors bg-white dark:bg-[#1e293b]"
+                                         :class="step === 1 ? 'border-red-600 text-red-600' : (<?= $any_cbe_done ? 'true' : 'false' ?> ? 'border-green-500 text-green-500' : 'border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500')">
                                         1
                                     </div>
-                                    <span class="text-[10px] font-black uppercase tracking-widest" :class="step === 1 ? 'text-slate-800' : 'text-slate-400'">TBE & CBE Scoring</span>
+                                    <span class="text-[10px] font-black uppercase tracking-widest" :class="step === 1 ? 'text-slate-800 dark:text-white' : 'text-slate-400 dark:text-slate-500'">TBE & CBE Scoring</span>
                                 </button>
 
                                 <!-- Step 2 -->
                                 <button @click="step = 2" class="relative z-10 flex flex-col items-center gap-2 group cursor-pointer transition-all">
-                                    <div class="w-10 h-10 rounded-full border-4 flex items-center justify-center font-black text-sm transition-colors bg-white"
-                                         :class="step === 2 ? 'border-red-600 text-red-600' : (<?= $all_evaluated ? 'true' : 'false' ?> ? 'border-green-500 text-green-500' : 'border-slate-200 text-slate-400')">
+                                    <div class="w-10 h-10 rounded-full border-4 flex items-center justify-center font-black text-sm transition-colors bg-white dark:bg-[#1e293b]"
+                                         :class="step === 2 ? 'border-red-600 text-red-600' : (<?= $all_evaluated ? 'true' : 'false' ?> ? 'border-green-500 text-green-500' : 'border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500')">
                                         2
                                     </div>
-                                    <span class="text-[10px] font-black uppercase tracking-widest" :class="step === 2 ? 'text-slate-800' : 'text-slate-400'">Final Ranking</span>
+                                    <span class="text-[10px] font-black uppercase tracking-widest" :class="step === 2 ? 'text-slate-800 dark:text-white' : 'text-slate-400 dark:text-slate-500'">Final Ranking</span>
                                 </button>
 
                                 <!-- Step 3 -->
                                 <button @click="<?= $all_evaluated ? 'step = 3' : 'alert(\'Selesaikan evaluasi semua vendor terlebih dahulu\')' ?>" class="relative z-10 flex flex-col items-center gap-2 group cursor-pointer transition-all">
-                                    <div class="w-10 h-10 rounded-full border-4 flex items-center justify-center font-black text-sm transition-colors bg-white"
-                                         :class="step === 3 ? 'border-red-600 text-red-600' : 'border-slate-200 text-slate-400'">
+                                    <div class="w-10 h-10 rounded-full border-4 flex items-center justify-center font-black text-sm transition-colors bg-white dark:bg-[#1e293b]"
+                                         :class="step === 3 ? 'border-red-600 text-red-600' : 'border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500'">
                                         3
                                     </div>
-                                    <span class="text-[10px] font-black uppercase tracking-widest" :class="step === 3 ? 'text-slate-800' : 'text-slate-400'">Vendor Selection</span>
+                                    <span class="text-[10px] font-black uppercase tracking-widest" :class="step === 3 ? 'text-slate-800 dark:text-white' : 'text-slate-400 dark:text-slate-500'">Vendor Selection</span>
                                 </button>
                             </div>
 
@@ -224,14 +224,14 @@ include 'header_meta.php';
                                             $diskon_display = floatval($s['diskon_nilai'] ?? 0) . '%';
                                         }
                                     ?>
-                                    <div class="border border-slate-200 rounded-2xl overflow-hidden hover:border-slate-300 transition-colors">
+                                    <div class="border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden hover:border-slate-300 transition-colors">
                                         <!-- Header Vendor -->
-                                        <div class="bg-slate-50 p-5 border-b border-slate-200 flex justify-between items-start">
+                                        <div class="bg-slate-50 dark:bg-slate-900 p-5 border-b border-slate-200 dark:border-slate-700 flex justify-between items-start">
                                             <div>
-                                                <h4 class="font-black text-slate-800 uppercase text-lg"><?= htmlspecialchars($s['nama_perusahaan']) ?></h4>
-                                                <p class="text-[10px] text-slate-400 font-bold tracking-widest">SPH: <?= htmlspecialchars($s['nomor_sph'] ?? '-') ?></p>
+                                                <h4 class="font-black text-slate-800 dark:text-white uppercase text-lg"><?= htmlspecialchars($s['nama_perusahaan']) ?></h4>
+                                                <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold tracking-widest">SPH: <?= htmlspecialchars($s['nomor_sph'] ?? '-') ?></p>
                                             </div>
-                                            <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest bg-slate-100 text-slate-500 border border-slate-200">
+                                            <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest bg-slate-100 text-slate-500 dark:text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700">
                                                 <?= $s['status'] ?>
                                             </span>
                                         </div>
@@ -244,33 +244,33 @@ include 'header_meta.php';
                                                         <h5 class="text-xs font-black text-blue-600 uppercase tracking-widest flex items-center gap-2">
                                                             <i class="fa-solid fa-microscope"></i> Technical Bid (TBE)
                                                         </h5>
-                                                        <span class="text-[9px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded">Range: 1-10</span>
+                                                        <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 bg-slate-100 px-2 py-0.5 rounded">Range: 1-10</span>
                                                     </div>
 
                                                     <!-- TBE Info Cards -->
                                                     <div class="bg-blue-50/50 border border-blue-100 rounded-xl p-3 space-y-2 text-xs">
                                                         <div class="flex justify-between">
-                                                            <span class="text-slate-500 font-medium"><i class="fa-solid fa-boxes-stacked mr-1 text-blue-400"></i> Quantity</span>
-                                                            <span class="font-black text-slate-800"><?= intval($s['jumlah_kebutuhan'] ?? 0) ?> <?= htmlspecialchars($s['unit'] ?? '') ?></span>
+                                                            <span class="text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium"><i class="fa-solid fa-boxes-stacked mr-1 text-blue-400"></i> Quantity</span>
+                                                            <span class="font-black text-slate-800 dark:text-white"><?= intval($s['jumlah_kebutuhan'] ?? 0) ?> <?= htmlspecialchars($s['unit'] ?? '') ?></span>
                                                         </div>
                                                         <div class="flex justify-between">
-                                                            <span class="text-slate-500 font-medium"><i class="fa-solid fa-ship mr-1 text-blue-400"></i> Incoterm</span>
-                                                            <span class="font-black text-slate-800"><?= htmlspecialchars($s['incoterm'] ?: '-') ?></span>
+                                                            <span class="text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium"><i class="fa-solid fa-ship mr-1 text-blue-400"></i> Incoterm</span>
+                                                            <span class="font-black text-slate-800 dark:text-white"><?= htmlspecialchars($s['incoterm'] ?: '-') ?></span>
                                                         </div>
                                                         <div class="flex justify-between">
-                                                            <span class="text-slate-500 font-medium"><i class="fa-solid fa-file-lines mr-1 text-blue-400"></i> Spesifikasi</span>
-                                                            <span class="font-bold text-slate-700 text-right max-w-[60%] truncate" title="<?= htmlspecialchars($s['keterangan'] ?: ($s['rfq_catatan'] ?: '-')) ?>"><?= htmlspecialchars($s['keterangan'] ?: ($s['rfq_catatan'] ?: '-')) ?></span>
+                                                            <span class="text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium"><i class="fa-solid fa-file-lines mr-1 text-blue-400"></i> Spesifikasi</span>
+                                                            <span class="font-bold text-slate-700 dark:text-slate-200 text-right max-w-[60%] truncate" title="<?= htmlspecialchars($s['keterangan'] ?: ($s['rfq_catatan'] ?: '-')) ?>"><?= htmlspecialchars($s['keterangan'] ?: ($s['rfq_catatan'] ?: '-')) ?></span>
                                                         </div>
                                                     </div>
 
                                                     <!-- TBE Score Input -->
-                                                    <div class="bg-white p-3 rounded-xl border-2 <?= $tbe_done ? 'border-green-200 bg-green-50/30' : 'border-blue-200' ?> flex items-center justify-between flex-wrap gap-4">
-                                                        <div class="font-bold text-sm text-slate-700">Skor TBE</div>
+                                                    <div class="bg-white dark:bg-[#1e293b] p-3 rounded-xl border-2 <?= $tbe_done ? 'border-green-200 bg-green-50/30' : 'border-blue-200' ?> flex items-center justify-between flex-wrap gap-4">
+                                                        <div class="font-bold text-sm text-slate-700 dark:text-slate-200">Skor TBE</div>
                                                         <?php if($tbe_done): ?>
-                                                            <span class="font-black text-2xl text-green-600"><?= $s['tbe_score'] ?><span class="text-xs text-slate-400 font-bold ml-1">/ 10</span></span>
+                                                            <span class="font-black text-2xl text-green-600"><?= $s['tbe_score'] ?><span class="text-xs text-slate-400 dark:text-slate-500 font-bold ml-1">/ 10</span></span>
                                                         <?php else: ?>
                                                             <div class="flex gap-2 items-center">
-                                                                <input type="number" :value="getTbe(<?= $s['id'] ?>)" @input="setTbe(<?= $s['id'] ?>, $event.target.value)" class="w-16 text-sm p-2 border-2 border-slate-200 rounded-lg text-center outline-none focus:border-blue-500 font-black" placeholder="1-10" min="1" max="10" step="0.1">
+                                                                <input type="number" :value="getTbe(<?= $s['id'] ?>)" @input="setTbe(<?= $s['id'] ?>, $event.target.value)" class="w-16 text-sm p-2 border-2 border-slate-200 dark:border-slate-700 rounded-lg text-center outline-none focus:border-blue-500 font-black" placeholder="1-10" min="1" max="10" step="0.1">
                                                                 <button @click="submitTbe(<?= $s['id'] ?>)" class="bg-blue-600 text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-blue-700 transition"><i class="fa-solid fa-check mr-1"></i>Save</button>
                                                             </div>
                                                         <?php endif; ?>
@@ -283,41 +283,41 @@ include 'header_meta.php';
                                                         <h5 class="text-xs font-black text-emerald-600 uppercase tracking-widest flex items-center gap-2">
                                                             <i class="fa-solid fa-coins"></i> Commercial Bid (CBE)
                                                         </h5>
-                                                        <span class="text-[9px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded">Range: 1-10</span>
+                                                        <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 bg-slate-100 px-2 py-0.5 rounded">Range: 1-10</span>
                                                     </div>
 
                                                     <!-- CBE Info Cards -->
                                                     <div class="bg-emerald-50/50 border border-emerald-100 rounded-xl p-3 space-y-2 text-xs">
                                                         <div class="flex justify-between">
-                                                            <span class="text-slate-500 font-medium"><i class="fa-solid fa-tag mr-1 text-emerald-400"></i> Harga Satuan</span>
-                                                            <span class="font-black text-slate-800">Rp <?= number_format(floatval($s['harga_penawaran']), 0, ',', '.') ?></span>
+                                                            <span class="text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium"><i class="fa-solid fa-tag mr-1 text-emerald-400"></i> Harga Satuan</span>
+                                                            <span class="font-black text-slate-800 dark:text-white">Rp <?= number_format(floatval($s['harga_penawaran']), 0, ',', '.') ?></span>
                                                         </div>
                                                         <div class="flex justify-between">
-                                                            <span class="text-slate-500 font-medium"><i class="fa-solid fa-percent mr-1 text-emerald-400"></i> Diskon</span>
-                                                            <span class="font-black text-slate-800"><?= $diskon_display ?></span>
+                                                            <span class="text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium"><i class="fa-solid fa-percent mr-1 text-emerald-400"></i> Diskon</span>
+                                                            <span class="font-black text-slate-800 dark:text-white"><?= $diskon_display ?></span>
                                                         </div>
                                                         <div class="flex justify-between">
-                                                            <span class="text-slate-500 font-medium"><i class="fa-solid fa-truck mr-1 text-emerald-400"></i> Biaya Pengiriman</span>
-                                                            <span class="font-black text-slate-800">Rp <?= number_format(floatval($s['biaya_pengiriman'] ?? 0), 0, ',', '.') ?></span>
+                                                            <span class="text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium"><i class="fa-solid fa-truck mr-1 text-emerald-400"></i> Biaya Pengiriman</span>
+                                                            <span class="font-black text-slate-800 dark:text-white">Rp <?= number_format(floatval($s['biaya_pengiriman'] ?? 0), 0, ',', '.') ?></span>
                                                         </div>
                                                         <div class="flex justify-between">
-                                                            <span class="text-slate-500 font-medium"><i class="fa-solid fa-clock mr-1 text-emerald-400"></i> Payment Term</span>
-                                                            <span class="font-black text-slate-800"><?= htmlspecialchars($s['payment_term'] ?: '-') ?></span>
+                                                            <span class="text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium"><i class="fa-solid fa-clock mr-1 text-emerald-400"></i> Payment Term</span>
+                                                            <span class="font-black text-slate-800 dark:text-white"><?= htmlspecialchars($s['payment_term'] ?: '-') ?></span>
                                                         </div>
                                                     </div>
 
                                                     <!-- CBE Score Input -->
-                                                    <div class="bg-white p-3 rounded-xl border-2 <?= $cbe_done ? 'border-green-200 bg-green-50/30' : 'border-emerald-200' ?> flex items-center justify-between flex-wrap gap-4">
-                                                        <div class="font-bold text-sm text-slate-700">Skor CBE</div>
+                                                    <div class="bg-white dark:bg-[#1e293b] p-3 rounded-xl border-2 <?= $cbe_done ? 'border-green-200 bg-green-50/30' : 'border-emerald-200' ?> flex items-center justify-between flex-wrap gap-4">
+                                                        <div class="font-bold text-sm text-slate-700 dark:text-slate-200">Skor CBE</div>
                                                         <?php if($cbe_done): ?>
-                                                            <span class="font-black text-2xl text-green-600"><?= $s['cbe_score'] ?><span class="text-xs text-slate-400 font-bold ml-1">/ 10</span></span>
+                                                            <span class="font-black text-2xl text-green-600"><?= $s['cbe_score'] ?><span class="text-xs text-slate-400 dark:text-slate-500 font-bold ml-1">/ 10</span></span>
                                                         <?php elseif($tbe_done): ?>
                                                             <div class="flex gap-2 items-center">
-                                                                <input type="number" :value="getCbe(<?= $s['id'] ?>)" @input="setCbe(<?= $s['id'] ?>, $event.target.value)" class="w-16 text-sm p-2 border-2 border-slate-200 rounded-lg text-center outline-none focus:border-emerald-500 font-black" placeholder="1-10" min="1" max="10" step="0.1">
+                                                                <input type="number" :value="getCbe(<?= $s['id'] ?>)" @input="setCbe(<?= $s['id'] ?>, $event.target.value)" class="w-16 text-sm p-2 border-2 border-slate-200 dark:border-slate-700 rounded-lg text-center outline-none focus:border-emerald-500 font-black" placeholder="1-10" min="1" max="10" step="0.1">
                                                                 <button @click="submitCbe(<?= $s['id'] ?>)" class="bg-emerald-600 text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-emerald-700 transition"><i class="fa-solid fa-check mr-1"></i>Save</button>
                                                             </div>
                                                         <?php else: ?>
-                                                            <span class="text-xs text-slate-400 italic">Isi TBE terlebih dahulu</span>
+                                                            <span class="text-xs text-slate-400 dark:text-slate-500 italic">Isi TBE terlebih dahulu</span>
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
@@ -342,8 +342,8 @@ include 'header_meta.php';
                                     </div>
                                 <?php else: ?>
                                     <div class="overflow-x-auto w-full">
-<table class="w-full text-left text-sm border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
-                                        <thead class="bg-slate-100 text-slate-500 text-[10px] uppercase font-black tracking-widest">
+<table class="w-full text-left text-sm border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden shadow-sm">
+                                        <thead class="bg-slate-100 text-slate-500 dark:text-slate-400 dark:text-slate-500 text-[10px] uppercase font-black tracking-widest">
                                             <tr>
                                                 <th class="p-4">Rank</th>
                                                 <th class="p-4">Vendor</th>
@@ -359,13 +359,13 @@ include 'header_meta.php';
                                                     <?php if($idx === 0): ?>
                                                         <span class="w-8 h-8 rounded bg-red-600 text-white flex items-center justify-center font-black shadow-lg shadow-red-600/30">1</span>
                                                     <?php else: ?>
-                                                        <span class="w-8 h-8 rounded bg-slate-200 text-slate-500 flex items-center justify-center font-black"><?= $idx + 1 ?></span>
+                                                        <span class="w-8 h-8 rounded bg-slate-200 text-slate-500 dark:text-slate-400 dark:text-slate-500 flex items-center justify-center font-black"><?= $idx + 1 ?></span>
                                                     <?php endif; ?>
                                                 </td>
-                                                <td class="p-4 font-bold text-slate-800"><?= htmlspecialchars($s['nama_perusahaan']) ?></td>
+                                                <td class="p-4 font-bold text-slate-800 dark:text-white"><?= htmlspecialchars($s['nama_perusahaan']) ?></td>
                                                 <td class="p-4 text-center font-medium"><?= $s['tbe_score'] ?></td>
                                                 <td class="p-4 text-center font-medium"><?= $s['cbe_score'] ?></td>
-                                                <td class="p-4 text-right font-black text-lg <?= $idx === 0 ? 'text-red-600' : 'text-slate-800' ?>">
+                                                <td class="p-4 text-right font-black text-lg <?= $idx === 0 ? 'text-red-600' : 'text-slate-800 dark:text-white' ?>">
                                                     <?= $s['final_score'] ?>
                                                 </td>
                                             </tr>
@@ -375,7 +375,7 @@ include 'header_meta.php';
 </div>
                                     
                                     <div class="mt-6 flex justify-between items-center flex-wrap gap-4">
-                                        <button @click="step = 1" class="text-slate-400 hover:text-slate-800 font-bold text-xs uppercase transition-colors"><i class="fa-solid fa-arrow-left mr-2"></i> Back to Scoring</button>
+                                        <button @click="step = 1" class="text-slate-400 dark:text-slate-500 hover:text-slate-800 dark:text-white font-bold text-xs uppercase transition-colors"><i class="fa-solid fa-arrow-left mr-2"></i> Back to Scoring</button>
                                         <button @click="step = 3" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-colors flex items-center gap-2">
                                             Assign Quota <i class="fa-solid fa-arrow-right"></i>
                                         </button>
@@ -395,48 +395,48 @@ include 'header_meta.php';
                                         <input type="hidden" name="rfq_id" value="<?= !empty($sph_data) ? intval($sph_data[0]['rfq_id']) : 0 ?>">
                                         
                                         <!-- Rank 1 Assignment -->
-                                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                                        <div class="bg-white dark:bg-[#1e293b] p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
                                             <div class="flex justify-between items-center mb-4">
                                                 <span class="w-8 h-8 bg-yellow-400 text-slate-900 rounded-lg flex items-center justify-center font-black">1</span>
-                                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Utama</span>
+                                                <span class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Utama</span>
                                             </div>
-                                            <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Pilih Vendor</label>
-                                            <select name="vendor_1" class="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl text-sm mb-4 outline-none focus:border-red-500 font-bold" required>
+                                            <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase mb-1 block">Pilih Vendor</label>
+                                            <select name="vendor_1" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 rounded-xl text-sm mb-4 outline-none focus:border-red-500 font-bold" required>
                                                 <option value="">-- Pilih Vendor --</option>
                                                 <?php foreach($sph_data as $s): ?>
                                                     <option value="<?= $s['vendor_id'] ?>" <?= $sph_data[0]['vendor_id'] == $s['vendor_id'] ? 'selected' : '' ?>><?= htmlspecialchars($s['nama_perusahaan']) ?> (Skor: <?= $s['final_score'] ?>)</option>
                                                 <?php endforeach; ?>
                                             </select>
-                                            <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Kuota (%)</label>
+                                            <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase mb-1 block">Kuota (%)</label>
                                             <div class="relative">
-                                                <input type="number" name="quota_1" value="70" class="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl font-black text-center focus:border-red-500 outline-none" required>
-                                                <span class="absolute right-4 top-3.5 text-slate-400 font-black">%</span>
+                                                <input type="number" name="quota_1" value="70" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 rounded-xl font-black text-center focus:border-red-500 outline-none" required>
+                                                <span class="absolute right-4 top-3.5 text-slate-400 dark:text-slate-500 font-black">%</span>
                                             </div>
                                         </div>
 
                                         <!-- Rank 2 Assignment -->
-                                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                                        <div class="bg-white dark:bg-[#1e293b] p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
                                             <div class="flex justify-between items-center mb-4">
-                                                <span class="w-8 h-8 bg-slate-200 text-slate-600 rounded-lg flex items-center justify-center font-black">2</span>
-                                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Pendamping</span>
+                                                <span class="w-8 h-8 bg-slate-200 text-slate-600 dark:text-slate-300 rounded-lg flex items-center justify-center font-black">2</span>
+                                                <span class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Pendamping</span>
                                             </div>
-                                            <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Pilih Vendor</label>
-                                            <select name="vendor_2" class="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl text-sm mb-4 outline-none font-bold">
+                                            <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase mb-1 block">Pilih Vendor</label>
+                                            <select name="vendor_2" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 rounded-xl text-sm mb-4 outline-none font-bold">
                                                 <option value="">-- Tanpa Pendamping --</option>
                                                 <?php foreach($sph_data as $s): ?>
                                                     <option value="<?= $s['vendor_id'] ?>"><?= htmlspecialchars($s['nama_perusahaan']) ?> (Skor: <?= $s['final_score'] ?>)</option>
                                                 <?php endforeach; ?>
                                             </select>
-                                            <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Kuota (%)</label>
+                                            <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase mb-1 block">Kuota (%)</label>
                                             <div class="relative">
-                                                <input type="number" name="quota_2" value="30" class="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl font-black text-center outline-none">
-                                                <span class="absolute right-4 top-3.5 text-slate-400 font-black">%</span>
+                                                <input type="number" name="quota_2" value="30" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 rounded-xl font-black text-center outline-none">
+                                                <span class="absolute right-4 top-3.5 text-slate-400 dark:text-slate-500 font-black">%</span>
                                             </div>
                                         </div>
 
                                         <!-- Konfirmasi -->
-                                        <div class="col-span-1 md:col-span-2 pt-4 flex items-center justify-between border-t border-slate-100">
-                                            <button type="button" @click="step = 2" class="text-slate-400 hover:text-slate-800 font-bold text-xs uppercase transition-colors"><i class="fa-solid fa-arrow-left mr-2"></i> Back to Ranking</button>
+                                        <div class="col-span-1 md:col-span-2 pt-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
+                                            <button type="button" @click="step = 2" class="text-slate-400 dark:text-slate-500 hover:text-slate-800 dark:text-white font-bold text-xs uppercase transition-colors"><i class="fa-solid fa-arrow-left mr-2"></i> Back to Ranking</button>
                                             <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-red-600/20 transition-all flex items-center gap-3">
                                                 <i class="fa-solid fa-file-signature"></i> Finalize & Generate PO
                                             </button>
@@ -448,12 +448,12 @@ include 'header_meta.php';
                     </div>
                     <?php endwhile; ?>
                 <?php else: ?>
-                    <div class="bg-white p-20 rounded-[3rem] text-center border-2 border-dashed border-slate-200 shadow-sm">
-                        <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <div class="bg-white dark:bg-[#1e293b] p-20 rounded-[3rem] text-center border-2 border-dashed border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div class="w-24 h-24 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6">
                             <i class="fa-solid fa-clipboard-check text-5xl text-slate-300"></i>
                         </div>
-                        <h3 class="text-xl font-black text-slate-800 uppercase tracking-tight mb-2">No Items to Evaluate</h3>
-                        <p class="text-slate-400 font-medium">Tidak ada SPH yang memerlukan evaluasi saat ini.</p>
+                        <h3 class="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight mb-2">No Items to Evaluate</h3>
+                        <p class="text-slate-400 dark:text-slate-500 font-medium">Tidak ada SPH yang memerlukan evaluasi saat ini.</p>
                     </div>
                 <?php endif; ?>
 

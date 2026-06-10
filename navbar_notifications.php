@@ -317,10 +317,10 @@ elseif ($role === 'Finance') {
 
 <!-- Notification Component (Alpine.js) -->
 <div x-data="{ openNotif: false }" class="relative">
-    <button @click="openNotif = !openNotif" class="relative w-9 h-9 flex items-center justify-center bg-white rounded-xl border border-slate-100 text-slate-500 hover:text-slate-800 hover:shadow-md transition">
-        <i class="fa-regular fa-bell text-[15px]"></i>
+    <button @click="openNotif = !openNotif" class="relative w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition group shrink-0" title="Notifikasi">
+        <i class="fa-regular fa-bell text-[14px]"></i>
         <?php if($total_notifs > 0): ?>
-            <span class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-[9px] font-black rounded-full flex items-center justify-center shadow-sm"><?= $total_notifs ?></span>
+            <span class="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 bg-brand-500 bg-red-500 text-white text-[9px] font-black rounded-full flex items-center justify-center shadow-sm border-2 border-slate-900"><?= $total_notifs ?></span>
         <?php endif; ?>
     </button>
 
@@ -339,15 +339,15 @@ elseif ($role === 'Finance') {
          class="notif-dropdown">
         
         <!-- Header -->
-        <div class="p-4 border-b border-slate-100 bg-slate-50/80 flex justify-between items-center shrink-0">
-            <h4 class="font-black text-slate-800 uppercase tracking-widest text-[11px]">
+        <div class="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 flex justify-between items-center shrink-0">
+            <h4 class="font-black text-slate-800 dark:text-white uppercase tracking-widest text-[11px]">
                 <i class="fa-solid fa-bell text-red-500 mr-1.5"></i> Notifikasi
             </h4>
             <div class="flex items-center gap-2">
                 <?php if($total_notifs > 0): ?>
                     <span class="bg-red-500 text-white text-[9px] font-black px-2.5 py-1 rounded-lg"><?= $total_notifs ?> Baru</span>
                 <?php endif; ?>
-                <button @click="openNotif = false" class="w-7 h-7 rounded-lg bg-slate-200/60 text-slate-400 hover:text-red-500 hover:bg-red-50 flex items-center justify-center transition text-xs">
+                <button @click="openNotif = false" class="w-7 h-7 rounded-lg bg-slate-200/60 text-slate-400 dark:text-slate-500 hover:text-red-500 hover:bg-red-50 flex items-center justify-center transition text-xs">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
@@ -362,19 +362,19 @@ elseif ($role === 'Finance') {
                             <i class="fa-solid <?= $n['icon'] ?> text-sm"></i>
                         </div>
                         <div class="min-w-0 flex-1">
-                            <p class="text-[13px] font-bold text-slate-800 mb-0.5 truncate"><?= $n['title'] ?></p>
-                            <p class="text-[11px] font-medium text-slate-500 leading-snug"><?= $n['desc'] ?></p>
+                            <p class="text-[13px] font-bold text-slate-800 dark:text-white mb-0.5 truncate"><?= $n['title'] ?></p>
+                            <p class="text-[11px] font-medium text-slate-500 dark:text-slate-400 dark:text-slate-500 leading-snug"><?= $n['desc'] ?></p>
                         </div>
                         <i class="fa-solid fa-chevron-right text-[10px] text-slate-300 mt-1.5 shrink-0"></i>
                     </a>
                 <?php endforeach; ?>
             <?php else: ?>
-                <div class="p-10 text-center text-slate-400">
-                    <div class="w-14 h-14 rounded-full bg-slate-50 flex items-center justify-center mx-auto mb-3">
+                <div class="p-10 text-center text-slate-400 dark:text-slate-500">
+                    <div class="w-14 h-14 rounded-full bg-slate-50 dark:bg-slate-900 flex items-center justify-center mx-auto mb-3">
                         <i class="fa-regular fa-bell-slash text-2xl opacity-50"></i>
                     </div>
                     <p class="text-[11px] font-bold uppercase tracking-widest">Semua aman!</p>
-                    <p class="text-[10px] mt-1 text-slate-400">Tidak ada notifikasi saat ini.</p>
+                    <p class="text-[10px] mt-1 text-slate-400 dark:text-slate-500">Tidak ada notifikasi saat ini.</p>
                 </div>
             <?php endif; ?>
         </div>

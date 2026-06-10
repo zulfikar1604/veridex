@@ -44,12 +44,12 @@ $query_ready = mysqli_query($conn, "
 
 include 'header_meta.php';
 ?>
-<body class="bg-slate-50 flex flex-col h-screen overflow-hidden text-slate-800">
+<body class="bg-slate-50 dark:bg-[#0f172a] flex flex-col h-screen overflow-hidden text-slate-800 dark:text-white">
 
     <?php
     $page_title = "Purchase Orders";
     $page_subtitle = "Daftar PO (Pending Approval Manager)";
-    $navbar_badge = '<div class="text-right"><span class="text-[10px] font-black text-slate-400 uppercase block">Pending PO</span><span class="text-2xl font-black text-red-600">' . mysqli_num_rows($query_po) . '</span></div>';
+    $navbar_badge = '<span class="hidden sm:inline-flex items-center gap-2 bg-red-500/10 text-red-500 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border border-red-500/20">Pending PO: <span class="bg-red-500 text-white px-2 py-0.5 rounded-lg">' . mysqli_num_rows($query_po) . '</span></span>';
     include 'navbar.php';
 ?>
 
@@ -97,8 +97,8 @@ include 'header_meta.php';
                 <!-- Siap Dibuat PO -->
                 <?php if(mysqli_num_rows($query_ready) > 0): ?>
                 <div>
-                    <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-4"><i class="fa-solid fa-clipboard-list text-red-500 mr-2"></i> Siap Dibuat PO</h3>
-                    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+                    <h3 class="text-sm font-black text-slate-800 dark:text-white uppercase tracking-widest mb-4"><i class="fa-solid fa-clipboard-list text-red-500 mr-2"></i> Siap Dibuat PO</h3>
+                    <div class="bg-white dark:bg-[#1e293b] rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
                         <div class="overflow-x-auto w-full">
 <table class="w-full text-left">
                             <thead class="bg-red-50 text-[10px] font-black text-red-600 uppercase tracking-[0.2em]">
@@ -111,14 +111,14 @@ include 'header_meta.php';
                             </thead>
                             <tbody class="divide-y divide-slate-50">
                                 <?php while($ready = mysqli_fetch_assoc($query_ready)): ?>
-                                <tr class="hover:bg-slate-50 transition-colors">
+                                <tr class="hover:bg-slate-50 dark:bg-slate-900 transition-colors">
                                     <td class="p-6">
-                                        <div class="font-black text-slate-800 uppercase text-sm"><?= htmlspecialchars($ready['nama_barang']) ?></div>
-                                        <div class="text-[10px] text-slate-500 font-bold uppercase">Kebutuhan: <?= $ready['jumlah_kebutuhan'] ?? 'N/A' ?></div>
+                                        <div class="font-black text-slate-800 dark:text-white uppercase text-sm"><?= htmlspecialchars($ready['nama_barang']) ?></div>
+                                        <div class="text-[10px] text-slate-500 dark:text-slate-400 dark:text-slate-500 font-bold uppercase">Kebutuhan: <?= $ready['jumlah_kebutuhan'] ?? 'N/A' ?></div>
                                     </td>
                                     <td class="p-6">
-                                        <div class="font-bold text-slate-700"><?= htmlspecialchars($ready['nama_perusahaan']) ?></div>
-                                        <div class="text-[10px] text-slate-400 font-bold uppercase">Harga Satuan: Rp <span x-text="new Intl.NumberFormat('id-ID').format(<?= $ready['harga_penawaran'] ?>)"></span></div>
+                                        <div class="font-bold text-slate-700 dark:text-slate-200"><?= htmlspecialchars($ready['nama_perusahaan']) ?></div>
+                                        <div class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase">Harga Satuan: Rp <span x-text="new Intl.NumberFormat('id-ID').format(<?= $ready['harga_penawaran'] ?>)"></span></div>
                                     </td>
                                     <td class="p-6 text-center">
                                         <span class="px-3 py-1 bg-blue-50 text-blue-600 border border-blue-100 rounded-full text-[10px] font-black uppercase">
@@ -139,13 +139,13 @@ include 'header_meta.php';
                 </div>
                 <?php endif; ?>
 
-                <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-4 mt-8"><i class="fa-solid fa-clock-rotate-left text-red-500 mr-2"></i> PO Pending Manager</h3>
+                <h3 class="text-sm font-black text-slate-800 dark:text-white uppercase tracking-widest mb-4 mt-8"><i class="fa-solid fa-clock-rotate-left text-red-500 mr-2"></i> PO Pending Manager</h3>
 
                 <?php if(mysqli_num_rows($query_po) > 0): ?>
-                    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="bg-white dark:bg-[#1e293b] rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
                         <div class="overflow-x-auto w-full">
 <table class="w-full text-left">
-                            <thead class="bg-slate-900 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
+                            <thead class="bg-slate-900 text-[10px] font-black text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
                                 <tr>
                                     <th class="p-6">PO Number</th>
                                     <th class="p-6">Vendor & Item</th>
@@ -156,14 +156,14 @@ include 'header_meta.php';
                             </thead>
                             <tbody class="divide-y divide-slate-50">
                                 <?php while($po = mysqli_fetch_assoc($query_po)): ?>
-                                <tr class="hover:bg-slate-50 transition-colors">
-                                    <td class="p-6 font-black text-slate-800"><?= htmlspecialchars($po['po_number']) ?></td>
+                                <tr class="hover:bg-slate-50 dark:bg-slate-900 transition-colors">
+                                    <td class="p-6 font-black text-slate-800 dark:text-white"><?= htmlspecialchars($po['po_number']) ?></td>
                                     <td class="p-6">
-                                        <div class="font-black text-slate-800 uppercase text-sm"><?= htmlspecialchars($po['nama_barang']) ?></div>
+                                        <div class="font-black text-slate-800 dark:text-white uppercase text-sm"><?= htmlspecialchars($po['nama_barang']) ?></div>
                                         <div class="text-[10px] text-red-500 font-bold uppercase tracking-widest italic">Vendor: <?= htmlspecialchars($po['nama_perusahaan']) ?></div>
                                     </td>
                                     <td class="p-6 text-center">
-                                        <div class="font-black text-slate-700">Rp <?= number_format($po['total_harga'], 0, ',', '.') ?></div>
+                                        <div class="font-black text-slate-700 dark:text-slate-200">Rp <?= number_format($po['total_harga'], 0, ',', '.') ?></div>
                                     </td>
                                     <td class="p-6 text-center">
                                         <span class="px-3 py-1 bg-yellow-50 text-yellow-600 border border-yellow-100 rounded-full text-[9px] font-black uppercase tracking-widest">
@@ -171,7 +171,7 @@ include 'header_meta.php';
                                         </span>
                                     </td>
                                     <td class="p-6 text-right">
-                                        <a href="print_po.php?id=<?= $po['id'] ?>" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-600 hover:bg-red-500 hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
+                                        <a href="print_po.php?id=<?= $po['id'] ?>" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-600 dark:text-slate-300 hover:bg-red-500 hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
                                             <i class="fa-solid fa-print"></i> Print PO
                                         </a>
                                     </td>
@@ -182,51 +182,68 @@ include 'header_meta.php';
 </div>
                     </div>
                 <?php else: ?>
-                    <div class="bg-white p-20 rounded-[3rem] text-center border-2 border-dashed border-slate-200 shadow-sm">
-                        <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <div class="bg-white dark:bg-[#1e293b] p-20 rounded-[3rem] text-center border-2 border-dashed border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div class="w-24 h-24 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6">
                             <i class="fa-solid fa-file-signature text-5xl text-slate-300"></i>
                         </div>
-                        <h3 class="text-xl font-black text-slate-800 uppercase tracking-tight mb-2">No Pending PO</h3>
-                        <p class="text-slate-400 font-medium">Belum ada PO yang digenerate atau menunggu persetujuan manager.</p>
+                        <h3 class="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight mb-2">No Pending PO</h3>
+                        <p class="text-slate-400 dark:text-slate-500 font-medium">Belum ada PO yang digenerate atau menunggu persetujuan manager.</p>
                         <a href="strategic_procurement.php" class="mt-6 inline-block bg-red-600 text-white px-6 py-3 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-red-700 transition">Ke Evaluasi Vendor</a>
                     </div>
                 <?php endif; ?>
 
             </div>
 
-            <!-- Modal Buat PO -->
-            <div x-show="showModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm">
-                <div @click.away="showModal = false" class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full border border-slate-100 transform transition-all">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-xl font-black text-slate-800 uppercase tracking-tight">Form Generate PO</h3>
-                        <button @click="showModal = false" class="text-slate-400 hover:text-red-500"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <!-- Slide-Over Panel Buat PO -->
+            <div x-show="showModal" x-cloak class="fixed inset-0 z-50 flex justify-end">
+                <!-- Backdrop -->
+                <div x-show="showModal" x-transition.opacity class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" @click="showModal = false"></div>
+                
+                <!-- Panel -->
+                <div x-show="showModal" 
+                     x-transition:enter="transition ease-out duration-300 transform"
+                     x-transition:enter-start="translate-x-full"
+                     x-transition:enter-end="translate-x-0"
+                     x-transition:leave="transition ease-in duration-200 transform"
+                     x-transition:leave-start="translate-x-0"
+                     x-transition:leave-end="translate-x-full"
+                     class="relative w-full max-w-md h-full bg-white dark:bg-[#1e293b] shadow-2xl flex flex-col z-50 border-l border-slate-100 dark:border-slate-800">
+                    
+                    <!-- Header -->
+                    <div class="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50 dark:bg-slate-900/50 shrink-0">
+                        <h3 class="text-base font-black text-slate-800 dark:text-white uppercase tracking-tight">Form Generate PO</h3>
+                        <button @click="showModal = false" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:text-red-500 hover:border-red-200 dark:hover:border-red-900 transition-colors">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
                     </div>
                     
-                    <div class="space-y-4">
+                    <!-- Body -->
+                    <div class="flex-1 overflow-y-auto p-6 space-y-4">
                         <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Item</label>
-                            <input type="text" x-model="form.item_name" disabled class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-600">
+                            <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Item</label>
+                            <input type="text" x-model="form.item_name" disabled class="w-full">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Vendor</label>
-                            <input type="text" x-model="form.vendor_name" disabled class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-600">
+                            <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Vendor</label>
+                            <input type="text" x-model="form.vendor_name" disabled class="w-full">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Jumlah Pesan</label>
-                            <input type="number" x-model="form.jumlah_pesan" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500">
+                            <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Jumlah Pesan</label>
+                            <input type="number" x-model="form.jumlah_pesan" class="w-full">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Harga Satuan (Rp)</label>
-                            <input type="number" x-model="form.harga_satuan" disabled class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-600">
+                            <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Harga Satuan (Rp)</label>
+                            <input type="number" x-model="form.harga_satuan" disabled class="w-full">
                         </div>
-                        <div class="bg-red-50 p-4 rounded-xl border border-red-100 mt-2">
-                            <label class="block text-[10px] font-black text-red-400 uppercase tracking-widest mb-1">Total Harga PO</label>
-                            <div class="text-2xl font-black text-red-600">Rp <span x-text="new Intl.NumberFormat('id-ID').format(totalHarga)"></span></div>
+                        <div class="bg-red-50 dark:bg-red-900/20 p-5 rounded-2xl border border-red-100 dark:border-red-900/30 mt-6">
+                            <label class="block text-[10px] font-black text-red-400 dark:text-red-500 uppercase tracking-widest mb-1">Total Harga PO</label>
+                            <div class="text-2xl font-black text-red-600 dark:text-red-400">Rp <span x-text="new Intl.NumberFormat('id-ID').format(totalHarga)"></span></div>
                         </div>
                     </div>
 
-                    <div class="mt-8">
-                        <button @click="submitPO" class="w-full bg-red-600 text-white rounded-xl py-4 font-black uppercase tracking-widest text-xs hover:bg-red-700 transition shadow-lg shadow-red-600/20">
+                    <!-- Footer -->
+                    <div class="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 dark:bg-slate-900/50 shrink-0">
+                        <button @click="submitPO" class="w-full bg-red-600 text-white rounded-xl py-3.5 font-black uppercase tracking-widest text-xs hover:bg-red-700 transition shadow-lg shadow-red-600/20">
                             Generate & Kirim ke Manager
                         </button>
                     </div>

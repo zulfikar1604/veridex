@@ -20,7 +20,7 @@ $query_po = mysqli_query($conn, "
 
 include 'header_meta.php';
 ?>
-<body class="bg-slate-50 flex flex-col h-screen overflow-hidden text-slate-800">
+<body class="bg-slate-50 dark:bg-[#0f172a] flex flex-col h-screen overflow-hidden text-slate-800 dark:text-white">
 
     <?php
     $page_title = "Arsip PO";
@@ -34,11 +34,11 @@ include 'header_meta.php';
 
         <main class="flex-1 overflow-y-auto p-6 md:p-8">
             <?php if(mysqli_num_rows($query_po) > 0): ?>
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="bg-white dark:bg-[#1e293b] rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
                 <div class="overflow-x-auto w-full">
 <table class="w-full text-left">
                     <thead class="bg-slate-900">
-                        <tr class="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                        <tr class="text-[10px] font-black text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                             <th class="p-6">PO Number</th>
                             <th class="p-6">Vendor</th>
                             <th class="p-6">Item</th>
@@ -61,31 +61,31 @@ include 'header_meta.php';
                                 'Payment Completed' => 'bg-green-50 text-green-600 border-green-200',
                                 'Rejected' => 'bg-red-50 text-red-500 border-red-200'
                             ];
-                            $sc = $status_colors[$po['status']] ?? 'bg-slate-100 text-slate-500 border-slate-200';
+                            $sc = $status_colors[$po['status']] ?? 'bg-slate-100 text-slate-500 dark:text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-700';
                         ?>
-                        <tr class="hover:bg-slate-50/50 transition-colors">
+                        <tr class="hover:bg-slate-50 dark:bg-slate-900/50 transition-colors">
                             <td class="p-6">
-                                <div class="font-black text-slate-800 text-sm"><?= htmlspecialchars($po['po_number']) ?></div>
-                                <div class="text-[10px] text-slate-400 font-bold"><?= date('d M Y', strtotime($po['created_at'])) ?></div>
+                                <div class="font-black text-slate-800 dark:text-white text-sm"><?= htmlspecialchars($po['po_number']) ?></div>
+                                <div class="text-[10px] text-slate-400 dark:text-slate-500 font-bold"><?= date('d M Y', strtotime($po['created_at'])) ?></div>
                             </td>
                             <td class="p-6">
-                                <div class="font-bold text-slate-800 uppercase text-sm"><?= htmlspecialchars($po['nama_perusahaan']) ?></div>
+                                <div class="font-bold text-slate-800 dark:text-white uppercase text-sm"><?= htmlspecialchars($po['nama_perusahaan']) ?></div>
                             </td>
                             <td class="p-6">
-                                <div class="font-bold text-slate-800 uppercase text-sm"><?= htmlspecialchars($po['nama_barang']) ?></div>
-                                <div class="text-[10px] text-slate-400 font-bold">SKU: <?= htmlspecialchars($po['sku']) ?></div>
+                                <div class="font-bold text-slate-800 dark:text-white uppercase text-sm"><?= htmlspecialchars($po['nama_barang']) ?></div>
+                                <div class="text-[10px] text-slate-400 dark:text-slate-500 font-bold">SKU: <?= htmlspecialchars($po['sku']) ?></div>
                             </td>
                             <td class="p-6 text-center">
-                                <span class="font-black text-slate-800"><?= $po['jumlah_pesan'] ?></span>
+                                <span class="font-black text-slate-800 dark:text-white"><?= $po['jumlah_pesan'] ?></span>
                             </td>
                             <td class="p-6 text-right">
-                                <span class="font-black text-slate-800">Rp <?= number_format($po['total_harga'], 0, ',', '.') ?></span>
+                                <span class="font-black text-slate-800 dark:text-white">Rp <?= number_format($po['total_harga'], 0, ',', '.') ?></span>
                             </td>
                             <td class="p-6 text-center">
                                 <span class="px-3 py-1 border rounded-lg text-[9px] font-black uppercase <?= $sc ?>"><?= htmlspecialchars($po['status']) ?></span>
                             </td>
                             <td class="p-6 text-right">
-                                <a href="print_po.php?id=<?= $po['id'] ?>" target="_blank" class="px-3 py-1.5 bg-white border border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-200 rounded-lg text-[9px] font-black uppercase transition shadow-sm" title="Cetak PO">
+                                <a href="print_po.php?id=<?= $po['id'] ?>" target="_blank" class="px-3 py-1.5 bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-blue-600 hover:border-blue-200 rounded-lg text-[9px] font-black uppercase transition shadow-sm" title="Cetak PO">
                                     <i class="fa-solid fa-print mr-1"></i> Print
                                 </a>
                             </td>
@@ -96,10 +96,10 @@ include 'header_meta.php';
 </div>
             </div>
             <?php else: ?>
-            <div class="bg-white p-16 rounded-[2.5rem] border shadow-sm text-center">
+            <div class="bg-white dark:bg-[#1e293b] p-16 rounded-[2.5rem] border shadow-sm text-center">
                 <i class="fa-solid fa-folder-open text-7xl text-slate-100 mb-6 block"></i>
-                <h3 class="font-black text-slate-800 text-xl mb-2">Belum Ada Data PO</h3>
-                <p class="text-slate-400 text-sm">Purchase Order yang sudah dibuat akan muncul di sini.</p>
+                <h3 class="font-black text-slate-800 dark:text-white text-xl mb-2">Belum Ada Data PO</h3>
+                <p class="text-slate-400 dark:text-slate-500 text-sm">Purchase Order yang sudah dibuat akan muncul di sini.</p>
             </div>
             <?php endif; ?>
         </main>

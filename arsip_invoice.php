@@ -24,7 +24,7 @@ $page_title = "Arsip Invoice";
 $page_subtitle = "Riwayat Tagihan & Pembayaran";
 include 'header_meta.php';
 ?>
-<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
+<body class="bg-slate-50 dark:bg-[#0f172a] flex flex-col h-screen overflow-hidden">
 
     <?php
     include 'navbar.php';
@@ -34,10 +34,10 @@ include 'header_meta.php';
         <?php include 'sidebar_procurement.php'; ?>
 
         <main class="flex-1 overflow-y-auto p-6 md:p-8">
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="bg-white dark:bg-[#1e293b] rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
                 <div class="overflow-x-auto w-full">
 <table class="w-full text-left">
-                    <thead class="bg-slate-900 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
+                    <thead class="bg-slate-900 text-[10px] font-black text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
                         <tr>
                             <th class="p-6">Invoice & Date</th>
                             <th class="p-6">Vendor / Supplier</th>
@@ -48,20 +48,20 @@ include 'header_meta.php';
                     </thead>
                     <tbody class="divide-y divide-slate-50">
                         <?php while($row = mysqli_fetch_assoc($query_invoice)): ?>
-                        <tr class="hover:bg-slate-50 transition-colors">
+                        <tr class="hover:bg-slate-50 dark:bg-slate-900 transition-colors">
                             <td class="p-6">
-                                <div class="font-black text-slate-800 uppercase text-sm">#<?= $row['invoice_number'] ?></div>
-                                <div class="text-[10px] text-slate-400 font-bold"><?= date('d/m/Y', strtotime($row['created_at'])) ?></div>
+                                <div class="font-black text-slate-800 dark:text-white uppercase text-sm">#<?= $row['invoice_number'] ?></div>
+                                <div class="text-[10px] text-slate-400 dark:text-slate-500 font-bold"><?= date('d/m/Y', strtotime($row['created_at'])) ?></div>
                             </td>
                             <td class="p-6">
-                                <div class="font-bold text-slate-700 text-sm"><?= $row['nama_perusahaan'] ?></div>
-                                <span class="text-[9px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase font-black">Verified Vendor</span>
+                                <div class="font-bold text-slate-700 dark:text-slate-200 text-sm"><?= $row['nama_perusahaan'] ?></div>
+                                <span class="text-[9px] bg-slate-100 text-slate-500 dark:text-slate-400 dark:text-slate-500 px-2 py-0.5 rounded uppercase font-black">Verified Vendor</span>
                             </td>
                             <td class="p-6 text-center">
-                                <span class="text-xs font-black text-slate-500 italic"><?= $row['po_number'] ?></span>
+                                <span class="text-xs font-black text-slate-500 dark:text-slate-400 dark:text-slate-500 italic"><?= $row['po_number'] ?></span>
                             </td>
                             <td class="p-6 text-right">
-                                <div class="font-black text-slate-800">Rp <?= number_format($row['total_tagihan'], 0, ',', '.') ?></div>
+                                <div class="font-black text-slate-800 dark:text-white">Rp <?= number_format($row['total_tagihan'], 0, ',', '.') ?></div>
                             </td>
                             <td class="p-6 text-center">
                                 <?php if($row['status'] == 'Paid'): ?>

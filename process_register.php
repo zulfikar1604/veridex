@@ -18,32 +18,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $npwp = trim($_POST['npwp']);
     
     try {
-        $nama_safe = mysqli_real_escape_string($conn, $nama_perusahaan);
-        $spesialisasi_safe = mysqli_real_escape_string($conn, $spesialisasi);
-        $alamat_safe = mysqli_real_escape_string($conn, $alamat);
-        $email_safe = mysqli_real_escape_string($conn, $email);
-        $pic_nama_safe = mysqli_real_escape_string($conn, $pic_nama);
-        $pic_kontak_safe = mysqli_real_escape_string($conn, $pic_kontak);
-        
         // Hash password (SECURITY)
         $password_hashed = password_hash($password, PASSWORD_DEFAULT);
-        $password_safe = mysqli_real_escape_string($conn, $password_hashed);
-        
-        $nib_safe = mysqli_real_escape_string($conn, $nib);
-        $npwp_safe = mysqli_real_escape_string($conn, $npwp);
 
-        $sql = "INSERT INTO vendors (nama_perusahaan, spesialisasi, alamat, email, pic_nama, pic_kontak, password, nib, npwp, status) 
-                VALUES ('$nama_safe', '$spesialisasi_safe', '$alamat_safe', '$email_safe', '$pic_nama_safe', '$pic_kontak_safe', '$password_safe', '$nib_safe', '$npwp_safe', 'Pending')";
-        
-        if (mysqli_query($conn, $sql)) {
-            $_SESSION['success'] = "Pendaftaran berhasil! Tim kami akan meninjau profil Anda dalam waktu 1x24 jam sebelum Anda dapat login.";
-            header("Location: register_vendor.php");
-            exit;
+        $stmt = mysqli_prepare($conn, "INSERT INTO vendors (nama_perusahaan, spesialisasi, alamat, email, pic_nama, pic_kontak, password, nib, npwp, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending')");
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "sssssssss", $nama_perusahaan, $spesialisasi, $alamat, $email, $pic_nama, $pic_kontak, $password_hashed, $nib, $npwp);
+            $success = mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+
+            if ($success) {
+                $_SESSION['success'] = "Pendaftaran berhasil! Tim kami akan meninjau profil Anda dalam waktu 1x24 jam sebelum Anda dapat login.";
+                header("Location: register_vendor.php");
+                exit;
+            } else {
+                throw new Exception("Gagal menyimpan data pendaftaran vendor. Silakan periksa kembali data Anda.");
+            }
         } else {
-            throw new Exception(mysqli_error($conn));
+            throw new Exception("Gagal mempersiapkan sistem pendaftaran.");
         }
     } catch(Exception $e) {
-        $_SESSION['error'] = "Terjadi kesalahan database: " . $e->getMessage();
+        $_SESSION['error'] = "Terjadi kesalahan: " . $e->getMessage();
         header("Location: register_vendor.php");
         exit;
     }

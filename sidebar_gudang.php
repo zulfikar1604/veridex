@@ -15,7 +15,7 @@
     <div class="flex justify-between items-center p-5 md:p-6 border-b border-slate-800">
         <div>
             <h1 class="text-2xl font-black text-red-500 tracking-wider">VERIDEX</h1>
-            <p class="text-[10px] text-slate-400 mt-1 uppercase tracking-widest font-bold">ROLE: GUDANG</p>
+            <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-1 uppercase tracking-widest font-bold">ROLE: GUDANG</p>
         </div>
         <button onclick="toggleSidebar()" class="sidebar-close-btn md:hidden"><i class="fa-solid fa-xmark"></i></button>
     </div>

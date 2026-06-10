@@ -31,7 +31,7 @@ $query_match = mysqli_query($conn, "
 
 include 'header_meta.php';
 ?>
-<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
+<body class="bg-slate-50 dark:bg-[#0f172a] flex flex-col h-screen overflow-hidden">
 
     <?php
     $page_title = "3-Way Matching";
@@ -46,21 +46,21 @@ include 'header_meta.php';
             <!-- GREETING BANNER -->
             <div class="bg-gradient-to-r from-emerald-500/10 to-transparent p-5 rounded-2xl border border-emerald-500/20 flex justify-between items-center flex-wrap gap-4 mb-6">
                 <div>
-                    <h3 class="text-base font-black text-slate-800 uppercase tracking-tight">Validasi Keuangan PO</h3>
-                    <p class="text-xs text-slate-500 font-medium mt-1">Selamat datang kembali, <?= htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8') ?>. Lakukan pencocokan invoice vendor.</p>
+                    <h3 class="text-base font-black text-slate-800 dark:text-white uppercase tracking-tight">Validasi Keuangan PO</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium mt-1">Selamat datang kembali, <?= htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8') ?>. Lakukan pencocokan invoice vendor.</p>
                 </div>
-                <div class="bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100 text-xs font-bold text-slate-600">
+                <div class="bg-white dark:bg-[#1e293b] px-4 py-2 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300">
                     <i class="fa-solid fa-shield-halved text-emerald-500 mr-1.5"></i> AP Secure
                 </div>
             </div>
             <?php if(mysqli_num_rows($query_match) > 0): ?>
                 <?php while($po = mysqli_fetch_assoc($query_match)): ?>
-                <div class="bg-white p-6 rounded-2xl border shadow-sm" x-data="{ matching: false }">
+                <div class="bg-white dark:bg-[#1e293b] p-6 rounded-2xl border shadow-sm" x-data="{ matching: false }">
                     <!-- Header -->
                     <div class="flex justify-between items-start mb-6">
                         <div>
-                            <h3 class="font-black text-slate-800 text-lg uppercase"><?= htmlspecialchars($po['po_number']) ?></h3>
-                            <p class="text-sm text-slate-500 mt-1"><?= htmlspecialchars($po['nama_perusahaan']) ?> — <?= htmlspecialchars($po['nama_barang']) ?></p>
+                            <h3 class="font-black text-slate-800 dark:text-white text-lg uppercase"><?= htmlspecialchars($po['po_number']) ?></h3>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1"><?= htmlspecialchars($po['nama_perusahaan']) ?> — <?= htmlspecialchars($po['nama_barang']) ?></p>
                         </div>
                         <span class="bg-indigo-100 text-indigo-700 text-[9px] px-3 py-1 rounded-full font-black uppercase">Siap Matching</span>
                     </div>
@@ -74,9 +74,9 @@ include 'header_meta.php';
                                 <span class="text-[10px] font-black text-green-700 uppercase tracking-widest">Data PO</span>
                             </div>
                             <div class="space-y-2 text-sm">
-                                <div class="flex justify-between"><span class="text-slate-500">No PO</span><span class="font-bold text-slate-800"><?= $po['po_number'] ?></span></div>
-                                <div class="flex justify-between"><span class="text-slate-500">Barang</span><span class="font-bold text-slate-800"><?= $po['nama_barang'] ?></span></div>
-                                <div class="flex justify-between"><span class="text-slate-500">Nilai</span><span class="font-bold text-slate-800">Rp <?= number_format($po['total_harga'],0,',','.') ?></span></div>
+                                <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400 dark:text-slate-500">No PO</span><span class="font-bold text-slate-800 dark:text-white"><?= $po['po_number'] ?></span></div>
+                                <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400 dark:text-slate-500">Barang</span><span class="font-bold text-slate-800 dark:text-white"><?= $po['nama_barang'] ?></span></div>
+                                <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400 dark:text-slate-500">Nilai</span><span class="font-bold text-slate-800 dark:text-white">Rp <?= number_format($po['total_harga'],0,',','.') ?></span></div>
                             </div>
                             <div class="mt-3 text-center"><span class="bg-green-600 text-white text-[9px] px-3 py-1 rounded-full font-black uppercase"><i class="fa-solid fa-check mr-1"></i> OK</span></div>
                         </div>
@@ -89,8 +89,8 @@ include 'header_meta.php';
                             </div>
                             <?php if($po['received_at']): ?>
                             <div class="space-y-2 text-sm">
-                                <div class="flex justify-between"><span class="text-slate-500">Tgl Terima</span><span class="font-bold text-slate-800"><?= date('d M Y', strtotime($po['received_at'])) ?></span></div>
-                                <div class="flex justify-between"><span class="text-slate-500">Qty Diterima</span><span class="font-bold text-slate-800"><?= $po['jumlah_diterima'] ?></span></div>
+                                <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400 dark:text-slate-500">Tgl Terima</span><span class="font-bold text-slate-800 dark:text-white"><?= date('d M Y', strtotime($po['received_at'])) ?></span></div>
+                                <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400 dark:text-slate-500">Qty Diterima</span><span class="font-bold text-slate-800 dark:text-white"><?= $po['jumlah_diterima'] ?></span></div>
                             </div>
                             <div class="mt-3 text-center"><span class="bg-green-600 text-white text-[9px] px-3 py-1 rounded-full font-black uppercase"><i class="fa-solid fa-check mr-1"></i> OK</span></div>
                             <?php else: ?>
@@ -107,8 +107,8 @@ include 'header_meta.php';
                             </div>
                             <?php if($po['invoice_number']): ?>
                             <div class="space-y-2 text-sm">
-                                <div class="flex justify-between"><span class="text-slate-500">No Invoice</span><span class="font-bold text-slate-800"><?= htmlspecialchars($po['invoice_number']) ?></span></div>
-                                <div class="flex justify-between"><span class="text-slate-500">Tgl Submit</span><span class="font-bold text-slate-800"><?= date('d M Y', strtotime($po['invoice_submitted_at'])) ?></span></div>
+                                <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400 dark:text-slate-500">No Invoice</span><span class="font-bold text-slate-800 dark:text-white"><?= htmlspecialchars($po['invoice_number']) ?></span></div>
+                                <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400 dark:text-slate-500">Tgl Submit</span><span class="font-bold text-slate-800 dark:text-white"><?= date('d M Y', strtotime($po['invoice_submitted_at'])) ?></span></div>
                                 <?php if($po['invoice_file']): ?>
                                 <a href="<?= $po['invoice_file'] ?>" target="_blank" class="text-blue-600 text-xs font-bold underline"><i class="fa-solid fa-download mr-1"></i> Lihat File</a>
                                 <?php endif; ?>
@@ -135,20 +135,20 @@ include 'header_meta.php';
                         " class="bg-slate-900 text-white px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-green-600 transition shadow-xl flex items-center gap-3">
                             <i class="fa-solid fa-check-double"></i> Match & Approve for Payment
                         </button>
-                        <div x-show="matching" class="text-slate-400 font-bold text-sm flex items-center gap-2">
+                        <div x-show="matching" class="text-slate-400 dark:text-slate-500 font-bold text-sm flex items-center gap-2">
                             <i class="fa-solid fa-spinner fa-spin"></i> Memproses matching...
                         </div>
                     </div>
                     <?php else: ?>
-                    <p class="text-center text-slate-400 italic text-sm">Menunggu semua dokumen lengkap sebelum bisa di-match.</p>
+                    <p class="text-center text-slate-400 dark:text-slate-500 italic text-sm">Menunggu semua dokumen lengkap sebelum bisa di-match.</p>
                     <?php endif; ?>
                 </div>
                 <?php endwhile; ?>
             <?php else: ?>
-            <div class="bg-white p-12 rounded-2xl border shadow-sm text-center">
+            <div class="bg-white dark:bg-[#1e293b] p-12 rounded-2xl border shadow-sm text-center">
                 <i class="fa-solid fa-magnifying-glass-dollar text-6xl text-slate-200 mb-6 block"></i>
-                <h3 class="font-black text-slate-800 text-xl mb-2">Tidak Ada PO untuk Di-Match</h3>
-                <p class="text-slate-400 text-sm">Semua PO sudah di-match atau belum ada invoice yang masuk dari vendor.</p>
+                <h3 class="font-black text-slate-800 dark:text-white text-xl mb-2">Tidak Ada PO untuk Di-Match</h3>
+                <p class="text-slate-400 dark:text-slate-500 text-sm">Semua PO sudah di-match atau belum ada invoice yang masuk dari vendor.</p>
             </div>
             <?php endif; ?>
         </main>

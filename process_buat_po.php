@@ -29,42 +29,92 @@ $total_harga = $jumlah_pesan * $harga_satuan;
 
 $rfq_id = intval($_POST['rfq_id'] ?? 0);
 
-// Ambil SPH data untuk RFQ dan vendor terpilih ini
-if ($rfq_id > 0) {
-    $sph_data = mysqli_fetch_assoc(mysqli_query($conn, "SELECT payment_term, biaya_pengiriman FROM sph_submissions WHERE rfq_id = $rfq_id AND vendor_id = $vendor_id AND status = 'Selected' LIMIT 1"));
-} else {
-    // Fallback jika rfq_id tidak dikirim
-    $sph_data = mysqli_fetch_assoc(mysqli_query($conn, "SELECT rfq_id, payment_term, biaya_pengiriman FROM sph_submissions WHERE inventory_id = $inventory_id AND vendor_id = $vendor_id AND status = 'Selected' ORDER BY id DESC LIMIT 1"));
-    $rfq_id = $sph_data ? intval($sph_data['rfq_id']) : 0;
-}
+mysqli_begin_transaction($conn);
 
-$payment_term = $sph_data['payment_term'] ?? 'Net 30';
-$biaya_pengiriman = floatval($sph_data['biaya_pengiriman'] ?? 0);
-$total_harga += $biaya_pengiriman;
+try {
+    // Ambil SPH data untuk RFQ dan vendor terpilih ini
+    $sph_data = null;
+    if ($rfq_id > 0) {
+        $stmt = mysqli_prepare($conn, "SELECT payment_term, biaya_pengiriman FROM sph_submissions WHERE rfq_id = ? AND vendor_id = ? AND status = 'Selected' LIMIT 1");
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "ii", $rfq_id, $vendor_id);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            $sph_data = mysqli_fetch_assoc($result);
+            mysqli_stmt_close($stmt);
+        } else {
+            throw new Exception("Gagal memproses data SPH.");
+        }
+    } else {
+        // Fallback jika rfq_id tidak dikirim
+        $stmt = mysqli_prepare($conn, "SELECT rfq_id, payment_term, biaya_pengiriman FROM sph_submissions WHERE inventory_id = ? AND vendor_id = ? AND status = 'Selected' ORDER BY id DESC LIMIT 1");
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "ii", $inventory_id, $vendor_id);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            $sph_data = mysqli_fetch_assoc($result);
+            mysqli_stmt_close($stmt);
+            $rfq_id = $sph_data ? intval($sph_data['rfq_id']) : 0;
+        } else {
+            throw new Exception("Gagal memproses data SPH.");
+        }
+    }
 
-// Cek apakah sudah ada PO untuk RFQ dan vendor ini
-$check = mysqli_query($conn, "SELECT id FROM purchase_orders WHERE rfq_id = $rfq_id AND vendor_id = $vendor_id");
-if (mysqli_num_rows($check) > 0) {
-    echo json_encode(['success' => false, 'message' => 'Purchase Order untuk vendor ini dalam RFQ yang sama sudah dibuat sebelumnya.']);
-    exit;
-}
+    $payment_term = $sph_data['payment_term'] ?? 'Net 30';
+    $biaya_pengiriman = floatval($sph_data['biaya_pengiriman'] ?? 0);
+    $total_harga = ($jumlah_pesan * $harga_satuan) + $biaya_pengiriman;
 
-// Generate PO number
-$vq_q = mysqli_query($conn, "SELECT rank_position FROM vendor_quotas WHERE inventory_id = $inventory_id AND vendor_id = $vendor_id");
-$vq = mysqli_fetch_assoc($vq_q);
-$rank = $vq['rank_position'] ?? 1;
-$rank_letter = ($rank == 1) ? 'A' : (($rank == 2) ? 'B' : 'C');
-$po_number = 'PO-' . date('Ymd') . '-' . str_pad($inventory_id, 3, '0', STR_PAD_LEFT) . '-' . $rank_letter;
+    // Cek apakah sudah ada PO untuk RFQ dan vendor ini
+    $stmt_check = mysqli_prepare($conn, "SELECT id FROM purchase_orders WHERE rfq_id = ? AND vendor_id = ?");
+    if ($stmt_check) {
+        mysqli_stmt_bind_param($stmt_check, "ii", $rfq_id, $vendor_id);
+        mysqli_stmt_execute($stmt_check);
+        $result_check = mysqli_stmt_get_result($stmt_check);
+        $has_po = mysqli_num_rows($result_check) > 0;
+        mysqli_stmt_close($stmt_check);
+        
+        if ($has_po) {
+            throw new Exception('Purchase Order untuk vendor ini dalam RFQ yang sama sudah dibuat sebelumnya.');
+        }
+    } else {
+        throw new Exception("Gagal memeriksa data Purchase Order.");
+    }
 
-$procurement_id = $_SESSION['user_id'];
+    // Generate PO number
+    $stmt_vq = mysqli_prepare($conn, "SELECT rank_position FROM vendor_quotas WHERE inventory_id = ? AND vendor_id = ?");
+    if ($stmt_vq) {
+        mysqli_stmt_bind_param($stmt_vq, "ii", $inventory_id, $vendor_id);
+        mysqli_stmt_execute($stmt_vq);
+        $result_vq = mysqli_stmt_get_result($stmt_vq);
+        $vq = mysqli_fetch_assoc($result_vq);
+        mysqli_stmt_close($stmt_vq);
+    } else {
+        throw new Exception("Gagal memproses kuota vendor.");
+    }
 
-$pt_safe = mysqli_real_escape_string($conn, $payment_term);
-$stmt_po = mysqli_prepare($conn, "INSERT INTO purchase_orders (po_number, procurement_id, vendor_id, inventory_id, rfq_id, total_harga, nilai_kontrak, jumlah_pesan, payment_term, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, '$pt_safe', 'Pending Manager', NOW())");
-mysqli_stmt_bind_param($stmt_po, "siiiiddi", $po_number, $procurement_id, $vendor_id, $inventory_id, $rfq_id, $total_harga, $total_harga, $jumlah_pesan);
+    $rank = $vq['rank_position'] ?? 1;
+    $rank_letter = ($rank == 1) ? 'A' : (($rank == 2) ? 'B' : 'C');
+    $po_number = 'PO-' . date('Ymd') . '-' . str_pad($inventory_id, 3, '0', STR_PAD_LEFT) . '-' . $rank_letter;
 
-if (mysqli_stmt_execute($stmt_po)) {
+    $procurement_id = $_SESSION['user_id'];
+
+    $stmt_po = mysqli_prepare($conn, "INSERT INTO purchase_orders (po_number, procurement_id, vendor_id, inventory_id, rfq_id, total_harga, nilai_kontrak, jumlah_pesan, payment_term, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending Manager', NOW())");
+    if ($stmt_po) {
+        mysqli_stmt_bind_param($stmt_po, "siiiiddis", $po_number, $procurement_id, $vendor_id, $inventory_id, $rfq_id, $total_harga, $total_harga, $jumlah_pesan, $payment_term);
+        $execute_success = mysqli_stmt_execute($stmt_po);
+        mysqli_stmt_close($stmt_po);
+        
+        if (!$execute_success) {
+            throw new Exception('Gagal membuat Purchase Order.');
+        }
+    } else {
+        throw new Exception("Gagal mempersiapkan data Purchase Order.");
+    }
+
+    mysqli_commit($conn);
     echo json_encode(['success' => true, 'message' => 'Purchase Order berhasil dibuat dan menunggu approval Manager.']);
-} else {
-    echo json_encode(['success' => false, 'message' => 'Gagal membuat Purchase Order: ' . mysqli_error($conn)]);
+} catch (Exception $e) {
+    mysqli_rollback($conn);
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }
 ?>

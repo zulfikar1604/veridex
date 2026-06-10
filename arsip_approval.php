@@ -33,7 +33,7 @@ $page_title = "Arsip Approval";
 $page_subtitle = "Riwayat Keputusan Validasi PO";
 include 'header_meta.php';
 ?>
-<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
+<body class="bg-slate-50 dark:bg-[#0f172a] flex flex-col h-screen overflow-hidden">
 
     <?php
     include 'navbar.php';
@@ -43,17 +43,17 @@ include 'header_meta.php';
         <?php include 'sidebar_procurement.php'; ?>
 
         <main class="flex-1 overflow-y-auto p-6 md:p-8 space-y-6">
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex gap-4">
-                <input type="text" placeholder="Cari Nomor PO atau Vendor..." class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-red-500">
+            <div class="bg-white dark:bg-[#1e293b] p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex gap-4">
+                <input type="text" placeholder="Cari Nomor PO atau Vendor..." class="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-red-500">
                 <button class="bg-slate-800 text-white px-6 py-2 rounded-xl text-sm font-bold">Filter Tanggal</button>
             </div>
 
             <!-- Table Section -->
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="bg-white dark:bg-[#1e293b] rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
                 <div class="overflow-x-auto w-full">
 <table class="w-full text-left">
-                    <thead class="bg-slate-50/50 border-b border-slate-100">
-                        <tr class="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                    <thead class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800">
+                        <tr class="text-[10px] font-black text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                             <th class="p-6">ID Dokumen</th>
                             <th class="p-6">Vendor Partner</th>
                             <th class="p-6">Nilai Kontrak</th>
@@ -64,17 +64,17 @@ include 'header_meta.php';
                     </thead>
                     <tbody class="divide-y divide-slate-50">
                         <?php while($row = mysqli_fetch_assoc($query_arsip)): ?>
-                        <tr class="hover:bg-slate-50/80 transition">
+                        <tr class="hover:bg-slate-50 dark:bg-slate-900/80 transition">
                             <td class="p-6">
-                                <span class="font-black text-slate-700">#<?= htmlspecialchars($row['po_number']) ?></span>
+                                <span class="font-black text-slate-700 dark:text-slate-200">#<?= htmlspecialchars($row['po_number']) ?></span>
                             </td>
                             <td class="p-6">
-                                <div class="font-bold text-slate-800"><?= $row['nama_perusahaan'] ?></div>
+                                <div class="font-bold text-slate-800 dark:text-white"><?= $row['nama_perusahaan'] ?></div>
                             </td>
                             <td class="p-6">
-                                <div class="text-sm font-bold text-slate-600">Rp <?= number_format($row['nilai_kontrak'], 0, ',', '.') ?></div>
+                                <div class="text-sm font-bold text-slate-600 dark:text-slate-300">Rp <?= number_format($row['nilai_kontrak'], 0, ',', '.') ?></div>
                             </td>
-                            <td class="p-6 text-sm text-slate-500">
+                            <td class="p-6 text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500">
                                 <?= $row['approved_at'] ? date('d M Y', strtotime($row['approved_at'])) : '-' ?>
                             </td>
                             <td class="p-6">
@@ -83,7 +83,7 @@ include 'header_meta.php';
                                 </div>
                             </td>
                             <td class="p-6 text-center">
-                                <a href="print_po.php?id=<?= $row['id'] ?>" target="_blank" class="text-slate-400 hover:text-red-500 transition shadow-sm" title="Print / PDF PO">
+                                <a href="print_po.php?id=<?= $row['id'] ?>" target="_blank" class="text-slate-400 dark:text-slate-500 hover:text-red-500 transition shadow-sm" title="Print / PDF PO">
                                     <i class="fa-solid fa-file-pdf text-xl"></i>
                                 </a>
                             </td>

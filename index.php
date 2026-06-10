@@ -212,10 +212,10 @@ if (isset($_SESSION['role'])) {
                     </p>
                     
                     <div class="flex flex-wrap gap-4 pt-4">
-                        <a href="#simulator" class="flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]">
+                        <a href="#simulator" class="flex items-center gap-3 bg-white dark:bg-[#1e293b] text-black px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]">
                             <i class="fa-solid fa-calculator"></i> Simulasi ROP
                         </a>
-                        <a href="#features" class="flex items-center gap-3 glass px-8 py-4 rounded-full font-semibold text-white hover:bg-white/10 transition-all duration-300">
+                        <a href="#features" class="flex items-center gap-3 glass px-8 py-4 rounded-full font-semibold text-white hover:bg-white dark:bg-[#1e293b]/10 transition-all duration-300">
                             Pelajari Fitur <i class="fa-solid fa-chevron-down text-xs"></i>
                         </a>
                     </div>
@@ -464,7 +464,7 @@ if (isset($_SESSION['role'])) {
                     
                     <div class="grid lg:grid-cols-2 gap-16 relative z-10">
                         <div class="space-y-6">
-                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-xs font-semibold text-gray-300">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-white dark:bg-[#1e293b]/5 border border-white/10 text-xs font-semibold text-gray-300">
                                 <i class="fa-solid fa-calculator text-brand-500"></i> Interactive Tool
                             </div>
                             <h2 class="text-4xl font-bold text-white leading-tight">Simulasikan <br>Kebutuhan ROP Anda</h2>
@@ -518,7 +518,7 @@ if (isset($_SESSION['role'])) {
                                     <input type="range" id="calc-safetystock" min="0" max="200" value="15" oninput="updateSimulator()" class="w-full h-2 bg-dark-700 rounded-lg appearance-none cursor-pointer accent-brand-500">
                                 </div>
 
-                                <div class="h-px w-full bg-white/10 my-6"></div>
+                                <div class="h-px w-full bg-white dark:bg-[#1e293b]/10 my-6"></div>
 
                                 <!-- Result -->
                                 <div class="flex items-end justify-between">
@@ -627,7 +627,7 @@ if (isset($_SESSION['role'])) {
                         <p class="text-gray-400 text-lg">Bergabung dengan ekosistem Veridex dan rasakan kontrol, transparansi, dan efisiensi level enterprise.</p>
                         
                         <div class="pt-4">
-                            <a href="<?= $dashboard_link ?>" class="inline-flex items-center gap-3 px-8 py-4 bg-white text-dark-900 rounded-full font-bold hover:bg-gray-200 transition-all transform hover:scale-105 shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+                            <a href="<?= $dashboard_link ?>" class="inline-flex items-center gap-3 px-8 py-4 bg-white dark:bg-[#1e293b] text-dark-900 rounded-full font-bold hover:bg-gray-200 transition-all transform hover:scale-105 shadow-[0_0_40px_rgba(255,255,255,0.2)]">
                                 Akses Dashboard Sekarang <i class="fa-solid fa-arrow-right"></i>
                             </a>
                         </div>
@@ -654,13 +654,13 @@ if (isset($_SESSION['role'])) {
                     </p>
                 </div>
                 <div class="flex md:justify-end items-center gap-6">
-                    <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+                    <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-white dark:bg-[#1e293b]/10 transition-colors">
                         <i class="fa-brands fa-linkedin-in"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+                    <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-white dark:bg-[#1e293b]/10 transition-colors">
                         <i class="fa-brands fa-twitter"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+                    <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-white dark:bg-[#1e293b]/10 transition-colors">
                         <i class="fa-solid fa-envelope"></i>
                     </a>
                 </div>

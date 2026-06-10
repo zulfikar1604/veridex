@@ -96,7 +96,7 @@ include 'header_meta.php';
 ?>
 <!-- Load Chart.js for manager dashboard charts -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
+<body class="bg-slate-50 dark:bg-[#0f172a] flex flex-col h-screen overflow-hidden">
 
     <?php
     include 'navbar.php';
@@ -109,10 +109,10 @@ include 'header_meta.php';
             <!-- GREETING BANNER -->
             <div class="bg-gradient-to-r from-red-500/10 to-transparent p-5 rounded-2xl border border-red-500/20 flex justify-between items-center flex-wrap gap-4 mb-6">
                 <div>
-                    <h3 class="text-base font-black text-slate-800 uppercase tracking-tight">Selamat Datang Kembali, <?= htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8') ?>!</h3>
-                    <p class="text-xs text-slate-500 font-medium mt-1">Sistem siap memantau performa pengadaan strategis dan status persetujuan hari ini.</p>
+                    <h3 class="text-base font-black text-slate-800 dark:text-white uppercase tracking-tight">Selamat Datang Kembali, <?= htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8') ?>!</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium mt-1">Sistem siap memantau performa pengadaan strategis dan status persetujuan hari ini.</p>
                 </div>
-                <div class="bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100 text-xs font-bold text-slate-600">
+                <div class="bg-white dark:bg-[#1e293b] px-4 py-2 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300">
                     <i class="fa-solid fa-clock text-red-500 mr-1.5 animate-pulse"></i> Monitoring Real-time
                 </div>
             </div>
@@ -121,14 +121,14 @@ include 'header_meta.php';
                 <!-- Card 1 -->
                 <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-6 shadow-lg shadow-slate-900/20 text-white relative overflow-hidden group">
                     <div class="relative z-10">
-                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Total Pengeluaran Selesai</p>
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1">Total Pengeluaran Selesai</p>
                         <h3 class="text-2xl font-black mb-1">Rp <span class="text-3xl"><?= number_format($total_spend, 0, ',', '.') ?></span></h3>
                         <p class="text-xs text-slate-300 font-medium">Nilai PO yang sudah dibayar</p>
                     </div>
                     <i class="fa-solid fa-rupiah-sign absolute -bottom-4 -right-2 text-6xl text-white opacity-5 group-hover:scale-110 transition-transform duration-500"></i>
                 </div>
                 <!-- Card 2 -->
-                <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col justify-center">
+                <div class="bg-white dark:bg-[#1e293b] rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col justify-center">
                     <div class="flex justify-between items-start mb-2">
                         <div class="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center text-lg"><i class="fa-solid fa-file-signature"></i></div>
                         <?php if($total_pending_po > 0): ?>
@@ -138,24 +138,24 @@ include 'header_meta.php';
                             </span>
                         <?php endif; ?>
                     </div>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">PO Butuh Persetujuan</p>
-                    <h3 class="text-3xl font-black text-slate-800"><?= $total_pending_po ?> <span class="text-sm font-bold text-slate-400">Dokumen</span></h3>
+                    <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">PO Butuh Persetujuan</p>
+                    <h3 class="text-3xl font-black text-slate-800 dark:text-white"><?= $total_pending_po ?> <span class="text-sm font-bold text-slate-400 dark:text-slate-500">Dokumen</span></h3>
                 </div>
                 <!-- Card 3 -->
-                <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col justify-center">
+                <div class="bg-white dark:bg-[#1e293b] rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col justify-center">
                     <div class="flex justify-between items-start mb-2">
                         <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-lg"><i class="fa-solid fa-bullhorn"></i></div>
                     </div>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">RFQ Aktif (Terbuka)</p>
-                    <h3 class="text-3xl font-black text-slate-800"><?= $total_open_rfq ?> <span class="text-sm font-bold text-slate-400">Permintaan</span></h3>
+                    <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">RFQ Aktif (Terbuka)</p>
+                    <h3 class="text-3xl font-black text-slate-800 dark:text-white"><?= $total_open_rfq ?> <span class="text-sm font-bold text-slate-400 dark:text-slate-500">Permintaan</span></h3>
                 </div>
                 <!-- Card 4 -->
-                <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col justify-center">
+                <div class="bg-white dark:bg-[#1e293b] rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col justify-center">
                     <div class="flex justify-between items-start mb-2">
                         <div class="w-10 h-10 rounded-xl bg-green-100 text-green-600 flex items-center justify-center text-lg"><i class="fa-solid fa-building"></i></div>
                     </div>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Vendor Mitra</p>
-                    <h3 class="text-3xl font-black text-slate-800"><?= $total_vendors ?> <span class="text-sm font-bold text-slate-400">Perusahaan</span></h3>
+                    <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Total Vendor Mitra</p>
+                    <h3 class="text-3xl font-black text-slate-800 dark:text-white"><?= $total_vendors ?> <span class="text-sm font-bold text-slate-400 dark:text-slate-500">Perusahaan</span></h3>
                 </div>
             </div>
 
@@ -163,16 +163,16 @@ include 'header_meta.php';
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
                 <!-- PIE CHART: PO STATUS -->
-                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col">
-                    <h3 class="text-xs font-black text-slate-800 uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Status Pesanan (PO)</h3>
+                <div class="bg-white dark:bg-[#1e293b] rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 flex flex-col">
+                    <h3 class="text-xs font-black text-slate-800 dark:text-white uppercase tracking-widest mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">Status Pesanan (PO)</h3>
                     <div class="flex-1 relative w-full max-h-64 flex justify-center">
                         <canvas id="poStatusChart"></canvas>
                     </div>
                 </div>
 
                 <!-- BAR CHART: TOP 5 VENDORS -->
-                <div class="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col">
-                    <h3 class="text-xs font-black text-slate-800 uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Top 5 Mitra Pengadaan (Nilai Pembelian Rp)</h3>
+                <div class="lg:col-span-2 bg-white dark:bg-[#1e293b] rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 flex flex-col">
+                    <h3 class="text-xs font-black text-slate-800 dark:text-white uppercase tracking-widest mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">Top 5 Mitra Pengadaan (Nilai Pembelian Rp)</h3>
                     <div class="flex-1 relative w-full h-64">
                         <canvas id="topVendorChart"></canvas>
                     </div>
@@ -181,22 +181,22 @@ include 'header_meta.php';
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- QUICK ACTION: PENDING PO -->
-                <div class="lg:col-span-1 bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
-                    <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-2">
+                <div class="lg:col-span-1 bg-white dark:bg-[#1e293b] rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6">
+                    <div class="flex justify-between items-center mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
                         <h3 class="text-xs font-black text-red-600 uppercase tracking-widest"><i class="fa-solid fa-clock mr-1"></i> Butuh Persetujuan Segera</h3>
-                        <a href="approval_procurement.php" class="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 px-2 py-1 rounded font-bold transition">Lihat Semua</a>
+                        <a href="approval_procurement.php" class="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 dark:text-slate-300 px-2 py-1 rounded font-bold transition">Lihat Semua</a>
                     </div>
                     <div class="space-y-3">
                         <?php if (mysqli_num_rows($query_pending_action) > 0): ?>
                             <?php while ($po_action = mysqli_fetch_assoc($query_pending_action)): ?>
                             <div class="p-3 bg-red-50 border border-red-100 rounded-xl group hover:border-red-300 transition">
                                 <div class="flex justify-between items-start mb-1">
-                                    <span class="font-black text-sm text-slate-800"><?= $po_action['po_number'] ?></span>
+                                    <span class="font-black text-sm text-slate-800 dark:text-white"><?= $po_action['po_number'] ?></span>
                                     <span class="text-[9px] font-bold text-red-500 bg-red-100 px-2 py-0.5 rounded-full">Baru</span>
                                 </div>
-                                <p class="text-xs text-slate-600 font-medium truncate mb-1"><?= htmlspecialchars($po_action['nama_perusahaan']) ?></p>
+                                <p class="text-xs text-slate-600 dark:text-slate-300 font-medium truncate mb-1"><?= htmlspecialchars($po_action['nama_perusahaan']) ?></p>
                                 <div class="flex justify-between items-center flex-wrap gap-4">
-                                    <span class="text-xs font-black text-slate-800">Rp <?= number_format($po_action['total_harga'],0,',','.') ?></span>
+                                    <span class="text-xs font-black text-slate-800 dark:text-white">Rp <?= number_format($po_action['total_harga'],0,',','.') ?></span>
                                     <a href="approval_procurement.php" class="text-[9px] font-bold text-white bg-red-600 hover:bg-red-700 px-2 py-1 rounded">Approve &rarr;</a>
                                 </div>
                             </div>
@@ -204,23 +204,23 @@ include 'header_meta.php';
                         <?php else: ?>
                             <div class="text-center py-10 opacity-50">
                                 <i class="fa-solid fa-check-circle text-4xl text-green-500 mb-2"></i>
-                                <p class="text-xs font-bold uppercase text-slate-500">Semua Clear</p>
+                                <p class="text-xs font-bold uppercase text-slate-500 dark:text-slate-400 dark:text-slate-500">Semua Clear</p>
                             </div>
                         <?php endif; ?>
                     </div>
                 </div>
 
                 <!-- TABEL KINERJA VENDOR (Fulfillment Rate) -->
-                <div class="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-slate-100 flex flex-col overflow-hidden">
-                    <div class="p-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center flex-wrap gap-4">
-                        <h3 class="font-black text-slate-700 uppercase tracking-widest text-xs"><i class="fa-solid fa-chart-line mr-1"></i> Peringkat Pemenuhan (Fulfillment Rate)</h3>
+                <div class="lg:col-span-2 bg-white dark:bg-[#1e293b] rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center flex-wrap gap-4">
+                        <h3 class="font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest text-xs"><i class="fa-solid fa-chart-line mr-1"></i> Peringkat Pemenuhan (Fulfillment Rate)</h3>
                     </div>
                     
                     <div class="overflow-x-auto flex-1">
                         <div class="overflow-x-auto w-full">
 <table class="w-full text-left whitespace-nowrap">
                             <thead>
-                                <tr class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-100">
+                                <tr class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800">
                                     <th class="py-3 px-6">Vendor</th>
                                     <th class="py-3 px-6 text-center">Total PO</th>
                                     <th class="py-3 px-6 w-1/2">Tingkat Pemenuhan</th>
@@ -233,18 +233,18 @@ include 'header_meta.php';
                                     $persen = ($pesan > 0) ? round(($terima / $pesan) * 100) : 0;
                                     $color = ($persen >= 90) ? 'bg-green-500' : (($persen >= 70) ? 'bg-yellow-500' : 'bg-red-500');
                                 ?>
-                                <tr class="border-b border-slate-50 hover:bg-slate-50 transition">
+                                <tr class="border-b border-slate-50 hover:bg-slate-50 dark:bg-slate-900 transition">
                                     <td class="py-4 px-6">
-                                        <div class="font-black text-slate-800"><?= htmlspecialchars($row['nama_perusahaan']) ?></div>
-                                        <div class="text-[10px] text-slate-400 font-bold uppercase"><?= htmlspecialchars($row['spesialisasi']) ?></div>
+                                        <div class="font-black text-slate-800 dark:text-white"><?= htmlspecialchars($row['nama_perusahaan']) ?></div>
+                                        <div class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase"><?= htmlspecialchars($row['spesialisasi']) ?></div>
                                     </td>
-                                    <td class="py-4 px-6 text-center font-bold text-slate-600">
+                                    <td class="py-4 px-6 text-center font-bold text-slate-600 dark:text-slate-300">
                                         <?= $row['total_po'] ?>
                                     </td>
                                     <td class="py-4 px-6">
                                         <div class="flex justify-between mb-1 items-end">
-                                            <span class="text-xs font-black text-slate-700"><?= $persen ?>%</span>
-                                            <span class="text-[9px] font-bold text-slate-400"><?= number_format($terima) ?>/<?= number_format($pesan) ?> Unit</span>
+                                            <span class="text-xs font-black text-slate-700 dark:text-slate-200"><?= $persen ?>%</span>
+                                            <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500"><?= number_format($terima) ?>/<?= number_format($pesan) ?> Unit</span>
                                         </div>
                                         <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
                                             <div class="<?= $color ?> h-full rounded-full transition-all duration-1000" style="width: <?= $persen ?>%"></div>

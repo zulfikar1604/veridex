@@ -59,14 +59,14 @@ if ($_SESSION['role'] === 'Vendor' && $po['vendor_id'] != $_SESSION['vendor_id']
         }
     </style>
 </head>
-<body class="text-slate-800">
+<body class="text-slate-800 dark:text-white">
 
     <div class="fixed top-4 right-4 no-print flex gap-2">
         <button onclick="window.print()" class="bg-red-600 text-white px-6 py-2 rounded-lg font-bold shadow hover:bg-red-700">
             <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
             Print PDF
         </button>
-        <button onclick="window.close()" class="bg-slate-200 text-slate-700 px-6 py-2 rounded-lg font-bold shadow hover:bg-slate-300">Tutup</button>
+        <button onclick="window.close()" class="bg-slate-200 text-slate-700 dark:text-slate-200 px-6 py-2 rounded-lg font-bold shadow hover:bg-slate-300">Tutup</button>
     </div>
 
     <div class="print-area">
@@ -74,20 +74,20 @@ if ($_SESSION['role'] === 'Vendor' && $po['vendor_id'] != $_SESSION['vendor_id']
         <div class="flex justify-between items-start border-b-4 border-slate-900 pb-6 mb-8">
             <div>
                 <h1 class="text-4xl font-black text-red-600 tracking-tighter uppercase">VERIDEX</h1>
-                <p class="text-xs font-bold text-slate-500 tracking-widest mt-1">PROCUREMENT SYSTEM</p>
-                <div class="mt-4 text-sm text-slate-600">
+                <p class="text-xs font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 tracking-widest mt-1">PROCUREMENT SYSTEM</p>
+                <div class="mt-4 text-sm text-slate-600 dark:text-slate-300">
                     <p>Jl. Jend. Sudirman No. 123, Jakarta 12190</p>
                     <p>Tel: (021) 555-0123 | Email: procurement@veridex.co.id</p>
                 </div>
             </div>
             <div class="text-right">
-                <h2 class="text-3xl font-black text-slate-800 uppercase mb-2">Purchase Order</h2>
-                <div class="inline-block bg-slate-100 p-3 rounded-lg text-left border border-slate-200">
+                <h2 class="text-3xl font-black text-slate-800 dark:text-white uppercase mb-2">Purchase Order</h2>
+                <div class="inline-block bg-slate-100 p-3 rounded-lg text-left border border-slate-200 dark:border-slate-700">
                     <div class="overflow-x-auto w-full">
 <table class="text-sm">
-                        <tr><td class="font-bold text-slate-500 pr-4">PO Number</td><td class="font-black"><?= htmlspecialchars($po['po_number']) ?></td></tr>
-                        <tr><td class="font-bold text-slate-500 pr-4">Date</td><td class="font-bold"><?= date('d F Y', strtotime($po['created_at'])) ?></td></tr>
-                        <tr><td class="font-bold text-slate-500 pr-4">Status</td><td class="font-bold text-red-600 uppercase"><?= $po['status'] ?></td></tr>
+                        <tr><td class="font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 pr-4">PO Number</td><td class="font-black"><?= htmlspecialchars($po['po_number']) ?></td></tr>
+                        <tr><td class="font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 pr-4">Date</td><td class="font-bold"><?= date('d F Y', strtotime($po['created_at'])) ?></td></tr>
+                        <tr><td class="font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 pr-4">Status</td><td class="font-bold text-red-600 uppercase"><?= $po['status'] ?></td></tr>
                     </table>
 </div>
                 </div>
@@ -97,17 +97,17 @@ if ($_SESSION['role'] === 'Vendor' && $po['vendor_id'] != $_SESSION['vendor_id']
         <!-- Vendor & Ship To -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-8">
             <div>
-                <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-200 pb-1">Vendor To:</h3>
-                <h4 class="text-lg font-black text-slate-800 uppercase"><?= htmlspecialchars($po['nama_perusahaan']) ?></h4>
-                <p class="text-sm mt-1 text-slate-600"><?= nl2br(htmlspecialchars($po['alamat'] ?? '')) ?></p>
-                <p class="text-sm mt-2 text-slate-600 font-medium">T: <?= htmlspecialchars($po['pic_kontak'] ?? '-') ?></p>
-                <p class="text-sm text-slate-600 font-medium">E: <?= htmlspecialchars($po['email'] ?? '-') ?></p>
+                <h3 class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3 border-b border-slate-200 dark:border-slate-700 pb-1">Vendor To:</h3>
+                <h4 class="text-lg font-black text-slate-800 dark:text-white uppercase"><?= htmlspecialchars($po['nama_perusahaan']) ?></h4>
+                <p class="text-sm mt-1 text-slate-600 dark:text-slate-300"><?= nl2br(htmlspecialchars($po['alamat'] ?? '')) ?></p>
+                <p class="text-sm mt-2 text-slate-600 dark:text-slate-300 font-medium">T: <?= htmlspecialchars($po['pic_kontak'] ?? '-') ?></p>
+                <p class="text-sm text-slate-600 dark:text-slate-300 font-medium">E: <?= htmlspecialchars($po['email'] ?? '-') ?></p>
             </div>
             <div>
-                <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-200 pb-1">Ship To:</h3>
-                <h4 class="text-lg font-black text-slate-800 uppercase">Gudang Utama Veridex</h4>
-                <p class="text-sm mt-1 text-slate-600">Jl. Industri Raya Blok B2<br>Kawasan Industri Cikarang, Jawa Barat 17530</p>
-                <p class="text-sm mt-2 text-slate-600 font-medium">PIC: Warehouse Manager</p>
+                <h3 class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3 border-b border-slate-200 dark:border-slate-700 pb-1">Ship To:</h3>
+                <h4 class="text-lg font-black text-slate-800 dark:text-white uppercase">Gudang Utama Veridex</h4>
+                <p class="text-sm mt-1 text-slate-600 dark:text-slate-300">Jl. Industri Raya Blok B2<br>Kawasan Industri Cikarang, Jawa Barat 17530</p>
+                <p class="text-sm mt-2 text-slate-600 dark:text-slate-300 font-medium">PIC: Warehouse Manager</p>
             </div>
         </div>
 
@@ -127,9 +127,9 @@ if ($_SESSION['role'] === 'Vendor' && $po['vendor_id'] != $_SESSION['vendor_id']
             <tbody class="divide-y divide-slate-200 text-sm">
                 <tr>
                     <td class="py-4 px-4 text-center font-bold">1</td>
-                    <td class="py-4 px-4 font-bold text-slate-800"><?= htmlspecialchars($po['nama_barang']) ?></td>
-                    <td class="py-4 px-4 text-center text-slate-500 font-mono"><?= htmlspecialchars($po['sku']) ?></td>
-                    <td class="py-4 px-4 text-center font-bold"><?= $po['jumlah_pesan'] ?> <span class="text-xs text-slate-400"><?= htmlspecialchars($po['unit']) ?></span></td>
+                    <td class="py-4 px-4 font-bold text-slate-800 dark:text-white"><?= htmlspecialchars($po['nama_barang']) ?></td>
+                    <td class="py-4 px-4 text-center text-slate-500 dark:text-slate-400 dark:text-slate-500 font-mono"><?= htmlspecialchars($po['sku']) ?></td>
+                    <td class="py-4 px-4 text-center font-bold"><?= $po['jumlah_pesan'] ?> <span class="text-xs text-slate-400 dark:text-slate-500"><?= htmlspecialchars($po['unit']) ?></span></td>
                     <?php $unit_price = $po['jumlah_pesan'] > 0 ? $po['total_harga'] / $po['jumlah_pesan'] : 0; ?>
                     <td class="py-4 px-4 text-right font-bold">Rp <?= number_format($unit_price, 0, ',', '.') ?></td>
                     <td class="py-4 px-4 text-right font-black">Rp <?= number_format($po['total_harga'], 0, ',', '.') ?></td>
@@ -137,9 +137,9 @@ if ($_SESSION['role'] === 'Vendor' && $po['vendor_id'] != $_SESSION['vendor_id']
                 <!-- Spacer for layout -->
                 <tr class="h-32"><td colspan="6"></td></tr>
             </tbody>
-            <tfoot class="bg-slate-50 border-t-2 border-slate-900">
+            <tfoot class="bg-slate-50 dark:bg-slate-900 border-t-2 border-slate-900">
                 <tr>
-                    <td colspan="5" class="py-4 px-4 text-right font-black uppercase tracking-widest text-slate-600">Grand Total</td>
+                    <td colspan="5" class="py-4 px-4 text-right font-black uppercase tracking-widest text-slate-600 dark:text-slate-300">Grand Total</td>
                     <td class="py-4 px-4 text-right font-black text-lg text-red-600">Rp <?= number_format($po['total_harga'], 0, ',', '.') ?></td>
                 </tr>
             </tfoot>
@@ -149,8 +149,8 @@ if ($_SESSION['role'] === 'Vendor' && $po['vendor_id'] != $_SESSION['vendor_id']
         <!-- Terms and Signatures -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
             <div>
-                <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Terms & Conditions:</h3>
-                <ul class="text-xs text-slate-600 list-disc pl-4 space-y-1">
+                <h3 class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Terms & Conditions:</h3>
+                <ul class="text-xs text-slate-600 dark:text-slate-300 list-disc pl-4 space-y-1">
                     <li>Semua barang harus dikirimkan sesuai dengan spesifikasi yang disepakati.</li>
                     <li>Invoice harus mencantumkan nomor PO ini.</li>
                     <li>Pembayaran dilakukan 30 hari setelah invoice dan barang diterima dengan baik.</li>
@@ -159,11 +159,11 @@ if ($_SESSION['role'] === 'Vendor' && $po['vendor_id'] != $_SESSION['vendor_id']
             
             <div class="flex justify-end gap-12 relative">
                 <div class="text-center w-32 relative">
-                    <p class="text-xs font-bold text-slate-500 uppercase mb-12">Procurement</p>
+                    <p class="text-xs font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase mb-12">Procurement</p>
                     <div class="border-b border-slate-400 pb-1 font-bold text-sm z-10 relative"><?= htmlspecialchars($po['creator_name'] ?? 'Procurement Staff') ?></div>
                 </div>
                 <div class="text-center w-32 relative">
-                    <p class="text-xs font-bold text-slate-500 uppercase mb-12">Manager Approval</p>
+                    <p class="text-xs font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase mb-12">Manager Approval</p>
                     <?php if($po['status'] === 'Rejected'): ?>
                     <div class="border-b border-slate-400 pb-1 font-bold text-sm text-red-600 z-10 relative">Rejected</div>
                     <?php if(!empty($po['approved_at'])): ?>

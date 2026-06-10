@@ -16,7 +16,7 @@ $page_title = "Stok ROP";
 $page_subtitle = "Peringatan Safety Stock & Reorder Point";
 include 'header_meta.php';
 ?>
-<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
+<body class="bg-slate-50 dark:bg-[#0f172a] flex flex-col h-screen overflow-hidden">
 
     <?php
     $page_title = "Stok ROP";
@@ -39,12 +39,12 @@ include 'header_meta.php';
             <div class="space-y-4 max-w-4xl mx-auto">
 
                 <!-- Header ringkasan -->
-                <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between flex-wrap gap-4">
+                <div class="bg-white dark:bg-[#1e293b] p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex items-center justify-between flex-wrap gap-4">
                     <div>
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Barang Butuh Pengadaan</span>
+                        <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Total Barang Butuh Pengadaan</span>
                         <p class="text-3xl font-black text-red-600 mt-1">
                             <?= str_pad($total_kritis, 2, '0', STR_PAD_LEFT) ?>
-                            <span class="text-sm font-medium text-slate-400">SKU</span>
+                            <span class="text-sm font-medium text-slate-400 dark:text-slate-500">SKU</span>
                         </p>
                     </div>
                     <i class="fa-solid fa-triangle-exclamation text-5xl text-red-100"></i>
@@ -71,10 +71,10 @@ include 'header_meta.php';
 
                 <?php else: ?>
                     <!-- Semua aman -->
-                    <div class="bg-white p-10 rounded-2xl border shadow-sm text-center">
+                    <div class="bg-white dark:bg-[#1e293b] p-10 rounded-2xl border shadow-sm text-center">
                         <i class="fa-solid fa-check-double text-5xl text-green-200 mb-4 block"></i>
-                        <p class="text-slate-500 font-bold">Semua stok dalam kondisi aman.</p>
-                        <p class="text-slate-400 text-sm mt-1">Tidak ada barang yang perlu pengadaan saat ini.</p>
+                        <p class="text-slate-500 dark:text-slate-400 dark:text-slate-500 font-bold">Semua stok dalam kondisi aman.</p>
+                        <p class="text-slate-400 dark:text-slate-500 text-sm mt-1">Tidak ada barang yang perlu pengadaan saat ini.</p>
                     </div>
                 <?php endif; ?>
 

@@ -11,7 +11,7 @@ if (!isset($hari_ini)) {
 
 // 2. Setup Icon & Warna Berdasarkan Role
 $avatar_icon = 'fa-user';
-$role_color = 'text-slate-600';
+$role_color = 'text-slate-600 dark:text-slate-300';
 $role_bg = 'bg-slate-100';
 $dashboard_link = 'login.php';
 
@@ -57,7 +57,7 @@ if (!isset($GLOBALS['alpine_loaded'])) {
     
     <!-- Sisi Kiri: Hamburger + Judul Halaman -->
     <div class="flex items-center gap-3">
-        <button onclick="toggleSidebar()" class="w-10 h-10 rounded-xl hover:bg-slate-850 text-slate-400 hover:text-white flex items-center justify-center transition" title="Toggle Sidebar">
+        <button onclick="toggleSidebar()" class="w-10 h-10 rounded-xl hover:bg-slate-850 text-slate-400 dark:text-slate-500 hover:text-white flex items-center justify-center transition" title="Toggle Sidebar">
             <i class="fa-solid fa-bars text-base"></i>
         </button>
         <div>
@@ -88,6 +88,12 @@ if (!isset($GLOBALS['alpine_loaded'])) {
             </div>
         <?php endif; ?>
 
+        <!-- Theme Toggle -->
+        <button onclick="toggleTheme()" id="theme-toggle" class="w-9 h-9 rounded-xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800/60 transition group shrink-0" title="Toggle Dark/Light Mode">
+            <i id="theme-toggle-dark-icon" class="fa-solid fa-moon text-[14px]"></i>
+            <i id="theme-toggle-light-icon" class="fa-solid fa-sun text-[14px] hidden text-amber-400"></i>
+        </button>
+
         <!-- Notification Bell Component -->
         <div class="shrink-0">
             <?php include 'navbar_notifications.php'; ?>
@@ -96,7 +102,7 @@ if (!isset($GLOBALS['alpine_loaded'])) {
         <!-- Profile Dropdown (Alpine.js) -->
         <div x-data="{ openProfile: false }" class="relative shrink-0" id="profile-dropdown-wrapper">
             <button @click="openProfile = !openProfile" 
-                    class="flex items-center gap-3 px-3 py-1.5 rounded-xl hover:bg-slate-800/60 transition group text-left"
+                    class="flex items-center gap-3 px-2 py-1.5 rounded-xl hover:bg-slate-800/60 transition group text-left"
                     title="Menu Pengaturan Profile">
                 <!-- Text Info (Hidden on small screens) -->
                 <div class="hidden md:block text-right">
@@ -110,7 +116,7 @@ if (!isset($GLOBALS['alpine_loaded'])) {
                     <?php else: ?>
                         <i class="fa-solid <?= $avatar_icon ?> text-xs group-hover:scale-110 transition-transform"></i>
                     <?php endif; ?>
-                    <span class="absolute bottom-0 right-0 w-2 h-2 bg-green-500 rounded-full z-10 border border-slate-800"></span>
+                    <span class="absolute bottom-0 right-0 w-2 h-2 bg-green-500 rounded-full z-10 border-2 border-slate-900"></span>
                 </div>
                 <!-- Chevron -->
                 <i class="fa-solid fa-chevron-down text-[10px] text-slate-500 group-hover:text-white transition-colors"></i>
@@ -126,11 +132,11 @@ if (!isset($GLOBALS['alpine_loaded'])) {
                  x-transition:leave="transition ease-in duration-100"
                  x-transition:leave-start="opacity-100 scale-100 translate-y-0"
                  x-transition:leave-end="opacity-0 scale-95 translate-y-1"
-                 class="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 py-2.5 z-[999] origin-top-right text-slate-800">
+                 class="absolute right-0 mt-3 w-64 bg-white dark:bg-[#1e293b] rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 py-2.5 z-[999] origin-top-right text-slate-800 dark:text-white">
                 
                 <!-- User Info Card -->
                 <div class="px-5 py-3 border-b border-slate-50 flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-lg bg-slate-105 text-slate-700 flex items-center justify-center font-bold overflow-hidden">
+                    <div class="w-9 h-9 rounded-lg bg-slate-105 text-slate-700 dark:text-slate-200 flex items-center justify-center font-bold overflow-hidden">
                         <?php if (!empty($_SESSION['profile_photo'])): ?>
                             <img src="<?= htmlspecialchars($_SESSION['profile_photo'], ENT_QUOTES, 'UTF-8') ?>" alt="Profile" class="w-full h-full object-cover">
                         <?php else: ?>
@@ -149,12 +155,12 @@ if (!isset($GLOBALS['alpine_loaded'])) {
 
                 <!-- Dropdown Options -->
                 <div class="p-1.5 space-y-0.5">
-                    <a href="profile.php" class="flex items-center gap-3 px-3.5 py-2 rounded-lg text-slate-605 hover:text-slate-900 hover:bg-slate-50 transition text-xs font-bold">
-                        <i class="fa-solid fa-user-gear text-slate-400 text-sm w-5"></i> Pengaturan Akun
+                    <a href="profile.php" class="flex items-center gap-3 px-3.5 py-2 rounded-lg text-slate-605 hover:text-slate-900 hover:bg-slate-50 dark:bg-slate-900 transition text-xs font-bold">
+                        <i class="fa-solid fa-user-gear text-slate-400 dark:text-slate-500 text-sm w-5"></i> Pengaturan Akun
                     </a>
                     
-                    <a href="<?= $dashboard_link ?>" class="flex items-center gap-3 px-3.5 py-2 rounded-lg text-slate-605 hover:text-slate-900 hover:bg-slate-50 transition text-xs font-bold">
-                        <i class="fa-solid fa-gauge-high text-slate-400 text-sm w-5"></i> Dashboard Utama
+                    <a href="<?= $dashboard_link ?>" class="flex items-center gap-3 px-3.5 py-2 rounded-lg text-slate-605 hover:text-slate-900 hover:bg-slate-50 dark:bg-slate-900 transition text-xs font-bold">
+                        <i class="fa-solid fa-gauge-high text-slate-400 dark:text-slate-500 text-sm w-5"></i> Dashboard Utama
                     </a>
                 </div>
 
@@ -177,12 +183,12 @@ if (!isset($GLOBALS['alpine_loaded'])) {
 <!-- GLOBAL DASHBOARD CARD AESTHETICS (Minimalist & Elegant) -->
 <style>
     /* Subtle hover lift for dashboard cards */
-    .bg-white.rounded-3xl, 
-    .bg-white.rounded-2xl {
+    .bg-white dark:bg-[#1e293b].rounded-3xl, 
+    .bg-white dark:bg-[#1e293b].rounded-2xl {
         transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     }
-    .bg-white.rounded-3xl:hover, 
-    .bg-white.rounded-2xl:hover {
+    .bg-white dark:bg-[#1e293b].rounded-3xl:hover, 
+    .bg-white dark:bg-[#1e293b].rounded-2xl:hover {
         transform: translateY(-3px);
         box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05);
     }

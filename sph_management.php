@@ -26,7 +26,7 @@ $page_subtitle = "Evaluasi & Arsip Penawaran Masuk";
 $navbar_badge = '<span class="bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">Total SPH: ' . mysqli_num_rows($query_sph) . '</span>';
 include 'header_meta.php';
 ?>
-<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
+<body class="bg-slate-50 dark:bg-[#0f172a] flex flex-col h-screen overflow-hidden">
 
     <?php
     include 'navbar.php';
@@ -36,11 +36,11 @@ include 'header_meta.php';
         <?php include 'sidebar_procurement.php'; ?>
 
         <main class="flex-1 overflow-y-auto p-6 md:p-8">
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="bg-white dark:bg-[#1e293b] rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
                 <div class="overflow-x-auto w-full">
 <table class="w-full text-left">
-                    <thead class="bg-slate-50 border-b border-slate-100">
-                        <tr class="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                    <thead class="bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800">
+                        <tr class="text-[10px] font-black text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                             <th class="p-6">Date Received</th>
                             <th class="p-6">Vendor Name</th>
                             <th class="p-6">Item Subject</th>
@@ -51,15 +51,15 @@ include 'header_meta.php';
                     </thead>
                     <tbody class="divide-y divide-slate-50">
                         <?php while($row = mysqli_fetch_assoc($query_sph)): ?>
-                        <tr class="hover:bg-slate-50/50 transition-colors">
-                            <td class="p-6 text-xs font-bold text-slate-400">
+                        <tr class="hover:bg-slate-50 dark:bg-slate-900/50 transition-colors">
+                            <td class="p-6 text-xs font-bold text-slate-400 dark:text-slate-500">
                                 <?= date('d M Y', strtotime($row['created_at'])) ?>
                             </td>
                             <td class="p-6">
-                                <div class="font-black text-slate-800 uppercase text-sm"><?= $row['nama_perusahaan'] ?></div>
-                                <div class="text-[9px] text-slate-400 font-bold">DOC ID: <?= $row['nomor_sph'] ?></div>
+                                <div class="font-black text-slate-800 dark:text-white uppercase text-sm"><?= $row['nama_perusahaan'] ?></div>
+                                <div class="text-[9px] text-slate-400 dark:text-slate-500 font-bold">DOC ID: <?= $row['nomor_sph'] ?></div>
                             </td>
-                            <td class="p-6 text-xs font-medium text-slate-600">
+                            <td class="p-6 text-xs font-medium text-slate-600 dark:text-slate-300">
                                 <?= $row['nama_barang'] ?>
                             </td>
                             <td class="p-6 text-center">
@@ -79,7 +79,7 @@ include 'header_meta.php';
                             <td class="p-6 text-right">
                                 <?php
                                 $status_colors = [
-                                    'Pending Review' => 'bg-slate-100 text-slate-500 border-slate-200',
+                                    'Pending Review' => 'bg-slate-100 text-slate-500 dark:text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-700',
                                     'TBE Done' => 'bg-blue-50 text-blue-600 border-blue-200',
                                     'CBE Done' => 'bg-purple-50 text-purple-600 border-purple-200',
                                     'Evaluated' => 'bg-indigo-50 text-indigo-600 border-indigo-200',
@@ -91,7 +91,7 @@ include 'header_meta.php';
                                 <span class="px-3 py-1 border rounded-lg text-[9px] font-black uppercase <?= $color ?> mr-2">
                                     <?= htmlspecialchars($row['status']) ?>
                                 </span>
-                                <a href="print_sph.php?rfq=<?= $row['rfq_id'] ?>&vendor=<?= $row['vendor_id'] ?>" target="_blank" class="px-2 py-1 bg-white text-slate-500 border border-slate-200 rounded hover:text-blue-600 hover:border-blue-200 transition" title="Print SPH">
+                                <a href="print_sph.php?rfq=<?= $row['rfq_id'] ?>&vendor=<?= $row['vendor_id'] ?>" target="_blank" class="px-2 py-1 bg-white dark:bg-[#1e293b] text-slate-500 dark:text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700 rounded hover:text-blue-600 hover:border-blue-200 transition" title="Print SPH">
                                     <i class="fa-solid fa-print"></i>
                                 </a>
                             </td>
@@ -109,11 +109,11 @@ include 'header_meta.php';
                         <i class="fa-solid fa-database"></i>
                     </div>
                     <div>
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Ready for Analysis</p>
+                        <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Ready for Analysis</p>
                         <h4 class="text-sm font-bold uppercase">Data dari SPH ini akan otomatis diproses di halaman Strategic Procurement</h4>
                     </div>
                 </div>
-                <a href="strategic_procurement.php" class="bg-white/10 hover:bg-white/20 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition border border-white/10">
+                <a href="strategic_procurement.php" class="bg-white dark:bg-[#1e293b]/10 hover:bg-white dark:bg-[#1e293b]/20 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition border border-white/10">
                     Go to Strategic Analysis <i class="fa-solid fa-arrow-right ml-2"></i>
                 </a>
             </div>

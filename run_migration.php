@@ -159,15 +159,15 @@ run_sql($conn, "
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-50 min-h-screen flex items-center justify-center p-6">
-    <div class="bg-white rounded-3xl shadow-lg border w-full max-w-2xl p-10">
+<body class="bg-slate-50 dark:bg-[#0f172a] min-h-screen flex items-center justify-center p-6">
+    <div class="bg-white dark:bg-[#1e293b] rounded-3xl shadow-lg border w-full max-w-2xl p-10">
         <div class="flex items-center gap-4 mb-8">
             <div class="w-14 h-14 bg-red-600 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/30">
                 <i class="fa-solid fa-database text-white text-2xl"></i>
             </div>
             <div>
-                <h1 class="text-2xl font-black text-slate-800 uppercase tracking-tight">Veridex Migration</h1>
-                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">Procure-to-Pay Database Setup</p>
+                <h1 class="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Veridex Migration</h1>
+                <p class="text-xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest">Procure-to-Pay Database Setup</p>
             </div>
         </div>
 
@@ -182,7 +182,7 @@ run_sql($conn, "
 
         <div class="space-y-2 mb-8">
             <?php foreach($results as $r): ?>
-            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl text-sm font-medium text-slate-700">
+            <div class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200">
                 <?= $r ?>
             </div>
             <?php endforeach; ?>

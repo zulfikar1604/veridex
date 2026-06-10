@@ -44,7 +44,7 @@ $page_title = "Create RFQ";
 $page_subtitle = "Pengadaan Barang Baru & Undang Vendor";
 include 'header_meta.php';
 ?>
-<body class="bg-slate-50 flex flex-col h-screen overflow-hidden text-slate-800">
+<body class="bg-slate-50 dark:bg-[#0f172a] flex flex-col h-screen overflow-hidden text-slate-800 dark:text-white">
 
     <?php
     $page_title = "Create RFQ";
@@ -62,17 +62,17 @@ include 'header_meta.php';
                 <!-- Sudah ada RFQ Open -->
                 <div class="bg-yellow-50 border-2 border-yellow-300 p-8 rounded-3xl text-center">
                     <i class="fa-solid fa-triangle-exclamation text-5xl text-yellow-400 mb-4 block"></i>
-                    <h3 class="text-xl font-black text-slate-800 mb-2">RFQ Sudah Ada</h3>
-                    <p class="text-slate-500 mb-4">Barang <strong><?= htmlspecialchars($item['nama_barang']) ?></strong> sudah memiliki RFQ terbuka: <strong><?= $existing_rfq['rfq_number'] ?></strong></p>
-                    <p class="text-sm text-slate-400 mb-6">Tunggu vendor mengirimkan penawaran, lalu lanjut ke evaluasi di Strategic Procurement.</p>
+                    <h3 class="text-xl font-black text-slate-800 dark:text-white mb-2">RFQ Sudah Ada</h3>
+                    <p class="text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-4">Barang <strong><?= htmlspecialchars($item['nama_barang']) ?></strong> sudah memiliki RFQ terbuka: <strong><?= $existing_rfq['rfq_number'] ?></strong></p>
+                    <p class="text-sm text-slate-400 dark:text-slate-500 mb-6">Tunggu vendor mengirimkan penawaran, lalu lanjut ke evaluasi di Strategic Procurement.</p>
                     <div class="flex justify-center gap-4">
-                        <a href="print_rfq.php?id=<?= $existing_rfq['id'] ?>" target="_blank" class="bg-white text-slate-800 border border-slate-200 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:border-slate-400 transition">
+                        <a href="print_rfq.php?id=<?= $existing_rfq['id'] ?>" target="_blank" class="bg-white dark:bg-[#1e293b] text-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:border-slate-400 transition">
                             <i class="fa-solid fa-print mr-2"></i> Print RFQ
                         </a>
                         <a href="strategic_procurement.php" class="bg-slate-900 text-white px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-red-600 transition">
                             <i class="fa-solid fa-chess-knight mr-2"></i> Ke Strategic Procurement
                         </a>
-                        <a href="dashboard_procurement.php" class="bg-slate-200 text-slate-600 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-slate-300 transition">
+                        <a href="dashboard_procurement.php" class="bg-slate-200 text-slate-600 dark:text-slate-300 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-slate-300 transition">
                             Kembali
                         </a>
                     </div>
@@ -91,13 +91,13 @@ include 'header_meta.php';
                         </div>
                     </div>
                     <div class="text-right">
-                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Stok Saat Ini</span>
-                        <span class="text-xl font-black text-red-500"><?= $item['stok_saat_ini'] ?> <span class="text-sm text-slate-500">/ <?= $item['stok_kritis'] ?></span></span>
+                        <span class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block">Stok Saat Ini</span>
+                        <span class="text-xl font-black text-red-500"><?= $item['stok_saat_ini'] ?> <span class="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500">/ <?= $item['stok_kritis'] ?></span></span>
                     </div>
                 </div>
 
                 <!-- Form RFQ -->
-                <div class="bg-white p-8 rounded-b-3xl border border-t-0 border-slate-200 shadow-sm" 
+                <div class="bg-white dark:bg-[#1e293b] p-8 rounded-b-3xl border border-t-0 border-slate-200 dark:border-slate-700 shadow-sm" 
                      x-data="{
                         selectedVendors: [],
                         submitting: false,
@@ -134,31 +134,31 @@ include 'header_meta.php';
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Jumlah Kebutuhan *</label>
+                                <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1 block">Jumlah Kebutuhan *</label>
                                 <div class="relative">
                                     <input type="number" name="jumlah_kebutuhan" required min="1" value="<?= max(1, $item['stok_kritis'] - $item['stok_saat_ini'] + 10) ?>" 
-                                        class="w-full bg-slate-50 border border-slate-200 p-4 rounded-xl font-black text-center focus:border-red-500 outline-none">
-                                    <span class="absolute right-4 top-4 text-slate-400 font-bold text-sm"><?= $item['unit'] ?></span>
+                                        class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4 rounded-xl font-black text-center focus:border-red-500 outline-none">
+                                    <span class="absolute right-4 top-4 text-slate-400 dark:text-slate-500 font-bold text-sm"><?= $item['unit'] ?></span>
                                 </div>
                             </div>
                             <div>
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Batas Waktu Penawaran *</label>
+                                <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1 block">Batas Waktu Penawaran *</label>
                                 <input type="datetime-local" name="deadline" required 
                                     value="<?= date('Y-m-d\TH:i', strtotime('+7 days')) ?>"
-                                    class="w-full bg-slate-50 border border-slate-200 p-4 rounded-xl font-bold focus:border-red-500 outline-none">
+                                    class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4 rounded-xl font-bold focus:border-red-500 outline-none">
                             </div>
                         </div>
 
                         <div>
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Catatan / Spesifikasi Tambahan</label>
+                            <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1 block">Catatan / Spesifikasi Tambahan</label>
                             <textarea name="catatan" rows="3" placeholder="Contoh: Wajib memiliki sertifikat ISO, warna biru, ukuran A4..." 
-                                class="w-full bg-slate-50 border border-slate-200 p-4 rounded-xl font-medium text-sm focus:border-red-500 outline-none"></textarea>
+                                class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4 rounded-xl font-medium text-sm focus:border-red-500 outline-none"></textarea>
                         </div>
 
                         <!-- Vendor Selection -->
                         <div>
                             <div class="flex justify-between items-center mb-3">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pilih Vendor yang Diundang *</label>
+                                <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Pilih Vendor yang Diundang *</label>
                                 <div class="flex gap-2">
                                     <button type="button" @click="selectAll()" class="text-[10px] text-blue-600 font-bold uppercase hover:underline">Pilih Semua</button>
                                     <span class="text-slate-300">|</span>
@@ -174,29 +174,29 @@ include 'header_meta.php';
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-64 overflow-y-auto pr-2">
                                 <?php foreach ($vendors as $v): ?>
                                 <div @click="toggleVendor(<?= $v['id'] ?>)" 
-                                     :class="selectedVendors.includes(<?= $v['id'] ?>) ? 'border-red-500 bg-red-50 shadow-md' : 'border-slate-200 bg-white hover:border-slate-300'"
+                                     :class="selectedVendors.includes(<?= $v['id'] ?>) ? 'border-red-500 bg-red-50 shadow-md' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1e293b] hover:border-slate-300'"
                                      class="p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-3">
-                                    <div :class="selectedVendors.includes(<?= $v['id'] ?>) ? 'bg-red-600 text-white' : 'bg-slate-100 text-slate-400'"
+                                    <div :class="selectedVendors.includes(<?= $v['id'] ?>) ? 'bg-red-600 text-white' : 'bg-slate-100 text-slate-400 dark:text-slate-500'"
                                          class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors shrink-0">
                                         <i :class="selectedVendors.includes(<?= $v['id'] ?>) ? 'fa-solid fa-check' : 'fa-solid fa-building'" class="text-sm"></i>
                                     </div>
                                     <div class="min-w-0">
-                                        <p class="font-bold text-slate-800 text-sm truncate"><?= htmlspecialchars($v['nama_perusahaan']) ?></p>
-                                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest truncate"><?= htmlspecialchars($v['spesialisasi'] ?? 'Umum') ?></p>
+                                        <p class="font-bold text-slate-800 dark:text-white text-sm truncate"><?= htmlspecialchars($v['nama_perusahaan']) ?></p>
+                                        <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest truncate"><?= htmlspecialchars($v['spesialisasi'] ?? 'Umum') ?></p>
                                     </div>
                                 </div>
                                 <?php endforeach; ?>
                             </div>
 
                             <?php if (empty($vendors)): ?>
-                            <div class="p-8 text-center border-2 border-dashed border-slate-200 rounded-xl">
-                                <p class="text-slate-400 font-bold">Belum ada vendor terdaftar. Tambahkan di Master Vendor terlebih dahulu.</p>
+                            <div class="p-8 text-center border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl">
+                                <p class="text-slate-400 dark:text-slate-500 font-bold">Belum ada vendor terdaftar. Tambahkan di Master Vendor terlebih dahulu.</p>
                             </div>
                             <?php endif; ?>
                         </div>
 
                         <!-- Submit -->
-                        <div class="pt-4 border-t border-slate-100 flex justify-end">
+                        <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
                             <button type="submit" :disabled="submitting || selectedVendors.length === 0"
                                 class="bg-red-600 hover:bg-red-700 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-red-600/20 transition-all flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed">
                                 <span x-show="!submitting"><i class="fa-solid fa-paper-plane"></i> Kirim RFQ ke Vendor</span>

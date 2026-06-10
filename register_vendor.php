@@ -47,28 +47,28 @@ session_start();
                         Jadilah Bagian Dari <br>
                         <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400">Ekosistem Pengadaan</span>
                     </h2>
-                    <p class="text-slate-600 leading-relaxed text-lg mb-8">
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-lg mb-8">
                         Veridex adalah platform ekosistem digital untuk menjamin transparansi pengadaan barang operasional. Kami memprioritaskan kualitas, integritas, dan kecepatan transaksi.
                     </p>
                 </div>
 
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                    <h3 class="font-bold text-slate-800 mb-4 uppercase tracking-widest text-xs border-b pb-3 flex items-center">
+                <div class="bg-white dark:bg-[#1e293b] p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800">
+                    <h3 class="font-bold text-slate-800 dark:text-white mb-4 uppercase tracking-widest text-xs border-b pb-3 flex items-center">
                         <i class="fa-solid fa-fire text-red-500 mr-2"></i> Kebutuhan Rutin Kami:
                     </h3>
                     <div class="flex flex-wrap gap-3">
-                        <span class="bg-slate-50 text-slate-700 px-4 py-2 rounded-xl border border-slate-200 text-sm font-bold hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors cursor-default"><i class="fa-solid fa-paperclip mr-2 text-slate-400"></i>Alat Tulis Kantor</span>
-                        <span class="bg-slate-50 text-slate-700 px-4 py-2 rounded-xl border border-slate-200 text-sm font-bold hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors cursor-default"><i class="fa-solid fa-computer mr-2 text-slate-400"></i>Maintenance IT</span>
-                        <span class="bg-slate-50 text-slate-700 px-4 py-2 rounded-xl border border-slate-200 text-sm font-bold hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors cursor-default"><i class="fa-solid fa-helmet-safety mr-2 text-slate-400"></i>Konstruksi Ringan</span>
-                        <span class="bg-slate-50 text-slate-700 px-4 py-2 rounded-xl border border-slate-200 text-sm font-bold hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors cursor-default"><i class="fa-solid fa-boxes-stacked mr-2 text-slate-400"></i>Bahan Baku Kemasan</span>
+                        <span class="bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-bold hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors cursor-default"><i class="fa-solid fa-paperclip mr-2 text-slate-400 dark:text-slate-500"></i>Alat Tulis Kantor</span>
+                        <span class="bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-bold hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors cursor-default"><i class="fa-solid fa-computer mr-2 text-slate-400 dark:text-slate-500"></i>Maintenance IT</span>
+                        <span class="bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-bold hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors cursor-default"><i class="fa-solid fa-helmet-safety mr-2 text-slate-400 dark:text-slate-500"></i>Konstruksi Ringan</span>
+                        <span class="bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-bold hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors cursor-default"><i class="fa-solid fa-boxes-stacked mr-2 text-slate-400 dark:text-slate-500"></i>Bahan Baku Kemasan</span>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl shadow-slate-200 border border-white">
+            <div class="bg-white dark:bg-[#1e293b] p-10 rounded-[2.5rem] shadow-2xl shadow-slate-200 border border-white">
                 
-                <h3 class="text-2xl font-black mb-2 text-slate-800">Form Registrasi Vendor</h3>
-                <p class="text-slate-500 text-sm mb-8">Isi data perusahaan Anda. Tim verifikasi kami akan mengecek dalam 1x24 jam.</p>
+                <h3 class="text-2xl font-black mb-2 text-slate-800 dark:text-white">Form Registrasi Vendor</h3>
+                <p class="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm mb-8">Isi data perusahaan Anda. Tim verifikasi kami akan mengecek dalam 1x24 jam.</p>
 
                 <?php if(isset($_SESSION['success'])): ?>
                     <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-xl text-sm font-bold">
@@ -87,16 +87,16 @@ session_start();
                 <form action="process_register.php" method="POST" enctype="multipart/form-data" class="space-y-6" x-data="{ fileName: '' }">
                     
                     <div>
-                        <label class="block text-sm font-bold text-slate-700 mb-2">Nama Perusahaan (PT/CV)</label>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Nama Perusahaan (PT/CV)</label>
                         <input type="text" name="nama_perusahaan" required 
-                               class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700" 
+                               class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition-all font-medium text-slate-700 dark:text-slate-200" 
                                placeholder="Contoh: PT. Solusi Maju Bersama">
                     </div>
 
                     <div class="relative">
-                        <label class="block text-sm font-bold text-slate-700 mb-2">Spesialisasi Pengadaan</label>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Spesialisasi Pengadaan</label>
                         <select name="spesialisasi" required 
-                               class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700 appearance-none">
+                               class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition-all font-medium text-slate-700 dark:text-slate-200 appearance-none">
                             <option value="" disabled selected>-- Pilih Kategori Spesialisasi --</option>
                             <option value="Alat Tulis Kantor (ATK)">Alat Tulis Kantor (ATK)</option>
                             <option value="Perangkat IT & Komputer">Perangkat IT & Komputer</option>
@@ -108,58 +108,58 @@ session_start();
                             <option value="Alat Keselamatan Kerja (K3)">Alat Keselamatan Kerja (K3)</option>
                             <option value="Lainnya">Lainnya</option>
                         </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pt-8 text-slate-500">
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pt-8 text-slate-500 dark:text-slate-400 dark:text-slate-500">
                             <i class="fa-solid fa-chevron-down text-xs"></i>
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-slate-700 mb-2">Alamat Lengkap</label>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Alamat Lengkap</label>
                         <textarea name="alamat" required rows="3"
-                               class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700" 
+                               class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition-all font-medium text-slate-700 dark:text-slate-200" 
                                placeholder="Contoh: Jl. Sudirman No. 123, Jakarta"></textarea>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-bold text-slate-700 mb-2">Email Perusahaan (Username Login)</label>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Email Perusahaan (Username Login)</label>
                             <input type="email" name="email" required 
-                                   class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700" 
+                                   class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition-all font-medium text-slate-700 dark:text-slate-200" 
                                    placeholder="Contoh: info@perusahaan.com">
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-slate-700 mb-2">Password Akun Baru</label>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Password Akun Baru</label>
                             <input type="password" name="password" required 
-                                   class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700" 
+                                   class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition-all font-medium text-slate-700 dark:text-slate-200" 
                                    placeholder="Masukkan password...">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-bold text-slate-700 mb-2">Nama PIC</label>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Nama PIC</label>
                             <input type="text" name="pic_nama" required 
-                                   class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700" 
+                                   class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition-all font-medium text-slate-700 dark:text-slate-200" 
                                    placeholder="Contoh: Budi Santoso">
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-slate-700 mb-2">Nomor Kontak PIC (WA/Telp)</label>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Nomor Kontak PIC (WA/Telp)</label>
                             <input type="text" name="pic_kontak" required 
-                                   class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700" 
+                                   class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition-all font-medium text-slate-700 dark:text-slate-200" 
                                    placeholder="Contoh: 081234567890">
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-100 pt-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-100 dark:border-slate-800 pt-6">
                         <div>
-                            <label class="block text-sm font-bold text-slate-700 mb-2">Nomor Induk Berusaha (NIB)</label>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Nomor Induk Berusaha (NIB)</label>
                             <input type="text" name="nib" required 
-                                   class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700" 
+                                   class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition-all font-medium text-slate-700 dark:text-slate-200" 
                                    placeholder="Contoh: 1234567890123">
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-slate-700 mb-2">NPWP Perusahaan</label>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">NPWP Perusahaan</label>
                             <input type="text" name="npwp" required 
-                                   class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-red-500 focus:bg-white transition-all font-medium text-slate-700" 
+                                   class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition-all font-medium text-slate-700 dark:text-slate-200" 
                                    placeholder="Contoh: 12.345.678.9-012.000">
                         </div>
                     </div>
@@ -173,7 +173,7 @@ session_start();
         </div>
     </main>
 
-    <footer class="py-6 text-center text-slate-500 text-xs font-medium tracking-widest opacity-60">
+    <footer class="py-6 text-center text-slate-500 dark:text-slate-400 dark:text-slate-500 text-xs font-medium tracking-widest opacity-60">
         &copy; 2026 VERIDEX SUPPLY CHAIN MANAGEMENT
     </footer>
 

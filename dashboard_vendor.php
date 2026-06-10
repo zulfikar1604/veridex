@@ -37,7 +37,7 @@ $query_submitted = mysqli_query($conn, "
 
 include 'header_meta.php';
 ?>
-<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
+<body class="bg-slate-50 dark:bg-[#0f172a] flex flex-col h-screen overflow-hidden">
 
     <?php
     $page_title = "Bidding Area";
@@ -53,10 +53,10 @@ include 'header_meta.php';
             <!-- GREETING BANNER -->
             <div class="bg-gradient-to-r from-blue-500/10 to-transparent p-5 rounded-2xl border border-blue-500/20 flex justify-between items-center flex-wrap gap-4 mb-6">
                 <div>
-                    <h3 class="text-base font-black text-slate-800 uppercase tracking-tight">Portal Rekanan Penjual</h3>
-                    <p class="text-xs text-slate-500 font-medium mt-1">Selamat datang di Veridex, <?= htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8') ?>. Temukan RFQ aktif dan kelola PO.</p>
+                    <h3 class="text-base font-black text-slate-800 dark:text-white uppercase tracking-tight">Portal Rekanan Penjual</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium mt-1">Selamat datang di Veridex, <?= htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8') ?>. Temukan RFQ aktif dan kelola PO.</p>
                 </div>
-                <div class="bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100 text-xs font-bold text-slate-600">
+                <div class="bg-white dark:bg-[#1e293b] px-4 py-2 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300">
                     <i class="fa-solid fa-handshake text-blue-500 mr-1.5"></i> Vendor Mitra
                 </div>
             </div>
@@ -73,32 +73,32 @@ include 'header_meta.php';
                         $days_left = floor($time_left / 86400);
                         $hours_left = floor(($time_left % 86400) / 3600);
                     ?>
-                    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden" x-data="{ open: false, submitting: false }">
+                    <div class="bg-white dark:bg-[#1e293b] rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden" x-data="{ open: false, submitting: false }">
                         <!-- Header RFQ -->
                         <div class="p-6">
                             <div class="flex justify-between items-start mb-4">
                                 <div>
                                     <div class="flex items-center gap-3 mb-1">
-                                        <span class="font-black text-slate-800 text-xl"><?= htmlspecialchars($rfq['nama_barang']) ?></span>
+                                        <span class="font-black text-slate-800 dark:text-white text-xl"><?= htmlspecialchars($rfq['nama_barang']) ?></span>
                                         <?php if(!$is_expired): ?>
                                         <span class="bg-red-600 text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg shadow-red-200">OPEN</span>
                                         <?php else: ?>
                                         <span class="bg-slate-400 text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">EXPIRED</span>
                                         <?php endif; ?>
-                                        <a href="print_rfq.php?id=<?= $rfq['id'] ?>" target="_blank" class="px-2 py-1 bg-white border border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-200 rounded-lg text-[9px] font-black uppercase transition shadow-sm ml-2" title="Cetak RFQ">
+                                        <a href="print_rfq.php?id=<?= $rfq['id'] ?>" target="_blank" class="px-2 py-1 bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-blue-600 hover:border-blue-200 rounded-lg text-[9px] font-black uppercase transition shadow-sm ml-2" title="Cetak RFQ">
                                             <i class="fa-solid fa-print"></i> RFQ
                                         </a>
                                     </div>
                                     <div class="flex gap-3 mt-1 flex-wrap">
-                                        <span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded font-bold uppercase">RFQ: <?= htmlspecialchars($rfq['rfq_number']) ?></span>
-                                        <span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded font-bold uppercase">SKU: <?= htmlspecialchars($rfq['sku']) ?></span>
+                                        <span class="text-[10px] bg-slate-100 text-slate-500 dark:text-slate-400 dark:text-slate-500 px-2 py-0.5 rounded font-bold uppercase">RFQ: <?= htmlspecialchars($rfq['rfq_number']) ?></span>
+                                        <span class="text-[10px] bg-slate-100 text-slate-500 dark:text-slate-400 dark:text-slate-500 px-2 py-0.5 rounded font-bold uppercase">SKU: <?= htmlspecialchars($rfq['sku']) ?></span>
                                         <span class="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-bold uppercase">Kebutuhan: <?= $rfq['jumlah_kebutuhan'] ?> <?= $rfq['unit'] ?></span>
                                     </div>
                                 </div>
                                 <div class="text-right shrink-0">
                                     <?php if(!$is_expired && $time_left > 0): ?>
-                                    <span class="text-[10px] font-black text-slate-400 uppercase block">Sisa Waktu</span>
-                                    <span class="text-lg font-black <?= $days_left < 2 ? 'text-red-600' : 'text-slate-800' ?>"><?= $days_left ?>h <?= $hours_left ?>j</span>
+                                    <span class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase block">Sisa Waktu</span>
+                                    <span class="text-lg font-black <?= $days_left < 2 ? 'text-red-600' : 'text-slate-800 dark:text-white' ?>"><?= $days_left ?>h <?= $hours_left ?>j</span>
                                     <?php else: ?>
                                     <span class="text-xs font-black text-red-500">Waktu Habis</span>
                                     <?php endif; ?>
@@ -111,7 +111,7 @@ include 'header_meta.php';
                             </div>
                             <?php endif; ?>
 
-                            <p class="text-[10px] text-slate-400 font-bold">
+                            <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold">
                                 <i class="fa-regular fa-calendar mr-1"></i> Deadline: <?= date('d M Y, H:i', strtotime($rfq['deadline'])) ?> WIB
                                 <span class="mx-2">|</span>
                                 <i class="fa-regular fa-clock mr-1"></i> Dibuat: <?= date('d M Y', strtotime($rfq['created_at'])) ?>
@@ -127,7 +127,7 @@ include 'header_meta.php';
                         </div>
 
                         <!-- Form Submit SPH -->
-                        <div x-show="open" x-cloak x-transition class="bg-slate-50 border-t border-slate-100 p-6">
+                        <div x-show="open" x-cloak x-transition class="bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 p-6">
                             <form id="sph-form-<?= $rfq['id'] ?>" @submit.prevent="
                                 submitting = true;
                                 let form = document.getElementById('sph-form-<?= $rfq['id'] ?>');
@@ -140,36 +140,36 @@ include 'header_meta.php';
                             " class="space-y-4">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Harga Penawaran (Per Satuan) *</label>
-                                        <input type="number" name="harga_penawaran" required min="1" placeholder="5000000" class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-red-500 bg-white font-bold text-sm">
+                                        <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase mb-1 block">Harga Penawaran (Per Satuan) *</label>
+                                        <input type="number" name="harga_penawaran" required min="1" placeholder="5000000" class="w-full border border-slate-200 dark:border-slate-700 p-3 rounded-xl outline-none focus:border-red-500 bg-white dark:bg-[#1e293b] font-bold text-sm">
                                     </div>
                                     <div>
-                                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Biaya Pengiriman</label>
-                                        <input type="number" name="biaya_pengiriman" min="0" placeholder="0" class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-red-500 bg-white font-bold text-sm">
+                                        <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase mb-1 block">Biaya Pengiriman</label>
+                                        <input type="number" name="biaya_pengiriman" min="0" placeholder="0" class="w-full border border-slate-200 dark:border-slate-700 p-3 rounded-xl outline-none focus:border-red-500 bg-white dark:bg-[#1e293b] font-bold text-sm">
                                     </div>
                                     <div>
-                                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Jenis Diskon</label>
-                                        <select name="diskon_jenis" class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-red-500 bg-white font-bold text-sm">
+                                        <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase mb-1 block">Jenis Diskon</label>
+                                        <select name="diskon_jenis" class="w-full border border-slate-200 dark:border-slate-700 p-3 rounded-xl outline-none focus:border-red-500 bg-white dark:bg-[#1e293b] font-bold text-sm">
                                             <option value="Nominal">Nominal (Rp)</option>
                                             <option value="Persentase">Persentase (%)</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Nilai Diskon</label>
-                                        <input type="number" name="diskon_nilai" min="0" step="0.01" placeholder="0" class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-red-500 bg-white font-bold text-sm">
+                                        <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase mb-1 block">Nilai Diskon</label>
+                                        <input type="number" name="diskon_nilai" min="0" step="0.01" placeholder="0" class="w-full border border-slate-200 dark:border-slate-700 p-3 rounded-xl outline-none focus:border-red-500 bg-white dark:bg-[#1e293b] font-bold text-sm">
                                     </div>
                                     <div>
-                                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Incoterm</label>
-                                        <input type="text" name="incoterm" placeholder="ex: FOB, CIF, EXW" class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-red-500 bg-white font-bold text-sm">
+                                        <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase mb-1 block">Incoterm</label>
+                                        <input type="text" name="incoterm" placeholder="ex: FOB, CIF, EXW" class="w-full border border-slate-200 dark:border-slate-700 p-3 rounded-xl outline-none focus:border-red-500 bg-white dark:bg-[#1e293b] font-bold text-sm">
                                     </div>
                                     <div>
-                                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Payment Term</label>
-                                        <input type="text" name="payment_term" placeholder="ex: Net 30, CBD" class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-red-500 bg-white font-bold text-sm">
+                                        <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase mb-1 block">Payment Term</label>
+                                        <input type="text" name="payment_term" placeholder="ex: Net 30, CBD" class="w-full border border-slate-200 dark:border-slate-700 p-3 rounded-xl outline-none focus:border-red-500 bg-white dark:bg-[#1e293b] font-bold text-sm">
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Keterangan / Catatan Tambahan</label>
-                                    <textarea name="keterangan" rows="3" placeholder="Syarat dan ketentuan lainnya..." class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-red-500 bg-white font-bold text-sm"></textarea>
+                                    <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase mb-1 block">Keterangan / Catatan Tambahan</label>
+                                    <textarea name="keterangan" rows="3" placeholder="Syarat dan ketentuan lainnya..." class="w-full border border-slate-200 dark:border-slate-700 p-3 rounded-xl outline-none focus:border-red-500 bg-white dark:bg-[#1e293b] font-bold text-sm"></textarea>
                                 </div>
                                 <button type="submit" :disabled="submitting" class="w-full bg-red-600 text-white py-4 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-red-700 transition disabled:opacity-50 shadow-lg shadow-red-600/20">
                                     <span x-show="!submitting"><i class="fa-solid fa-paper-plane mr-2"></i> Kirim Penawaran otomatis</span>
@@ -186,15 +186,15 @@ include 'header_meta.php';
 
             <!-- Riwayat Penawaran -->
             <div>
-                <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                <h3 class="text-xs font-black text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                     <i class="fa-solid fa-clock-rotate-left"></i> Riwayat Penawaran Anda
                 </h3>
                 <?php if(mysqli_num_rows($query_submitted) > 0): ?>
-                <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
+                <div class="bg-white dark:bg-[#1e293b] rounded-2xl border shadow-sm overflow-hidden">
                     <div class="overflow-x-auto w-full">
 <table class="w-full text-sm">
                         <thead>
-                            <tr class="bg-slate-900 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                            <tr class="bg-slate-900 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                                 <th class="p-4">RFQ</th>
                                 <th class="p-4">Barang</th>
                                 <th class="p-4">No. SPH</th>
@@ -205,20 +205,20 @@ include 'header_meta.php';
                         <tbody class="divide-y divide-slate-50">
                             <?php while($row = mysqli_fetch_assoc($query_submitted)):
                                 $sc = [
-                                    'Pending Review'=>'bg-slate-100 text-slate-500',
+                                    'Pending Review'=>'bg-slate-100 text-slate-500 dark:text-slate-400 dark:text-slate-500',
                                     'TBE Done'=>'bg-blue-50 text-blue-600',
                                     'CBE Done'=>'bg-purple-50 text-purple-600',
                                     'Evaluated'=>'bg-indigo-50 text-indigo-600',
                                     'Selected'=>'bg-green-50 text-green-600',
                                     'Rejected'=>'bg-red-50 text-red-600'
                                 ];
-                                $c = $sc[$row['sph_status'] ?? ''] ?? 'bg-slate-100 text-slate-500';
+                                $c = $sc[$row['sph_status'] ?? ''] ?? 'bg-slate-100 text-slate-500 dark:text-slate-400 dark:text-slate-500';
                             ?>
-                            <tr class="hover:bg-slate-50 transition">
-                                <td class="p-4 font-bold text-slate-600 text-xs"><?= htmlspecialchars($row['rfq_number']) ?></td>
-                                <td class="p-4 font-bold text-slate-800"><?= htmlspecialchars($row['nama_barang']) ?></td>
-                                <td class="p-4 text-slate-600"><?= htmlspecialchars($row['nomor_sph'] ?? '-') ?></td>
-                                <td class="p-4 text-center font-bold text-slate-700">Rp <?= number_format($row['harga_penawaran'] ?? 0, 0, ',', '.') ?> <span class="text-[9px] text-slate-400 font-normal">/unit</span></td>
+                            <tr class="hover:bg-slate-50 dark:bg-slate-900 transition">
+                                <td class="p-4 font-bold text-slate-600 dark:text-slate-300 text-xs"><?= htmlspecialchars($row['rfq_number']) ?></td>
+                                <td class="p-4 font-bold text-slate-800 dark:text-white"><?= htmlspecialchars($row['nama_barang']) ?></td>
+                                <td class="p-4 text-slate-600 dark:text-slate-300"><?= htmlspecialchars($row['nomor_sph'] ?? '-') ?></td>
+                                <td class="p-4 text-center font-bold text-slate-700 dark:text-slate-200">Rp <?= number_format($row['harga_penawaran'] ?? 0, 0, ',', '.') ?> <span class="text-[9px] text-slate-400 dark:text-slate-500 font-normal">/unit</span></td>
                                 <td class="p-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
                                         <?php 
@@ -234,12 +234,12 @@ include 'header_meta.php';
                                             'incoterm' => $row['incoterm'],
                                             'payment_term' => $row['payment_term'],
                                             'keterangan' => $row['keterangan']
-                                        ])) ?>; editModalOpen = true" class="px-3 py-1 bg-white border border-slate-200 text-amber-500 hover:text-amber-600 hover:border-amber-200 rounded-lg text-[9px] font-black uppercase transition shadow-sm" title="Edit SPH"><i class="fa-solid fa-pen"></i> Edit</button>
+                                        ])) ?>; editModalOpen = true" class="px-3 py-1 bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 text-amber-500 hover:text-amber-600 hover:border-amber-200 rounded-lg text-[9px] font-black uppercase transition shadow-sm" title="Edit SPH"><i class="fa-solid fa-pen"></i> Edit</button>
                                         
-                                        <button onclick="if(confirm('Yakin ingin membatalkan dan menghapus penawaran ini?')) { fetch('process_sph_delete.php', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'rfq_id=<?= $row['id'] ?>'}).then(r=>r.json()).then(d=>{alert(d.message); if(d.success) location.reload();}).catch(e=>alert(e)) }" class="px-3 py-1 bg-white border border-slate-200 text-red-500 hover:text-red-600 hover:border-red-200 rounded-lg text-[9px] font-black uppercase transition shadow-sm" title="Hapus SPH"><i class="fa-solid fa-trash"></i> Hapus</button>
+                                        <button onclick="if(confirm('Yakin ingin membatalkan dan menghapus penawaran ini?')) { fetch('process_sph_delete.php', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'rfq_id=<?= $row['id'] ?>'}).then(r=>r.json()).then(d=>{alert(d.message); if(d.success) location.reload();}).catch(e=>alert(e)) }" class="px-3 py-1 bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 text-red-500 hover:text-red-600 hover:border-red-200 rounded-lg text-[9px] font-black uppercase transition shadow-sm" title="Hapus SPH"><i class="fa-solid fa-trash"></i> Hapus</button>
                                         <?php endif; ?>
 
-                                        <a href="print_sph.php?rfq=<?= $row['id'] ?>&vendor=<?= $vendor_id ?>" target="_blank" class="px-3 py-1 bg-white border border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-200 rounded-lg text-[9px] font-black uppercase transition shadow-sm" title="Cetak SPH"><i class="fa-solid fa-print"></i> Cetak</a>
+                                        <a href="print_sph.php?rfq=<?= $row['id'] ?>&vendor=<?= $vendor_id ?>" target="_blank" class="px-3 py-1 bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-blue-600 hover:border-blue-200 rounded-lg text-[9px] font-black uppercase transition shadow-sm" title="Cetak SPH"><i class="fa-solid fa-print"></i> Cetak</a>
                                         <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase <?= $c ?>"><?= $row['sph_status'] ?? 'Submitted' ?></span>
                                     </div>
                                 </td>
@@ -248,16 +248,25 @@ include 'header_meta.php';
                         </tbody>
                     </table>
 </div>
-                </div>
-
-                <!-- Edit Modal -->
-                <div x-show="editModalOpen" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-                    <div @click.away="editModalOpen = false" class="bg-white rounded-2xl w-full max-w-2xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
-                        <div class="p-6 border-b border-slate-100 flex justify-between items-center flex-wrap gap-4">
-                            <h3 class="font-black text-slate-800 text-lg uppercase tracking-tight">Edit Surat Penawaran Harga</h3>
-                            <button @click="editModalOpen = false" class="text-slate-400 hover:text-red-500 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+                </div>                <!-- Slide-Over Edit Modal -->
+                <div x-show="editModalOpen" x-cloak class="fixed inset-0 z-50 flex justify-end">
+                    <div x-show="editModalOpen" x-transition.opacity class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" @click="editModalOpen = false"></div>
+                    
+                    <div x-show="editModalOpen" 
+                         x-transition:enter="transition ease-out duration-300 transform"
+                         x-transition:enter-start="translate-x-full"
+                         x-transition:enter-end="translate-x-0"
+                         x-transition:leave="transition ease-in duration-200 transform"
+                         x-transition:leave-start="translate-x-0"
+                         x-transition:leave-end="translate-x-full"
+                         class="relative w-full max-w-xl h-full bg-white dark:bg-[#1e293b] shadow-2xl flex flex-col z-50 border-l border-slate-100 dark:border-slate-800">
+                         
+                        <div class="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50 dark:bg-slate-900/50 shrink-0">
+                            <h3 class="text-base font-black text-slate-800 dark:text-white uppercase tracking-tight">Edit Surat Penawaran Harga</h3>
+                            <button @click="editModalOpen = false" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:text-red-500 hover:border-red-200 dark:hover:border-red-900 transition-colors"><i class="fa-solid fa-xmark"></i></button>
                         </div>
-                        <div class="p-6 overflow-y-auto">
+                        
+                        <div class="flex-1 overflow-y-auto p-6">
                             <form id="edit-sph-form" @submit.prevent="
                                 submittingEdit = true;
                                 let fd = new FormData(document.getElementById('edit-sph-form'));
@@ -269,59 +278,61 @@ include 'header_meta.php';
                             " class="space-y-4">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Harga Penawaran (Per Satuan) *</label>
-                                        <input type="number" name="harga_penawaran" required min="1" x-model="editData.harga_penawaran" class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-blue-500 bg-white font-bold text-sm">
+                                        <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Harga Penawaran (Per Satuan) *</label>
+                                        <input type="number" name="harga_penawaran" required min="1" x-model="editData.harga_penawaran" class="w-full">
                                     </div>
                                     <div>
-                                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Biaya Pengiriman</label>
-                                        <input type="number" name="biaya_pengiriman" min="0" x-model="editData.biaya_pengiriman" class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-blue-500 bg-white font-bold text-sm">
+                                        <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Biaya Pengiriman</label>
+                                        <input type="number" name="biaya_pengiriman" min="0" x-model="editData.biaya_pengiriman" class="w-full">
                                     </div>
                                     <div>
-                                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Jenis Diskon</label>
-                                        <select name="diskon_jenis" x-model="editData.diskon_jenis" class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-blue-500 bg-white font-bold text-sm">
+                                        <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Jenis Diskon</label>
+                                        <select name="diskon_jenis" x-model="editData.diskon_jenis" class="w-full">
                                             <option value="Nominal">Nominal (Rp)</option>
                                             <option value="Persentase">Persentase (%)</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Nilai Diskon</label>
-                                        <input type="number" name="diskon_nilai" min="0" step="0.01" x-model="editData.diskon_nilai" class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-blue-500 bg-white font-bold text-sm">
+                                        <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Nilai Diskon</label>
+                                        <input type="number" name="diskon_nilai" min="0" step="0.01" x-model="editData.diskon_nilai" class="w-full">
                                     </div>
                                     <div>
-                                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Incoterm</label>
-                                        <input type="text" name="incoterm" x-model="editData.incoterm" class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-blue-500 bg-white font-bold text-sm">
+                                        <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Incoterm</label>
+                                        <input type="text" name="incoterm" x-model="editData.incoterm" class="w-full">
                                     </div>
                                     <div>
-                                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Payment Term</label>
-                                        <input type="text" name="payment_term" x-model="editData.payment_term" class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-blue-500 bg-white font-bold text-sm">
+                                        <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Payment Term</label>
+                                        <input type="text" name="payment_term" x-model="editData.payment_term" class="w-full">
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Keterangan / Catatan Tambahan</label>
-                                    <textarea name="keterangan" rows="3" x-model="editData.keterangan" class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-blue-500 bg-white font-bold text-sm"></textarea>
+                                    <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Keterangan / Catatan Tambahan</label>
+                                    <textarea name="keterangan" rows="3" x-model="editData.keterangan" class="w-full"></textarea>
                                 </div>
-                                <button type="submit" :disabled="submittingEdit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-blue-700 transition disabled:opacity-50 shadow-lg shadow-blue-600/20 mt-4">
-                                    <span x-show="!submittingEdit"><i class="fa-solid fa-save mr-2"></i> Simpan Perubahan</span>
-                                    <span x-show="submittingEdit"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Menyimpan...</span>
-                                </button>
+                                <div class="pt-4 border-t border-slate-100 dark:border-slate-800 mt-6">
+                                    <button type="submit" :disabled="submittingEdit" class="w-full bg-blue-600 text-white py-3.5 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-blue-700 transition shadow-lg shadow-blue-600/20 disabled:opacity-50">
+                                        <span x-show="!submittingEdit"><i class="fa-solid fa-save mr-2"></i> Simpan Perubahan</span>
+                                        <span x-show="submittingEdit"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Menyimpan...</span>
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
                 <?php else: ?>
-                <div class="bg-white p-12 rounded-2xl border shadow-sm text-center">
+                <div class="bg-white dark:bg-[#1e293b] p-12 rounded-2xl border shadow-sm text-center">
                     <i class="fa-solid fa-folder-open text-5xl text-slate-200 mb-3 block"></i>
-                    <p class="text-slate-400 font-bold">Belum ada riwayat penawaran.</p>
+                    <p class="text-slate-400 dark:text-slate-500 font-bold">Belum ada riwayat penawaran.</p>
                 </div>
                 <?php endif; ?>
             </div>
 
             <!-- Empty state total -->
             <?php if(mysqli_num_rows($query_open) == 0 && mysqli_num_rows($query_submitted) == 0): ?>
-            <div class="bg-white p-12 rounded-2xl border shadow-sm text-center">
+            <div class="bg-white dark:bg-[#1e293b] p-12 rounded-2xl border shadow-sm text-center">
                 <i class="fa-solid fa-gavel text-6xl text-slate-100 mb-6 block"></i>
-                <h3 class="font-black text-slate-800 text-xl mb-2">Belum Ada Pengadaan Terbuka</h3>
-                <p class="text-slate-400 text-sm">Saat ini tidak ada RFQ yang ditujukan ke perusahaan Anda. Silakan cek kembali nanti.</p>
+                <h3 class="font-black text-slate-800 dark:text-white text-xl mb-2">Belum Ada Pengadaan Terbuka</h3>
+                <p class="text-slate-400 dark:text-slate-500 text-sm">Saat ini tidak ada RFQ yang ditujukan ke perusahaan Anda. Silakan cek kembali nanti.</p>
             </div>
             <?php endif; ?>
         </main>

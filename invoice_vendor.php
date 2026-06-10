@@ -22,7 +22,7 @@ $query_invoiced = mysqli_query($conn, "
 
 include 'header_meta.php';
 ?>
-<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
+<body class="bg-slate-50 dark:bg-[#0f172a] flex flex-col h-screen overflow-hidden">
 
     <?php
     $page_title = "Upload Invoice";
@@ -37,25 +37,25 @@ include 'header_meta.php';
             <!-- Bagian ini sudah tidak dipakai karena Invoice otomatis di-generate saat Inbound (Pay as Received) -->
 
             <div>
-                <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Riwayat Invoice</h3>
+                <h3 class="text-xs font-black text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Riwayat Invoice</h3>
                 <?php if(mysqli_num_rows($query_invoiced) > 0): ?>
-                <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
+                <div class="bg-white dark:bg-[#1e293b] rounded-2xl border shadow-sm overflow-hidden">
                     <div class="overflow-x-auto w-full">
 <table class="w-full text-sm">
-                        <thead><tr class="bg-slate-900 text-[10px] font-black text-slate-400 uppercase tracking-widest"><th class="p-4">No PO</th><th class="p-4">Barang</th><th class="p-4">No. Invoice</th><th class="p-4 text-center">Total</th><th class="p-4 text-right">Aksi & Status</th></tr></thead>
+                        <thead><tr class="bg-slate-900 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest"><th class="p-4">No PO</th><th class="p-4">Barang</th><th class="p-4">No. Invoice</th><th class="p-4 text-center">Total</th><th class="p-4 text-right">Aksi & Status</th></tr></thead>
                         <tbody class="divide-y divide-slate-50">
                             <?php while($inv = mysqli_fetch_assoc($query_invoiced)):
                                 $sc = ['Unpaid'=>'bg-yellow-50 text-yellow-600','Paid'=>'bg-emerald-50 text-emerald-700'];
-                                $c = $sc[$inv['status']] ?? 'bg-slate-100 text-slate-500';
+                                $c = $sc[$inv['status']] ?? 'bg-slate-100 text-slate-500 dark:text-slate-400 dark:text-slate-500';
                             ?>
-                            <tr class="hover:bg-slate-50 transition">
-                                <td class="p-4 font-bold text-slate-700"><?= htmlspecialchars($inv['po_number']) ?></td>
-                                <td class="p-4 text-slate-600"><?= htmlspecialchars($inv['nama_barang']) ?></td>
-                                <td class="p-4 font-medium text-slate-600"><?= htmlspecialchars($inv['invoice_number'] ?? '-') ?></td>
-                                <td class="p-4 font-black text-slate-800 text-center">Rp <?= number_format($inv['total_tagihan'], 0, ',', '.') ?></td>
+                            <tr class="hover:bg-slate-50 dark:bg-slate-900 transition">
+                                <td class="p-4 font-bold text-slate-700 dark:text-slate-200"><?= htmlspecialchars($inv['po_number']) ?></td>
+                                <td class="p-4 text-slate-600 dark:text-slate-300"><?= htmlspecialchars($inv['nama_barang']) ?></td>
+                                <td class="p-4 font-medium text-slate-600 dark:text-slate-300"><?= htmlspecialchars($inv['invoice_number'] ?? '-') ?></td>
+                                <td class="p-4 font-black text-slate-800 dark:text-white text-center">Rp <?= number_format($inv['total_tagihan'], 0, ',', '.') ?></td>
                                 <td class="p-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
-                                        <a href="print_invoice.php?id=<?= $inv['id'] ?>" target="_blank" class="px-3 py-1 bg-white border border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-200 rounded-lg text-[9px] font-black uppercase transition shadow-sm" title="Cetak Invoice"><i class="fa-solid fa-print"></i> Cetak</a>
+                                        <a href="print_invoice.php?id=<?= $inv['id'] ?>" target="_blank" class="px-3 py-1 bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-blue-600 hover:border-blue-200 rounded-lg text-[9px] font-black uppercase transition shadow-sm" title="Cetak Invoice"><i class="fa-solid fa-print"></i> Cetak</a>
                                         <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase <?= $c ?>"><?= $inv['status'] ?></span>
                                     </div>
                                 </td>
@@ -66,9 +66,9 @@ include 'header_meta.php';
 </div>
                 </div>
                 <?php else: ?>
-                <div class="bg-white p-12 rounded-2xl border shadow-sm text-center">
+                <div class="bg-white dark:bg-[#1e293b] p-12 rounded-2xl border shadow-sm text-center">
                     <i class="fa-solid fa-file-invoice text-5xl text-slate-200 mb-3 block"></i>
-                    <p class="text-slate-400 font-bold">Belum ada riwayat invoice.</p>
+                    <p class="text-slate-400 dark:text-slate-500 font-bold">Belum ada riwayat invoice.</p>
                     <p class="text-slate-300 text-sm mt-1">Pastikan barang sudah diterima gudang sebelum membuat invoice.</p>
                 </div>
                 <?php endif; ?>

@@ -124,7 +124,7 @@ include 'header_meta.php';
 // Menentukan sidebar yang tepat sesuai role user
 $role = $_SESSION['role'] ?? '';
 ?>
-<body class="bg-slate-50 flex h-screen overflow-hidden text-slate-800">
+<body class="bg-slate-50 dark:bg-[#0f172a] flex h-screen overflow-hidden text-slate-800 dark:text-white">
 
     <?php 
     if ($role === 'Gudang') {
@@ -218,11 +218,11 @@ $role = $_SESSION['role'] ?? '';
 
                         <div class="relative z-10 pt-6 border-t border-slate-800 mt-6 space-y-3">
                             <div class="flex justify-between items-center text-xs">
-                                <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">User ID</span>
+                                <span class="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider text-[10px]">User ID</span>
                                 <span class="font-black text-slate-200">#<?= $user['id'] ?></span>
                             </div>
                             <div class="flex justify-between items-center text-xs">
-                                <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">Status Akun</span>
+                                <span class="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider text-[10px]">Status Akun</span>
                                 <span class="font-black text-green-400 flex items-center gap-1.5">
                                     <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-ping"></span> Aktif
                                 </span>
@@ -231,91 +231,91 @@ $role = $_SESSION['role'] ?? '';
                     </div>
 
                     <!-- Kolom Kanan: Form Edit Data -->
-                    <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-slate-100 shadow-sm md:col-span-2 space-y-6">
+                    <div class="bg-white dark:bg-[#1e293b] rounded-[2rem] p-6 md:p-8 border border-slate-100 dark:border-slate-800 shadow-sm md:col-span-2 space-y-6">
                         <div>
-                            <h3 class="text-lg font-black text-slate-800 uppercase tracking-tight">Informasi Profil & Keamanan</h3>
-                            <p class="text-xs text-slate-400 mt-1">Perbarui username dan password Anda untuk menjaga keamanan akses akun.</p>
+                            <h3 class="text-lg font-black text-slate-800 dark:text-white uppercase tracking-tight">Informasi Profil & Keamanan</h3>
+                            <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Perbarui username dan password Anda untuk menjaga keamanan akses akun.</p>
                         </div>
 
                         <form action="profile.php" method="POST" enctype="multipart/form-data" class="space-y-5">
                             
                             <!-- Profile Photo Field -->
                             <div class="space-y-1.5">
-                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest">Foto Profil (Opsional)</label>
+                                <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Foto Profil (Opsional)</label>
                                 <div class="relative">
                                     <input type="hidden" name="cropped_image" id="cropped_image_input">
                                     <input type="file" 
                                            id="profile_photo_input"
                                            accept="image/*"
                                            @change="handleFileSelect"
-                                           class="w-full border border-slate-200 bg-slate-50/50 px-4 py-3 rounded-xl font-bold text-slate-700 focus:outline-none focus:border-red-500 focus:bg-white transition file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-red-50 file:text-red-700 hover:file:bg-red-100 cursor-pointer">
+                                           class="w-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 px-4 py-3 rounded-xl font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-red-50 file:text-red-700 hover:file:bg-red-100 cursor-pointer">
                                 </div>
                                 <?php if (!empty($user['profile_photo'])): ?>
                                 <div class="pt-2 flex items-center gap-2">
                                     <input type="checkbox" id="remove_photo_checkbox" name="remove_photo" value="1" class="w-4 h-4 text-red-600 rounded border-slate-300 focus:ring-red-500" @change="if($el.checked) photoPreview = null;">
-                                    <label for="remove_photo_checkbox" class="text-xs font-bold text-slate-600 cursor-pointer">Hapus foto profil saat ini</label>
+                                    <label for="remove_photo_checkbox" class="text-xs font-bold text-slate-600 dark:text-slate-300 cursor-pointer">Hapus foto profil saat ini</label>
                                 </div>
                                 <?php endif; ?>
                             </div>
 
                             <!-- Username Field -->
                             <div class="space-y-1.5">
-                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest">Username Baru</label>
+                                <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Username Baru</label>
                                 <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400">
+                                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 dark:text-slate-500">
                                         <i class="fa-solid fa-user text-sm"></i>
                                     </span>
                                     <input type="text" 
                                            name="username" 
                                            value="<?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?>" 
                                            required 
-                                           class="w-full border border-slate-200 bg-slate-50/50 pl-10 pr-4 py-3.5 rounded-xl font-bold text-slate-700 focus:outline-none focus:border-red-500 focus:bg-white transition">
+                                           class="w-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 pl-10 pr-4 py-3.5 rounded-xl font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition">
                                 </div>
                             </div>
 
                             <!-- Role Field (Read-only) -->
                             <div class="space-y-1.5 opacity-70">
-                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest">Tingkat Jabatan / Role (Read-only)</label>
+                                <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Tingkat Jabatan / Role (Read-only)</label>
                                 <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400">
+                                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 dark:text-slate-500">
                                         <i class="fa-solid fa-shield text-sm"></i>
                                     </span>
                                     <input type="text" 
                                            value="<?= htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8') ?>" 
                                            disabled 
-                                           class="w-full border border-slate-200 bg-slate-100 pl-10 pr-4 py-3.5 rounded-xl font-bold text-slate-500 cursor-not-allowed">
+                                           class="w-full border border-slate-200 dark:border-slate-700 bg-slate-100 pl-10 pr-4 py-3.5 rounded-xl font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 cursor-not-allowed">
                                 </div>
                             </div>
 
-                            <div class="my-6 border-t border-slate-100"></div>
+                            <div class="my-6 border-t border-slate-100 dark:border-slate-800"></div>
 
                             <!-- Password Field -->
                             <div class="space-y-1.5">
-                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest">Password Baru</label>
+                                <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Password Baru</label>
                                 <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400">
+                                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 dark:text-slate-500">
                                         <i class="fa-solid fa-lock text-sm"></i>
                                     </span>
                                     <input type="password" 
                                            name="password" 
                                            value="<?= htmlspecialchars($user['password'], ENT_QUOTES, 'UTF-8') ?>" 
                                            required 
-                                           class="w-full border border-slate-200 bg-slate-50/50 pl-10 pr-4 py-3.5 rounded-xl font-bold text-slate-700 focus:outline-none focus:border-red-500 focus:bg-white transition">
+                                           class="w-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 pl-10 pr-4 py-3.5 rounded-xl font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition">
                                 </div>
                             </div>
 
                             <!-- Confirm Password Field -->
                             <div class="space-y-1.5">
-                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest">Konfirmasi Password Baru</label>
+                                <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Konfirmasi Password Baru</label>
                                 <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400">
+                                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 dark:text-slate-500">
                                         <i class="fa-solid fa-circle-check text-sm"></i>
                                     </span>
                                     <input type="password" 
                                            name="confirm_password" 
                                            value="<?= htmlspecialchars($user['password'], ENT_QUOTES, 'UTF-8') ?>" 
                                            required 
-                                           class="w-full border border-slate-200 bg-slate-50/50 pl-10 pr-4 py-3.5 rounded-xl font-bold text-slate-700 focus:outline-none focus:border-red-500 focus:bg-white transition">
+                                           class="w-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 pl-10 pr-4 py-3.5 rounded-xl font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition">
                                 </div>
                             </div>
 
@@ -335,33 +335,41 @@ $role = $_SESSION['role'] ?? '';
             </div>
         </div>
 
-        <!-- Modal Cropper -->
-        <div x-show="isCropperOpen" 
-             style="display: none;"
-             class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4">
-            <div @click.away="cancelCrop" class="bg-white rounded-[2rem] w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
-                <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+        <!-- Slide-Over Cropper Panel -->
+        <div x-show="isCropperOpen" x-cloak class="fixed inset-0 z-[60] flex justify-end">
+            <div x-show="isCropperOpen" x-transition.opacity class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" @click="cancelCrop"></div>
+            
+            <div x-show="isCropperOpen" 
+                 x-transition:enter="transition ease-out duration-300 transform"
+                 x-transition:enter-start="translate-x-full"
+                 x-transition:enter-end="translate-x-0"
+                 x-transition:leave="transition ease-in duration-200 transform"
+                 x-transition:leave-start="translate-x-0"
+                 x-transition:leave-end="translate-x-full"
+                 class="relative w-full max-w-lg h-full bg-white dark:bg-[#1e293b] shadow-2xl flex flex-col z-[60] border-l border-slate-100 dark:border-slate-800">
+                 
+                <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50 dark:bg-slate-900/50 shrink-0">
                     <div>
-                        <h3 class="text-lg font-black tracking-tight text-slate-800 uppercase">Sesuaikan Foto</h3>
-                        <p class="text-xs text-slate-500 mt-1">Geser dan perbesar foto agar wajah pas di tengah kotak.</p>
+                        <h3 class="text-base font-black tracking-tight text-slate-800 dark:text-white uppercase">Sesuaikan Foto</h3>
+                        <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">Geser & Perbesar</p>
                     </div>
-                    <button @click="cancelCrop" type="button" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800 flex items-center justify-center transition">
+                    <button @click="cancelCrop" type="button" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:text-red-500 hover:border-red-200 dark:hover:border-red-900 transition-colors">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
                 
-                <div class="p-6 bg-slate-50">
-                    <div class="w-full h-[300px] md:h-[400px] bg-black rounded-xl overflow-hidden shadow-inner">
-                        <img id="cropperImage" src="" class="max-w-full hidden">
+                <div class="flex-1 overflow-y-auto p-6 bg-slate-100 dark:bg-slate-900">
+                    <div class="w-full h-full min-h-[400px] bg-black rounded-2xl overflow-hidden shadow-inner border-2 border-slate-200 dark:border-slate-700 flex flex-col">
+                        <img id="cropperImage" src="" class="max-w-full hidden flex-1">
                     </div>
                 </div>
                 
-                <div class="p-6 border-t border-slate-100 flex justify-end gap-3 bg-white">
-                    <button @click="cancelCrop" type="button" class="px-6 py-3 rounded-xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition">
+                <div class="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 dark:bg-slate-900/50 flex justify-end gap-3 shrink-0">
+                    <button @click="cancelCrop" type="button" class="px-6 py-3.5 rounded-xl font-black uppercase tracking-widest text-[10px] text-slate-600 dark:text-slate-400 dark:text-slate-500 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition flex-1 text-center">
                         Batal
                     </button>
-                    <button @click="applyCrop" type="button" class="px-6 py-3 rounded-xl font-bold text-white bg-red-600 hover:bg-red-700 shadow-lg shadow-red-500/30 transition">
-                        Terapkan Potongan
+                    <button @click="applyCrop" type="button" class="px-6 py-3.5 rounded-xl font-black uppercase tracking-widest text-[10px] text-white bg-red-600 hover:bg-red-700 shadow-lg shadow-red-500/30 transition flex-1 text-center">
+                        Terapkan
                     </button>
                 </div>
             </div>

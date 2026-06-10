@@ -63,7 +63,7 @@ include 'header_meta.php';
     #reader a { display: none; } /* Sembunyikan link credit library */
 </style>
 
-<body class="bg-slate-50 flex flex-col h-screen overflow-hidden">
+<body class="bg-slate-50 dark:bg-[#0f172a] flex flex-col h-screen overflow-hidden">
 
     <?php
     $page_title = "Barcode Outbound";
@@ -78,7 +78,7 @@ include 'header_meta.php';
     ?>
 
         <main class="flex-1 overflow-y-auto p-6 md:p-8 flex items-center justify-center">
-            <div class="bg-white p-8 md:p-12 rounded-3xl border shadow-sm text-center w-full max-w-2xl">
+            <div class="bg-white dark:bg-[#1e293b] p-8 md:p-12 rounded-3xl border shadow-sm text-center w-full max-w-2xl">
                 
                 <?php if ($pesan_sukses): ?>
                     <div class="bg-green-50 text-green-600 p-4 rounded-xl border border-green-200 font-bold mb-6 flex justify-between items-center flex-wrap gap-4">
@@ -97,20 +97,20 @@ include 'header_meta.php';
                     <div class="bg-rose-50 border-2 border-rose-500 p-8 rounded-2xl text-left relative overflow-hidden">
                         <i class="fa-solid fa-box-open text-9xl absolute -right-6 -bottom-6 text-rose-200 opacity-50"></i>
                         <h3 class="text-xs font-black text-rose-600 uppercase tracking-widest mb-1">PROSES OUTBOUND</h3>
-                        <p class="text-3xl font-black text-slate-800 mb-4"><?= $barang['nama_barang'] ?></p>
+                        <p class="text-3xl font-black text-slate-800 dark:text-white mb-4"><?= $barang['nama_barang'] ?></p>
                         
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="bg-white p-4 rounded-xl border border-rose-100 shadow-sm">
-                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Kode SKU</p>
-                                <p class="text-lg font-black text-slate-700"><?= $barang['sku'] ?></p>
+                            <div class="bg-white dark:bg-[#1e293b] p-4 rounded-xl border border-rose-100 shadow-sm">
+                                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Kode SKU</p>
+                                <p class="text-lg font-black text-slate-700 dark:text-slate-200"><?= $barang['sku'] ?></p>
                             </div>
-                            <div class="bg-white p-4 rounded-xl border border-rose-100 shadow-sm">
-                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Stok Saat Ini</p>
-                                <p class="text-lg font-black text-slate-700"><?= $barang['stok_saat_ini'] ?> <span class="text-sm font-normal text-slate-400"><?= $barang['unit'] ?></span></p>
+                            <div class="bg-white dark:bg-[#1e293b] p-4 rounded-xl border border-rose-100 shadow-sm">
+                                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Stok Saat Ini</p>
+                                <p class="text-lg font-black text-slate-700 dark:text-slate-200"><?= $barang['stok_saat_ini'] ?> <span class="text-sm font-normal text-slate-400 dark:text-slate-500"><?= $barang['unit'] ?></span></p>
                             </div>
-                            <div class="bg-white p-4 rounded-xl border border-rose-100 shadow-sm">
-                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Batas ROP</p>
-                                <p class="text-lg font-black text-rose-600"><?= $barang['stok_kritis'] ?> <span class="text-sm font-normal text-slate-400"><?= $barang['unit'] ?></span></p>
+                            <div class="bg-white dark:bg-[#1e293b] p-4 rounded-xl border border-rose-100 shadow-sm">
+                                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Batas ROP</p>
+                                <p class="text-lg font-black text-rose-600"><?= $barang['stok_kritis'] ?> <span class="text-sm font-normal text-slate-400 dark:text-slate-500"><?= $barang['unit'] ?></span></p>
                             </div>
                         </div>
 
@@ -118,12 +118,12 @@ include 'header_meta.php';
                             <input type="hidden" name="sku_outbound" value="<?= $barang['sku'] ?>">
                             
                             <div class="mb-4">
-                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Jumlah Barang Dikeluarkan:</label>
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Jumlah Barang Dikeluarkan:</label>
                                 <input type="number" name="jumlah_keluar" required min="1" max="<?= $barang['stok_saat_ini'] ?>" placeholder="Maksimal: <?= $barang['stok_saat_ini'] ?>" class="w-full border border-slate-300 focus:outline-rose-500 p-4 rounded-xl font-bold text-xl">
                             </div>
 
                             <div class="mb-6">
-                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Keterangan / Tujuan:</label>
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Keterangan / Tujuan:</label>
                                 <input type="text" name="keterangan" required placeholder="Contoh: Dipakai divisi Produksi" class="w-full border border-slate-300 focus:outline-rose-500 p-4 rounded-xl font-medium">
                             </div>
 
@@ -135,20 +135,20 @@ include 'header_meta.php';
 
                 <?php else: ?>
                     <i class="fa-solid fa-boxes-stacked text-6xl text-slate-200 mb-4"></i>
-                    <h3 class="text-2xl font-black mb-2 text-slate-800 uppercase tracking-widest">OUTBOUND BARANG</h3>
-                    <p class="text-slate-500 mb-8 text-sm">Pilih metode pemilihan barang yang akan dikeluarkan.</p>
+                    <h3 class="text-2xl font-black mb-2 text-slate-800 dark:text-white uppercase tracking-widest">OUTBOUND BARANG</h3>
+                    <p class="text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-8 text-sm">Pilih metode pemilihan barang yang akan dikeluarkan.</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto w-full text-left">
                         
                         <!-- Mode Manual -->
-                        <div class="border-2 border-slate-200 rounded-3xl p-8 bg-white relative flex flex-col justify-center shadow-sm hover:border-red-300 transition">
-                            <h4 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-2"><i class="fa-solid fa-keyboard text-red-500 mr-2"></i> Mode Manual</h4>
-                            <p class="text-xs text-slate-500 mb-6 font-medium">Ketik atau copy-paste kode SKU jika barcode fisik rusak atau sulit dibaca.</p>
+                        <div class="border-2 border-slate-200 dark:border-slate-700 rounded-3xl p-8 bg-white dark:bg-[#1e293b] relative flex flex-col justify-center shadow-sm hover:border-red-300 transition">
+                            <h4 class="text-sm font-black text-slate-800 dark:text-white uppercase tracking-widest mb-2"><i class="fa-solid fa-keyboard text-red-500 mr-2"></i> Mode Manual</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-6 font-medium">Ketik atau copy-paste kode SKU jika barcode fisik rusak atau sulit dibaca.</p>
                             
                             <form action="scan_barcode_outbound.php" method="POST" class="flex flex-col gap-4 mt-auto">
                                 <div>
-                                    <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block">Kode SKU / Barcode</label>
-                                    <input type="text" name="sku_scan" placeholder="Contoh: SKU-001" class="w-full border border-slate-300 p-4 rounded-xl outline-none focus:border-red-500 bg-slate-50 font-black text-center text-xl uppercase tracking-widest" required>
+                                    <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase mb-2 block">Kode SKU / Barcode</label>
+                                    <input type="text" name="sku_scan" placeholder="Contoh: SKU-001" class="w-full border border-slate-300 p-4 rounded-xl outline-none focus:border-red-500 bg-slate-50 dark:bg-slate-900 font-black text-center text-xl uppercase tracking-widest" required>
                                 </div>
                                 <button type="submit" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:bg-red-600 transition shadow-lg shadow-slate-900/20 flex justify-center items-center gap-2">
                                     Cari Data Barang
@@ -157,11 +157,11 @@ include 'header_meta.php';
                         </div>
 
                         <!-- Mode Scanner -->
-                        <div class="border-2 border-dashed border-slate-300 rounded-3xl p-8 bg-slate-50 relative flex flex-col items-center justify-center text-center">
-                            <h4 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-2"><i class="fa-solid fa-camera text-red-500 mr-2"></i> Mode Kamera</h4>
-                            <p class="text-xs text-slate-500 mb-6 font-medium">Arahkan barcode fisik barang ke kamera perangkat Anda.</p>
+                        <div class="border-2 border-dashed border-slate-300 rounded-3xl p-8 bg-slate-50 dark:bg-slate-900 relative flex flex-col items-center justify-center text-center">
+                            <h4 class="text-sm font-black text-slate-800 dark:text-white uppercase tracking-widest mb-2"><i class="fa-solid fa-camera text-red-500 mr-2"></i> Mode Kamera</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-6 font-medium">Arahkan barcode fisik barang ke kamera perangkat Anda.</p>
                             
-                            <div id="reader" class="mx-auto w-full max-w-[280px] bg-white rounded-2xl min-h-[250px] flex items-center justify-center overflow-hidden border border-slate-200 shadow-inner"></div>
+                            <div id="reader" class="mx-auto w-full max-w-[280px] bg-white dark:bg-[#1e293b] rounded-2xl min-h-[250px] flex items-center justify-center overflow-hidden border border-slate-200 dark:border-slate-700 shadow-inner"></div>
 
                             <form id="scan_form" method="POST" class="hidden">
                                 <input type="text" name="sku_scan" id="sku_input">

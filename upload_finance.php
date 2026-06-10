@@ -30,7 +30,7 @@ if ($po) {
 }
 include 'header_meta.php';
 ?>
-<body class="bg-slate-50 flex flex-col h-screen overflow-hidden text-slate-800">
+<body class="bg-slate-50 dark:bg-[#0f172a] flex flex-col h-screen overflow-hidden text-slate-800 dark:text-white">
 
     <?php include 'navbar.php'; ?>
 
@@ -39,18 +39,18 @@ include 'header_meta.php';
 
         <main class="flex-1 overflow-y-auto p-6 md:p-8 flex items-center justify-center">
             <?php if($po): ?>
-            <div class="bg-white p-10 rounded-[3rem] border shadow-sm w-full max-w-2xl" x-data="{ submitting: false }">
+            <div class="bg-white dark:bg-[#1e293b] p-10 rounded-[3rem] border shadow-sm w-full max-w-2xl" x-data="{ submitting: false }">
                 <!-- Detail PO -->
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 mb-8">
-                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Detail Pembayaran</h3>
+                <div class="bg-slate-50 dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 mb-8">
+                    <h3 class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">Detail Pembayaran</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                        <div><span class="text-slate-500">No PO</span><p class="font-black text-slate-800"><?= $po['po_number'] ?></p></div>
-                        <div><span class="text-slate-500">Vendor</span><p class="font-black text-slate-800"><?= htmlspecialchars($po['nama_perusahaan']) ?></p></div>
-                        <div><span class="text-slate-500">Barang</span><p class="font-black text-slate-800"><?= htmlspecialchars($po['nama_barang']) ?></p></div>
-                        <div><span class="text-slate-500">Invoice</span><p class="font-black text-slate-800"><?= htmlspecialchars($po['invoice_number'] ?? '-') ?></p></div>
+                        <div><span class="text-slate-500 dark:text-slate-400 dark:text-slate-500">No PO</span><p class="font-black text-slate-800 dark:text-white"><?= $po['po_number'] ?></p></div>
+                        <div><span class="text-slate-500 dark:text-slate-400 dark:text-slate-500">Vendor</span><p class="font-black text-slate-800 dark:text-white"><?= htmlspecialchars($po['nama_perusahaan']) ?></p></div>
+                        <div><span class="text-slate-500 dark:text-slate-400 dark:text-slate-500">Barang</span><p class="font-black text-slate-800 dark:text-white"><?= htmlspecialchars($po['nama_barang']) ?></p></div>
+                        <div><span class="text-slate-500 dark:text-slate-400 dark:text-slate-500">Invoice</span><p class="font-black text-slate-800 dark:text-white"><?= htmlspecialchars($po['invoice_number'] ?? '-') ?></p></div>
                     </div>
-                    <div class="mt-4 pt-4 border-t border-slate-200 flex justify-between items-center flex-wrap gap-4">
-                        <span class="text-slate-500 text-sm">Total Pembayaran</span>
+                    <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center flex-wrap gap-4">
+                        <span class="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm">Total Pembayaran</span>
                         <span class="text-2xl font-black text-red-600">Rp <?= number_format($po['total_harga'],0,',','.') ?></span>
                     </div>
                 </div>
@@ -70,20 +70,20 @@ include 'header_meta.php';
                     .catch(()=>{alert('Error');submitting=false;})
                 " enctype="multipart/form-data" class="space-y-6">
                     <label class="cursor-pointer group block">
-                        <div class="p-10 border-4 border-dashed border-slate-100 rounded-[2rem] group-hover:border-red-400 group-hover:bg-red-50/30 transition-all text-center">
+                        <div class="p-10 border-4 border-dashed border-slate-100 dark:border-slate-800 rounded-[2rem] group-hover:border-red-400 group-hover:bg-red-50/30 transition-all text-center">
                             <i class="fa-solid fa-cloud-arrow-up text-6xl text-slate-200 group-hover:text-red-500 transition-all mb-4 block"></i>
-                            <h4 class="font-black text-slate-700 text-lg mb-1">Pilih File Bukti Transfer</h4>
-                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">Format: PDF/JPG (Maks 5MB)</p>
+                            <h4 class="font-black text-slate-700 dark:text-slate-200 text-lg mb-1">Pilih File Bukti Transfer</h4>
+                            <p class="text-xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest">Format: PDF/JPG (Maks 5MB)</p>
                             <input type="file" name="bukti_bayar" accept=".jpg,.jpeg,.png,.pdf" required class="hidden">
                         </div>
                     </label>
 
                     <div>
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Catatan Pembayaran (Opsional)</label>
-                        <textarea name="payment_notes" rows="3" placeholder="Contoh: Transfer via BCA ke rekening vendor..." class="w-full border border-slate-200 p-4 rounded-xl outline-none focus:border-red-500 bg-slate-50 font-medium text-sm"></textarea>
+                        <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1 block">Catatan Pembayaran (Opsional)</label>
+                        <textarea name="payment_notes" rows="3" placeholder="Contoh: Transfer via BCA ke rekening vendor..." class="w-full border border-slate-200 dark:border-slate-700 p-4 rounded-xl outline-none focus:border-red-500 bg-slate-50 dark:bg-slate-900 font-medium text-sm"></textarea>
                     </div>
 
-                    <div class="flex items-center gap-2 text-xs text-slate-500 font-medium bg-blue-50 p-3 rounded-xl border border-blue-100">
+                    <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium bg-blue-50 p-3 rounded-xl border border-blue-100">
                         <i class="fa-solid fa-circle-info text-blue-500"></i>
                         Bukti yang diunggah akan muncul secara transparan di dashboard vendor.
                     </div>
@@ -95,10 +95,10 @@ include 'header_meta.php';
                 </form>
             </div>
             <?php else: ?>
-            <div class="bg-white p-16 rounded-[3rem] border shadow-sm text-center max-w-lg">
+            <div class="bg-white dark:bg-[#1e293b] p-16 rounded-[3rem] border shadow-sm text-center max-w-lg">
                 <i class="fa-solid fa-cloud-arrow-up text-7xl text-slate-100 mb-6 block"></i>
-                <h3 class="font-black text-slate-800 text-xl mb-2">Pilih PO Terlebih Dahulu</h3>
-                <p class="text-slate-400 text-sm mb-6">Buka halaman Management Pembayaran untuk memilih PO yang akan dibayar.</p>
+                <h3 class="font-black text-slate-800 dark:text-white text-xl mb-2">Pilih PO Terlebih Dahulu</h3>
+                <p class="text-slate-400 dark:text-slate-500 text-sm mb-6">Buka halaman Management Pembayaran untuk memilih PO yang akan dibayar.</p>
                 <a href="pembayaran_finance.php" class="bg-slate-900 text-white px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-red-600 transition inline-block">
                     <i class="fa-solid fa-arrow-left mr-2"></i> Ke Halaman Pembayaran
                 </a>
