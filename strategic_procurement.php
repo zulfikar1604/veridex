@@ -211,7 +211,7 @@ include 'header_meta.php';
                                     <i class="fa-solid fa-circle-info"></i> Lakukan penilaian Teknis (TBE) lalu Komersial (CBE) untuk setiap vendor. <strong>Range Nilai: 1 — 10</strong>
                                 </div>
                                 
-                                <div class="space-y-6">
+                                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 overflow-x-hidden">
                                     <?php foreach($sph_data as $s): 
                                         $tbe_done = ($s['tbe_score'] != null && $s['tbe_score'] !== '');
                                         $cbe_done = ($s['cbe_score'] != null && $s['cbe_score'] !== '');
@@ -225,7 +225,7 @@ include 'header_meta.php';
                                             $diskon_display = floatval($s['diskon_nilai'] ?? 0) . '%';
                                         }
                                     ?>
-                                    <div class="border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden hover:border-slate-300 transition-colors">
+                                    <div class="border border-slate-200 dark:border-slate-700 rounded-2xl flex flex-col hover:border-slate-300 transition-colors bg-white dark:bg-[#1e293b] shadow-sm">
                                         <!-- Header Vendor -->
                                         <div class="bg-slate-50 dark:bg-slate-900 p-5 border-b border-slate-200 dark:border-slate-700 flex justify-between items-start">
                                             <div>
@@ -237,8 +237,8 @@ include 'header_meta.php';
                                             </span>
                                         </div>
 
-                                        <div class="p-5">
-                                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                                        <div class="p-5 flex-1 flex flex-col">
+                                            <div class="grid grid-cols-1 gap-5 flex-1">
                                                 <!-- TBE Section -->
                                                 <div class="space-y-3">
                                                     <div class="flex items-center justify-between flex-wrap gap-4">

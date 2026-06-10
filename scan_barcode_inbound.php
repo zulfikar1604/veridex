@@ -76,7 +76,7 @@ include 'header_meta.php';
                         <i class="fa-solid fa-truck-fast text-red-500 mr-2"></i> Daftar Pengiriman Tiba
                     </h3>
                     <form action="konfirmasi_inbound.php" method="GET" class="flex gap-2">
-                        <input type="text" name="po" placeholder="Input No PO Manual..." class="border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1 text-xs focus:outline-red-500" required>
+                        <input type="text" name="po" id="scan_input_inbound" autofocus placeholder="Input No PO Manual..." class="border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1 text-xs focus:outline-red-500" required>
                         <button type="submit" class="bg-slate-800 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-slate-700 transition">Cari</button>
                     </form>
                 </div>
@@ -141,7 +141,79 @@ include 'header_meta.php';
         });
     </script>
 
+    <!-- SCRIPT UX GUDANG: AUTO-FOCUS & COLOR FEEDBACK -->
+    <script>
+        // 1. Audio Beep & Color Flash Function
+        function flashScreen(isSuccess) {
+            const flashDiv = document.createElement('div');
+            flashDiv.style.position = 'fixed';
+            flashDiv.style.inset = '0';
+            flashDiv.style.zIndex = '9999';
+            flashDiv.style.pointerEvents = 'none';
+            flashDiv.style.transition = 'opacity 0.8s ease-out';
+            flashDiv.style.backgroundColor = isSuccess ? 'rgba(34, 197, 94, 0.7)' : 'rgba(239, 68, 68, 0.8)';
+            
+            document.body.appendChild(flashDiv);
+            
+            // Audio context
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+                osc.connect(gainNode);
+                gainNode.connect(ctx.destination);
+                
+                if (isSuccess) {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(800, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1);
+                    gainNode.gain.setValueAtTime(0.5, ctx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.3);
+                } else {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(300, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.2);
+                    gainNode.gain.setValueAtTime(0.8, ctx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.4);
+                }
+            } catch(e) { console.log('Audio error:', e); }
+            
+            setTimeout(() => {
+                flashDiv.style.opacity = '0';
+                setTimeout(() => flashDiv.remove(), 800);
+            }, 100);
+        }
 
+        // 2. Auto-Focus Enforcer untuk Scanner Gun
+        document.addEventListener('DOMContentLoaded', () => {
+            const scanInput = document.getElementById('scan_input_inbound');
+            if (scanInput) {
+                scanInput.focus();
+                document.addEventListener('click', (e) => {
+                    const tag = e.target.tagName;
+                    if (tag !== 'INPUT' && tag !== 'SELECT' && tag !== 'BUTTON' && tag !== 'A') {
+                        scanInput.focus();
+                    }
+                });
+                scanInput.addEventListener('blur', () => {
+                    setTimeout(() => {
+                        const tag = document.activeElement ? document.activeElement.tagName : '';
+                        if (tag !== 'INPUT' && tag !== 'SELECT' && tag !== 'BUTTON' && tag !== 'A') {
+                            scanInput.focus();
+                        }
+                    }, 50);
+                });
+            }
 
+            // 3. Trigger Flash jika ada pesan sukses
+            <?php if ($pesan_sukses): ?>
+            flashScreen(true);
+            <?php endif; ?>
+        });
+    </script>
 </body>
 </html>

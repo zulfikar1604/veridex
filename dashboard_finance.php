@@ -124,20 +124,9 @@ include 'header_meta.php';
                     <!-- Match Button -->
                     <?php if($po['received_at'] && $po['invoice_number']): ?>
                     <div class="flex justify-center">
-                        <button x-show="!matching" @click="
-                            matching = true;
-                            let fd = new FormData();
-                            fd.append('po_id', <?= $po['id'] ?>);
-                            fetch('process_3way_matching.php', {method:'POST', body:fd})
-                            .then(r=>r.json())
-                            .then(d=>{alert(d.message);if(d.success)location.reload();else matching=false;})
-                            .catch(()=>{alert('Error');matching=false;})
-                        " class="bg-slate-900 text-white px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-green-600 transition shadow-xl flex items-center gap-3">
-                            <i class="fa-solid fa-check-double"></i> Match & Approve for Payment
-                        </button>
-                        <div x-show="matching" class="text-slate-400 dark:text-slate-500 font-bold text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-spinner fa-spin"></i> Memproses matching...
-                        </div>
+                        <a href="split_match_finance.php?po_id=<?= $po['id'] ?>" class="bg-slate-900 text-white px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-indigo-600 transition shadow-xl flex items-center gap-3">
+                            <i class="fa-solid fa-columns"></i> Lakukan Matching (Split-View)
+                        </a>
                     </div>
                     <?php else: ?>
                     <p class="text-center text-slate-400 dark:text-slate-500 italic text-sm">Menunggu semua dokumen lengkap sebelum bisa di-match.</p>

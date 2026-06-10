@@ -122,9 +122,22 @@ include 'header_meta.php';
                                 <input type="number" name="jumlah_keluar" required min="1" max="<?= $barang['stok_saat_ini'] ?>" placeholder="Maksimal: <?= $barang['stok_saat_ini'] ?>" class="w-full border border-slate-300 focus:outline-rose-500 p-4 rounded-xl font-bold text-xl">
                             </div>
 
+                            <div class="mb-4">
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Departemen Peminta:</label>
+                                <select name="departemen" id="deptSelect" onchange="toggleDeptLainnya()" required class="w-full border border-slate-300 focus:outline-rose-500 p-4 rounded-xl font-medium bg-white">
+                                    <option value="">-- Pilih Departemen --</option>
+                                    <option value="Produksi">Divisi Produksi</option>
+                                    <option value="Maintenance">Divisi Maintenance (Perbaikan)</option>
+                                    <option value="Operasional">Divisi Operasional Umum</option>
+                                    <option value="Marketing">Divisi Marketing</option>
+                                    <option value="Lainnya">Lainnya (Ketik Sendiri...)</option>
+                                </select>
+                                <input type="text" name="departemen_lainnya" id="deptLainnyaInput" placeholder="Ketik nama departemen..." class="w-full border border-slate-300 focus:outline-rose-500 p-4 rounded-xl font-medium mt-3 hidden" disabled>
+                            </div>
+
                             <div class="mb-6">
-                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Keterangan / Tujuan:</label>
-                                <input type="text" name="keterangan" required placeholder="Contoh: Dipakai divisi Produksi" class="w-full border border-slate-300 focus:outline-rose-500 p-4 rounded-xl font-medium">
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Tujuan Penggunaan (Catatan Khusus):</label>
+                                <input type="text" name="keterangan" required placeholder="Contoh: Digunakan untuk mesin A..." class="w-full border border-slate-300 focus:outline-rose-500 p-4 rounded-xl font-medium">
                             </div>
 
                             <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-black uppercase tracking-widest px-8 py-4 rounded-xl transition shadow-lg shadow-rose-500/30">
@@ -148,7 +161,7 @@ include 'header_meta.php';
                             <form action="scan_barcode_outbound.php" method="POST" class="flex flex-col gap-4 mt-auto">
                                 <div>
                                     <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase mb-2 block">Kode SKU / Barcode</label>
-                                    <input type="text" name="sku_scan" placeholder="Contoh: SKU-001" class="w-full border border-slate-300 p-4 rounded-xl outline-none focus:border-red-500 bg-slate-50 dark:bg-slate-900 font-black text-center text-xl uppercase tracking-widest" required>
+                                    <input type="text" name="sku_scan" id="scan_input_outbound" autofocus placeholder="Contoh: SKU-001" class="w-full border border-slate-300 p-4 rounded-xl outline-none focus:border-red-500 bg-slate-50 dark:bg-slate-900 font-black text-center text-xl uppercase tracking-widest" required>
                                 </div>
                                 <button type="submit" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:bg-red-600 transition shadow-lg shadow-slate-900/20 flex justify-center items-center gap-2">
                                     Cari Data Barang
@@ -181,17 +194,13 @@ include 'header_meta.php';
             
             // Fungsi ketika kamera berhasil membaca Barcode
             function onScanSuccess(decodedText, decodedResult) {
-                // 1. Bunyikan suara 'beep' (opsional)
-                let audio = new Audio('https://www.soundjay.com/buttons/sounds/beep-07a.mp3');
-                audio.play().catch(e => console.log("Audio play blocked by browser"));
-
-                // 2. Hentikan kamera agar tidak scan berkali-kali
+                // Hentikan kamera agar tidak scan berkali-kali
                 html5QrcodeScanner.clear();
                 
-                // 3. Masukkan teks barcode ke form tersembunyi
+                // Masukkan teks barcode ke form tersembunyi
                 document.getElementById('sku_input').value = decodedText;
                 
-                // 4. Tekan tombol submit secara otomatis
+                // Tekan tombol submit secara otomatis
                 document.getElementById('scan_form').submit();
             }
 
@@ -209,9 +218,80 @@ include 'header_meta.php';
             // Mulai nyalakan kamera
             html5QrcodeScanner.render(onScanSuccess, onScanFailure);
         }
+
+        // SCRIPT UX GUDANG: AUTO-FOCUS & COLOR FEEDBACK
+        function flashScreen(isSuccess) {
+            const flashDiv = document.createElement('div');
+            flashDiv.style.position = 'fixed';
+            flashDiv.style.inset = '0';
+            flashDiv.style.zIndex = '9999';
+            flashDiv.style.pointerEvents = 'none';
+            flashDiv.style.transition = 'opacity 0.8s ease-out';
+            flashDiv.style.backgroundColor = isSuccess ? 'rgba(34, 197, 94, 0.7)' : 'rgba(239, 68, 68, 0.8)';
+            
+            document.body.appendChild(flashDiv);
+            
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+                osc.connect(gainNode);
+                gainNode.connect(ctx.destination);
+                
+                if (isSuccess) {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(800, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1);
+                    gainNode.gain.setValueAtTime(0.5, ctx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.3);
+                } else {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(300, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.2);
+                    gainNode.gain.setValueAtTime(0.8, ctx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.4);
+                }
+            } catch(e) { console.log('Audio error:', e); }
+            
+            setTimeout(() => {
+                flashDiv.style.opacity = '0';
+                setTimeout(() => flashDiv.remove(), 800);
+            }, 100);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const scanInput = document.getElementById('scan_input_outbound');
+            if (scanInput) {
+                scanInput.focus();
+                document.addEventListener('click', (e) => {
+                    const tag = e.target.tagName;
+                    if (tag !== 'INPUT' && tag !== 'SELECT' && tag !== 'BUTTON' && tag !== 'A') {
+                        scanInput.focus();
+                    }
+                });
+                scanInput.addEventListener('blur', () => {
+                    setTimeout(() => {
+                        const tag = document.activeElement ? document.activeElement.tagName : '';
+                        if (tag !== 'INPUT' && tag !== 'SELECT' && tag !== 'BUTTON' && tag !== 'A') {
+                            scanInput.focus();
+                        }
+                    }, 50);
+                });
+            }
+
+            // Trigger Flash Feedback
+            <?php if ($pesan_sukses): ?>
+            flashScreen(true);
+            <?php endif; ?>
+            
+            <?php if ($pesan_error): ?>
+            flashScreen(false);
+            <?php endif; ?>
+        });
     </script>
-
-
-
 </body>
 </html>

@@ -6,7 +6,17 @@ require 'functions.php'; // Pakai fungsi calculateStatusLabel punya kamu
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sku = trim($_POST['sku_outbound'] ?? '');
     $jumlah_keluar = (int)($_POST['jumlah_keluar'] ?? 0);
-    $keterangan = trim($_POST['keterangan'] ?? '');
+    
+    $departemen = trim($_POST['departemen'] ?? 'Umum');
+    if ($departemen === 'Lainnya') {
+        $departemen = trim($_POST['departemen_lainnya'] ?? 'Lainnya');
+    }
+    
+    $ket_input = trim($_POST['keterangan'] ?? '');
+    
+    // Gabungkan departemen ke dalam keterangan agar otomatis tercetak di riwayat dan laporan
+    $keterangan = "[DEPT: " . strtoupper($departemen) . "] - " . $ket_input;
+    
     $user = $_SESSION['username'] ?? 'Staf Gudang';
 
     if (empty($sku) || $jumlah_keluar <= 0) {

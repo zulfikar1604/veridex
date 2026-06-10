@@ -96,10 +96,14 @@ include 'header_meta.php';
                     </div>
                 </div>
 
-                <!-- Form RFQ -->
-                <div class="bg-white dark:bg-[#1e293b] p-8 rounded-b-3xl border border-t-0 border-slate-200 dark:border-slate-700 shadow-sm" 
+                <!-- Form RFQ Wizard -->
+                <div class="bg-white dark:bg-[#1e293b] rounded-b-3xl border border-t-0 border-slate-200 dark:border-slate-700 shadow-sm" 
                      x-data="{
+                        step: 1,
                         selectedVendors: [],
+                        kebutuhan: <?= max(1, $item['stok_kritis'] - $item['stok_saat_ini'] + 10) ?>,
+                        deadline: '<?= date('Y-m-d\TH:i', strtotime('+7 days')) ?>',
+                        catatan: '',
                         submitting: false,
                         toggleVendor(id) {
                             if (this.selectedVendors.includes(id)) {
@@ -111,11 +115,29 @@ include 'header_meta.php';
                         selectAll() {
                             this.selectedVendors = [<?= implode(',', array_column($vendors, 'id')) ?>];
                         },
+                        nextStep() {
+                            if (this.step === 1 && (!this.kebutuhan || !this.deadline)) {
+                                alert('Harap isi jumlah kebutuhan dan batas waktu!');
+                                return;
+                            }
+                            if (this.step === 2 && this.selectedVendors.length === 0) {
+                                alert('Pilih minimal 1 vendor!');
+                                return;
+                            }
+                            this.step++;
+                        },
+                        prevStep() {
+                            if (this.step > 1) this.step--;
+                        },
                         async submitRFQ() {
                             if (this.selectedVendors.length === 0) return alert('Pilih minimal 1 vendor!');
                             this.submitting = true;
                             
-                            let fd = new FormData(document.getElementById('rfq_form'));
+                            let fd = new FormData();
+                            fd.append('inventory_id', <?= $item['id'] ?>);
+                            fd.append('jumlah_kebutuhan', this.kebutuhan);
+                            fd.append('deadline', this.deadline);
+                            fd.append('catatan', this.catatan);
                             fd.append('vendor_ids', JSON.stringify(this.selectedVendors));
                             
                             let res = await fetch('process_rfq.php', { method: 'POST', body: fd });
@@ -129,34 +151,57 @@ include 'header_meta.php';
                         }
                      }">
 
-                    <form id="rfq_form" @submit.prevent="submitRFQ()" class="space-y-6">
+                    <!-- Wizard Progress Header -->
+                    <div class="px-8 py-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center">
+                        <div class="flex items-center gap-4">
+                            <div class="flex items-center" :class="step >= 1 ? 'text-red-600' : 'text-slate-400'">
+                                <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center font-black text-sm" :class="step >= 1 ? 'border-red-600 bg-red-50 dark:bg-red-900/20' : 'border-slate-300'">1</div>
+                                <span class="ml-2 text-[10px] font-black uppercase tracking-widest hidden sm:block">Detail Kebutuhan</span>
+                            </div>
+                            <div class="w-10 h-0.5 bg-slate-200 dark:bg-slate-700"></div>
+                            <div class="flex items-center" :class="step >= 2 ? 'text-red-600' : 'text-slate-400'">
+                                <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center font-black text-sm" :class="step >= 2 ? 'border-red-600 bg-red-50 dark:bg-red-900/20' : 'border-slate-300'">2</div>
+                                <span class="ml-2 text-[10px] font-black uppercase tracking-widest hidden sm:block">Pilih Vendor</span>
+                            </div>
+                            <div class="w-10 h-0.5 bg-slate-200 dark:bg-slate-700"></div>
+                            <div class="flex items-center" :class="step === 3 ? 'text-red-600' : 'text-slate-400'">
+                                <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center font-black text-sm" :class="step === 3 ? 'border-red-600 bg-red-50 dark:bg-red-900/20' : 'border-slate-300'">3</div>
+                                <span class="ml-2 text-[10px] font-black uppercase tracking-widest hidden sm:block">Review</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="rfq_form" @submit.prevent="submitRFQ()" class="p-8 space-y-6">
                         <input type="hidden" name="inventory_id" value="<?= $item['id'] ?>">
+
+                        <!-- STEP 1: Kebutuhan -->
+                        <div x-show="step === 1" x-transition.opacity>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1 block">Jumlah Kebutuhan *</label>
                                 <div class="relative">
-                                    <input type="number" name="jumlah_kebutuhan" required min="1" value="<?= max(1, $item['stok_kritis'] - $item['stok_saat_ini'] + 10) ?>" 
+                                    <input type="number" x-model="kebutuhan" required min="1" 
                                         class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4 rounded-xl font-black text-center focus:border-red-500 outline-none">
                                     <span class="absolute right-4 top-4 text-slate-400 dark:text-slate-500 font-bold text-sm"><?= $item['unit'] ?></span>
                                 </div>
                             </div>
                             <div>
                                 <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1 block">Batas Waktu Penawaran *</label>
-                                <input type="datetime-local" name="deadline" required 
-                                    value="<?= date('Y-m-d\TH:i', strtotime('+7 days')) ?>"
+                                <input type="datetime-local" x-model="deadline" required 
                                     class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4 rounded-xl font-bold focus:border-red-500 outline-none">
                             </div>
                         </div>
 
-                        <div>
+                        <div class="mt-6">
                             <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1 block">Catatan / Spesifikasi Tambahan</label>
-                            <textarea name="catatan" rows="3" placeholder="Contoh: Wajib memiliki sertifikat ISO, warna biru, ukuran A4..." 
+                            <textarea x-model="catatan" rows="3" placeholder="Contoh: Wajib memiliki sertifikat ISO, warna biru, ukuran A4..." 
                                 class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4 rounded-xl font-medium text-sm focus:border-red-500 outline-none"></textarea>
                         </div>
+                        </div>
 
-                        <!-- Vendor Selection -->
-                        <div>
+                        <!-- STEP 2: Vendor Selection -->
+                        <div x-show="step === 2" style="display: none;" x-transition.opacity>
                             <div class="flex justify-between items-center mb-3">
                                 <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Pilih Vendor yang Diundang *</label>
                                 <div class="flex gap-2">
@@ -195,12 +240,41 @@ include 'header_meta.php';
                             <?php endif; ?>
                         </div>
 
-                        <!-- Submit -->
-                        <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
-                            <button type="submit" :disabled="submitting || selectedVendors.length === 0"
-                                class="bg-red-600 hover:bg-red-700 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-red-600/20 transition-all flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed">
-                                <span x-show="!submitting"><i class="fa-solid fa-paper-plane"></i> Kirim RFQ ke Vendor</span>
-                                <span x-show="submitting"><i class="fa-solid fa-spinner fa-spin"></i> Mengirim...</span>
+                        <!-- STEP 3: Review & Submit -->
+                        <div x-show="step === 3" style="display: none;" x-transition.opacity>
+                            <div class="bg-slate-50 dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-700">
+                                <h4 class="font-black text-lg mb-6 uppercase border-b border-slate-200 dark:border-slate-700 pb-4">Ringkasan RFQ</h4>
+                                <div class="grid grid-cols-2 gap-y-4 text-sm">
+                                    <div class="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Barang</div>
+                                    <div class="font-bold text-right"><?= htmlspecialchars($item['nama_barang']) ?></div>
+                                    
+                                    <div class="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Jumlah</div>
+                                    <div class="font-black text-blue-600 text-right"><span x-text="kebutuhan"></span> <?= $item['unit'] ?></div>
+                                    
+                                    <div class="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Batas Waktu</div>
+                                    <div class="font-bold text-right"><span x-text="deadline.replace('T', ' ')"></span></div>
+                                    
+                                    <div class="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Vendor Diundang</div>
+                                    <div class="font-black text-red-600 text-right"><span x-text="selectedVendors.length"></span> Vendor</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Navigation Buttons -->
+                        <div class="pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center mt-8">
+                            <button type="button" @click="prevStep()" x-show="step > 1" class="px-6 py-3 font-bold text-slate-500 hover:text-slate-800 transition">
+                                <i class="fa-solid fa-arrow-left mr-2"></i> Kembali
+                            </button>
+                            <div x-show="step === 1" class="ml-auto"></div>
+
+                            <button type="button" @click="nextStep()" x-show="step < 3" class="bg-slate-900 hover:bg-slate-800 text-white px-8 py-3 rounded-xl font-black uppercase tracking-widest shadow-lg transition-all flex items-center gap-2">
+                                Lanjut <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+
+                            <button type="submit" x-show="step === 3" :disabled="submitting"
+                                class="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl font-black uppercase tracking-widest shadow-xl shadow-red-600/20 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span x-show="!submitting"><i class="fa-solid fa-paper-plane"></i> Submit RFQ</span>
+                                <span x-show="submitting"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</span>
                             </button>
                         </div>
                     </form>
@@ -211,6 +285,20 @@ include 'header_meta.php';
     </div>
 
 
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('main-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (!sidebar) return;
+            if (window.innerWidth >= 768) {
+                sidebar.classList.toggle('sidebar-collapsed');
+            } else {
+                sidebar.classList.toggle('sidebar-open');
+                if (overlay) overlay.classList.toggle('overlay-open');
+            }
+        }
+    </script>
 
 </body>
 </html>

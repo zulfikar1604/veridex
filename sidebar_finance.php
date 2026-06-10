@@ -46,6 +46,12 @@ $_badge_payment = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c F
             <i class="fa-solid fa-cloud-arrow-up w-6 text-center mr-2.5 text-[15px]"></i> 
             <span>Upload Bukti Bayar</span>
         </a>
+
+        <div class="px-4 py-2 mt-4 text-[10px] font-black text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Reporting</div>
+
+        <a href="laporan_finance.php" class="flex items-center justify-between px-4 py-2.5 rounded-lg transition-all <?= ($active == 'laporan_finance') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold text-[13px]' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium text-[13px]' ?>">
+            <span class="flex items-center"><i class="fa-solid fa-chart-line w-6 text-center mr-2.5 text-[15px]"></i> Laporan Keuangan</span>
+        </a>
     </nav>
     
     <div class="p-5">

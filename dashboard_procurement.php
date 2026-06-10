@@ -79,15 +79,20 @@ include 'header_meta.php';
                                     <p class="text-sm text-slate-600 dark:text-slate-300 font-medium">Barang: <span class="font-bold uppercase"><?= htmlspecialchars($item['nama_barang']) ?></span> (Sisa: <?= $item['stok_saat_ini'] ?>)</p>
                                 </div>
                                 
-                                <?php if ($_SESSION['role'] === 'Procurement'): ?>
-                                    <a href="create_rfq.php?inventory_id=<?= $item['id'] ?>" class="bg-slate-900 text-white px-8 py-3 rounded-xl font-black text-xs shadow-lg hover:bg-red-600 hover:-translate-y-1 transition uppercase tracking-widest">
-                                        <i class="fa-solid fa-bullhorn mr-2"></i> BUAT RFQ
+                                <div class="flex items-center gap-2">
+                                    <a href="print_pr.php?inventory_id=<?= $item['id'] ?>" target="_blank" class="bg-white text-slate-800 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-white px-4 py-3 rounded-xl font-black text-xs shadow-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition uppercase tracking-widest" title="Cetak Dokumen PR">
+                                        <i class="fa-solid fa-print"></i>
                                     </a>
-                                <?php else: ?>
-                                    <div class="bg-slate-100 text-slate-400 dark:text-slate-500 px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest border border-slate-200 dark:border-slate-700">
-                                        <i class="fa-solid fa-eye mr-2"></i> VIEW ONLY
-                                    </div>
-                                <?php endif; ?>
+                                    <?php if ($_SESSION['role'] === 'Procurement'): ?>
+                                        <a href="create_rfq.php?inventory_id=<?= $item['id'] ?>" class="bg-slate-900 text-white px-8 py-3 rounded-xl font-black text-xs shadow-lg hover:bg-red-600 hover:-translate-y-1 transition uppercase tracking-widest">
+                                            <i class="fa-solid fa-bullhorn mr-2"></i> BUAT RFQ
+                                        </a>
+                                    <?php else: ?>
+                                        <div class="bg-slate-100 text-slate-400 dark:text-slate-500 px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest border border-slate-200 dark:border-slate-700">
+                                            <i class="fa-solid fa-eye mr-2"></i> VIEW ONLY
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         <?php endwhile; ?>
                     <?php else: ?>

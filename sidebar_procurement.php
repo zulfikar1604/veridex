@@ -57,9 +57,17 @@
         
         <div class="my-4 border-t border-slate-800"></div>
         <div class="px-4 py-2 text-[10px] font-black text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Operational</div>
+
+        <a href="laporan_procurement.php" class="flex items-center px-4 py-2.5 rounded-lg transition-all <?= ($active == 'laporan') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold text-[13px]' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium text-[13px]' ?>">
+            <i class="fa-solid fa-chart-column w-6 text-center mr-2.5 text-[15px]"></i> Laporan & Analitik
+        </a>
         
         <a href="dashboard_procurement.php" class="flex items-center px-4 py-2.5 rounded-lg transition-all <?= ($active == 'rop') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold text-[13px]' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium text-[13px]' ?>">
             <i class="fa-solid fa-bullseye w-6 text-center mr-2.5 text-[15px]"></i> ROP Dashboard
+        </a>
+
+        <a href="pilih_barang_rfq.php" class="flex items-center px-4 py-2.5 rounded-lg transition-all <?= ($active == 'buat_rfq') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold text-[13px]' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium text-[13px]' ?>">
+            <i class="fa-solid fa-file-pen w-6 text-center mr-2.5 text-[15px]"></i> Buat RFQ
         </a>
 
         <a href="strategic_procurement.php" class="flex items-center px-4 py-2.5 rounded-lg transition-all <?= ($active == 'strategic') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold text-[13px]' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium text-[13px]' ?>">
@@ -76,6 +84,10 @@
 
         <div class="my-4 border-t border-slate-800"></div>
         <div class="px-4 py-2 text-[10px] font-black text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Archive</div>
+
+        <a href="arsip_pr.php" class="flex items-center px-4 py-2.5 rounded-lg transition-all <?= ($active == 'arsip_pr') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold text-[13px]' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium text-[13px]' ?>">
+            <i class="fa-solid fa-file-lines w-6 text-center mr-2.5 text-[15px]"></i> Arsip PR
+        </a>
 
         <a href="arsip_rfq.php" class="flex items-center px-4 py-2.5 rounded-lg transition-all <?= ($active == 'arsip_rfq') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold text-[13px]' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium text-[13px]' ?>">
             <i class="fa-solid fa-rectangle-list w-6 text-center mr-2.5 text-[15px]"></i> Arsip RFQ

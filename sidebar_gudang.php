@@ -40,6 +40,11 @@
             <i class="fa-solid fa-clock-rotate-left w-6 text-center mr-2.5 text-[15px]"></i> 
             <span>Riwayat Outbound</span>
         </a>
+
+        <a href="arsip_pr_gudang.php" class="flex items-center px-4 py-2.5 rounded-lg transition-all <?= ($active == 'arsip_pr') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold text-[13px]' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium text-[13px]' ?>">
+            <i class="fa-solid fa-file-lines w-6 text-center mr-2.5 text-[15px]"></i> 
+            <span>Arsip PR</span>
+        </a>
         
         <a href="dashboard_gudang.php" class="flex items-center px-4 py-2.5 rounded-lg transition-all <?= ($active == 'inventory') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold text-[13px]' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium text-[13px]' ?>">
             <i class="fa-solid fa-table-list w-6 text-center mr-2.5 text-[15px]"></i> 
@@ -49,6 +54,13 @@
         <a href="notifikasi_rop.php" class="flex items-center px-4 py-2.5 rounded-lg transition-all <?= ($active == 'rop') ? 'bg-red-500 text-white shadow-[0_4px_15px_rgba(239,68,68,0.4)] font-bold text-[13px]' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium text-[13px]' ?>">
             <i class="fa-solid fa-triangle-exclamation w-6 text-center mr-2.5 text-[15px] <?= ($active == 'rop') ? '' : 'text-red-400' ?>"></i> 
             <span>Notifikasi ROP</span>
+        </a>
+
+        <div class="my-4 border-t border-slate-800"></div>
+
+        <a href="laporan_gudang.php" class="flex items-center px-4 py-2.5 rounded-lg transition-all <?= ($active == 'laporan_gudang') ? 'bg-indigo-600 text-white shadow-[0_4px_15px_rgba(79,70,229,0.4)] font-bold text-[13px]' : 'text-slate-300 hover:text-white hover:bg-slate-800 font-medium text-[13px]' ?>">
+            <i class="fa-solid fa-chart-line w-6 text-center mr-2.5 text-[15px]"></i> 
+            <span>Laporan & Analitik</span>
         </a>
     </nav>
     

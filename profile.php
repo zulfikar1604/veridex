@@ -262,14 +262,15 @@ $role = $_SESSION['role'] ?? '';
                             <div class="space-y-1.5">
                                 <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Username Baru</label>
                                 <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 dark:text-slate-500">
+                                    <span class="absolute inset-y-0 left-4 flex items-center text-slate-400 dark:text-slate-500">
                                         <i class="fa-solid fa-user text-sm"></i>
                                     </span>
                                     <input type="text" 
                                            name="username" 
                                            value="<?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?>" 
                                            required 
-                                           class="w-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 pl-10 pr-4 py-3.5 rounded-xl font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition">
+                                           style="padding-left: 3rem;"
+                                           class="w-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 pr-4 py-3.5 rounded-xl font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition">
                                 </div>
                             </div>
 
@@ -277,13 +278,14 @@ $role = $_SESSION['role'] ?? '';
                             <div class="space-y-1.5 opacity-70">
                                 <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Tingkat Jabatan / Role (Read-only)</label>
                                 <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 dark:text-slate-500">
+                                    <span class="absolute inset-y-0 left-4 flex items-center text-slate-400 dark:text-slate-500">
                                         <i class="fa-solid fa-shield text-sm"></i>
                                     </span>
                                     <input type="text" 
                                            value="<?= htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8') ?>" 
                                            disabled 
-                                           class="w-full border border-slate-200 dark:border-slate-700 bg-slate-100 pl-10 pr-4 py-3.5 rounded-xl font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 cursor-not-allowed">
+                                           style="padding-left: 3rem;"
+                                           class="w-full border border-slate-200 dark:border-slate-700 bg-slate-100 pr-4 py-3.5 rounded-xl font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 cursor-not-allowed">
                                 </div>
                             </div>
 
@@ -293,14 +295,15 @@ $role = $_SESSION['role'] ?? '';
                             <div class="space-y-1.5">
                                 <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Password Baru</label>
                                 <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 dark:text-slate-500">
+                                    <span class="absolute inset-y-0 left-4 flex items-center text-slate-400 dark:text-slate-500">
                                         <i class="fa-solid fa-lock text-sm"></i>
                                     </span>
                                     <input type="password" 
                                            name="password" 
                                            value="<?= htmlspecialchars($user['password'], ENT_QUOTES, 'UTF-8') ?>" 
                                            required 
-                                           class="w-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 pl-10 pr-4 py-3.5 rounded-xl font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition">
+                                           style="padding-left: 3rem;"
+                                           class="w-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 pr-4 py-3.5 rounded-xl font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition">
                                 </div>
                             </div>
 
@@ -308,14 +311,15 @@ $role = $_SESSION['role'] ?? '';
                             <div class="space-y-1.5">
                                 <label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Konfirmasi Password Baru</label>
                                 <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 dark:text-slate-500">
+                                    <span class="absolute inset-y-0 left-4 flex items-center text-slate-400 dark:text-slate-500">
                                         <i class="fa-solid fa-circle-check text-sm"></i>
                                     </span>
                                     <input type="password" 
                                            name="confirm_password" 
                                            value="<?= htmlspecialchars($user['password'], ENT_QUOTES, 'UTF-8') ?>" 
                                            required 
-                                           class="w-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 pl-10 pr-4 py-3.5 rounded-xl font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition">
+                                           style="padding-left: 3rem;"
+                                           class="w-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 pr-4 py-3.5 rounded-xl font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition">
                                 </div>
                             </div>
 

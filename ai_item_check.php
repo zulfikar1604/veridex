@@ -116,12 +116,13 @@ if ($selected_id > 0) {
     }
 }
 ?>
-<body class="bg-slate-50 dark:bg-[#0f172a] flex h-screen overflow-hidden text-slate-800 dark:text-white">
-    <?php include 'sidebar_procurement.php'; ?>
-    <main class="flex-1 flex flex-col overflow-hidden">
-        <?php include 'navbar.php'; ?>
-        
-        <div class="flex-1 overflow-y-auto p-6 md:p-8 scroll-smooth" id="main-scroll">
+<body class="bg-slate-50 dark:bg-[#0f172a] flex flex-col h-screen overflow-hidden text-slate-800 dark:text-white">
+    <?php include 'navbar.php'; ?>
+
+    <div class="flex-1 flex overflow-hidden">
+        <?php include 'sidebar_procurement.php'; ?>
+
+        <main class="flex-1 overflow-y-auto p-6 md:p-8 scroll-smooth" id="main-scroll">
             <div class="max-w-7xl mx-auto space-y-8">
 
                 <!-- HEADER UTAMA -->
@@ -380,7 +381,7 @@ if ($selected_id > 0) {
                 <?php endif; ?>
 
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 </body>
 </html>

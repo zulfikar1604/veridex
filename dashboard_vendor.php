@@ -24,6 +24,18 @@ $query_open = mysqli_query($conn, "
     ORDER BY r.created_at DESC
 ") or handle_db_error($conn);
 
+// Hitung metrik To-Do Urgent
+$query_po_pending = mysqli_query($conn, "SELECT COUNT(*) as c FROM purchase_orders WHERE vendor_id = $vendor_id AND status = 'Issued'");
+$po_pending = mysqli_fetch_assoc($query_po_pending)['c'] ?? 0;
+
+$query_rfq_urgent = mysqli_query($conn, "
+    SELECT COUNT(*) as c FROM rfq_requests r
+    JOIN rfq_vendors rv ON r.id = rv.rfq_id
+    WHERE rv.vendor_id = $vendor_id AND r.status = 'Open' AND rv.has_submitted = 0
+    AND r.deadline > NOW() AND r.deadline <= DATE_ADD(NOW(), INTERVAL 24 HOUR)
+");
+$rfq_urgent = mysqli_fetch_assoc($query_rfq_urgent)['c'] ?? 0;
+
 // RFQ yang sudah di-submit vendor ini
 $query_submitted = mysqli_query($conn, "
     SELECT r.*, rv.has_submitted, i.nama_barang, s.nomor_sph, s.harga_penawaran, s.biaya_pengiriman, s.status as sph_status, s.diskon_jenis, s.diskon_nilai, s.incoterm, s.payment_term, s.keterangan
@@ -60,6 +72,36 @@ include 'header_meta.php';
                     <i class="fa-solid fa-handshake text-blue-500 mr-1.5"></i> Vendor Mitra
                 </div>
             </div>
+            
+            <!-- TO-DO WIDGET (ACTION-DRIVEN DASHBOARD) -->
+            <?php if($po_pending > 0 || $rfq_urgent > 0): ?>
+            <div class="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-5 rounded-r-2xl shadow-sm mb-8 animate-pulse">
+                <div class="flex items-start gap-4">
+                    <div class="bg-red-100 text-red-600 w-10 h-10 rounded-full flex justify-center items-center shrink-0">
+                        <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-black text-red-700 dark:text-red-400 uppercase tracking-widest mb-2">To-Do List Urgent</h4>
+                        <ul class="space-y-2">
+                            <?php if($rfq_urgent > 0): ?>
+                            <li class="flex items-center text-sm text-red-600 dark:text-red-300 font-bold">
+                                <i class="fa-solid fa-clock mr-2 opacity-70"></i> 
+                                Anda memiliki <span class="bg-white px-2 py-0.5 rounded mx-1 text-red-700 font-black shadow-sm"><?= $rfq_urgent ?></span> undangan RFQ yang akan ditutup dalam kurang dari 24 jam!
+                            </li>
+                            <?php endif; ?>
+                            <?php if($po_pending > 0): ?>
+                            <li class="flex items-center text-sm text-red-600 dark:text-red-300 font-bold">
+                                <i class="fa-solid fa-file-signature mr-2 opacity-70"></i> 
+                                Terdapat <span class="bg-white px-2 py-0.5 rounded mx-1 text-red-700 font-black shadow-sm"><?= $po_pending ?></span> Purchase Order (PO) baru yang menunggu konfirmasi Anda.
+                                <a href="po_vendor.php" class="ml-2 underline hover:text-red-800">Lihat PO &rarr;</a>
+                            </li>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
             <!-- RFQ Terbuka — Menunggu Penawaran -->
             <?php if(mysqli_num_rows($query_open) > 0): ?>
             <div>
@@ -180,6 +222,20 @@ include 'header_meta.php';
                         <?php endif; ?>
                     </div>
                     <?php endwhile; ?>
+                </div>
+            </div>
+            <?php else: ?>
+            <!-- EMPTY STATE (Jika tidak ada RFQ terbuka) -->
+            <div class="bg-white dark:bg-[#1e293b] rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700 p-12 text-center shadow-sm">
+                <div class="w-24 h-24 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100 dark:border-slate-800">
+                    <i class="fa-solid fa-box-open text-5xl text-slate-300 dark:text-slate-600"></i>
+                </div>
+                <h3 class="text-xl font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest mb-2">Tidak Ada Undangan RFQ Baru</h3>
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Belum ada pesanan untuk saat ini. Kami akan mengirimi Anda notifikasi jika perusahaan kami membuka tender pengadaan barang yang relevan dengan Anda.</p>
+                <div class="mt-6 flex justify-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-slate-200"></span>
+                    <span class="w-2 h-2 rounded-full bg-slate-300"></span>
+                    <span class="w-2 h-2 rounded-full bg-slate-200"></span>
                 </div>
             </div>
             <?php endif; ?>
