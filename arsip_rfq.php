@@ -34,71 +34,82 @@ include 'header_meta.php';
     <div class="flex-1 flex overflow-hidden">
         <?php include 'sidebar_procurement.php'; ?>
 
-        <main class="flex-1 overflow-y-auto p-6 md:p-8">
+        <main class="flex-1 overflow-y-auto p-6 md:p-8 space-y-6">
+
+            <!-- Filter & Search Bar -->
+            <div class="bg-white dark:bg-[#1e293b] p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex gap-4">
+                <div class="relative flex-1">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-search text-slate-400"></i>
+                    </div>
+                    <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Cari Nomor RFQ, Kebutuhan, atau Pemohon..." style="padding-left: 2.5rem;" class="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-slate-800 dark:text-white">
+                </div>
+            </div>
+
             <?php if(mysqli_num_rows($query_rfq) > 0): ?>
             <div class="bg-white dark:bg-[#1e293b] rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
                 <div class="overflow-x-auto w-full">
 <table class="w-full text-left">
-                    <thead class="bg-slate-900">
-                        <tr class="text-[10px] font-black text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                    <thead class="bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800">
+                        <tr class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">
                             <th class="p-6">RFQ Number</th>
-                            <th class="p-6">Item</th>
-                            <th class="p-6 text-center">Kebutuhan</th>
-                            <th class="p-6 text-center">Vendor</th>
+                            <th class="p-6">Item Kebutuhan</th>
+                            <th class="p-6 text-center">Qty</th>
+                            <th class="p-6 text-center">Undangan</th>
                             <th class="p-6 text-center">SPH Masuk</th>
                             <th class="p-6 text-center">Deadline</th>
                             <th class="p-6 text-center">Status</th>
                             <th class="p-6 text-right">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-50">
+                    <tbody id="dataTable" class="divide-y divide-slate-50 dark:divide-slate-800">
                         <?php while($rfq = mysqli_fetch_assoc($query_rfq)): 
                             $status_colors = [
                                 'Open' => 'bg-green-50 text-green-600 border-green-200',
-                                'Closed' => 'bg-slate-100 text-slate-500 dark:text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-700',
+                                'Closed' => 'bg-slate-100 text-slate-500 border-slate-200',
                                 'Cancelled' => 'bg-red-50 text-red-500 border-red-200'
                             ];
                             $sc = $status_colors[$rfq['status']] ?? 'bg-yellow-50 text-yellow-600 border-yellow-200';
                             $is_expired = (!empty($rfq['deadline']) && strtotime($rfq['deadline']) < time() && $rfq['status'] === 'Open');
                         ?>
-                        <tr class="hover:bg-slate-50 dark:bg-slate-900/50 transition-colors">
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors group">
                             <td class="p-6">
-                                <div class="font-black text-slate-800 dark:text-white text-sm"><?= htmlspecialchars($rfq['rfq_number']) ?></div>
-                                <div class="text-[10px] text-slate-400 dark:text-slate-500 font-bold"><?= date('d M Y', strtotime($rfq['created_at'])) ?></div>
+                                <div class="font-black text-slate-800 dark:text-white text-sm">#<?= htmlspecialchars($rfq['rfq_number']) ?></div>
+                                <div class="text-[10px] text-slate-400 font-bold"><i class="fa-regular fa-calendar mr-1"></i> <?= date('d M Y', strtotime($rfq['created_at'])) ?></div>
                             </td>
                             <td class="p-6">
                                 <div class="font-bold text-slate-800 dark:text-white uppercase text-sm"><?= htmlspecialchars($rfq['nama_barang']) ?></div>
-                                <div class="text-[10px] text-slate-400 dark:text-slate-500 font-bold">SKU: <?= htmlspecialchars($rfq['sku']) ?></div>
+                                <div class="text-[10px] text-slate-400 font-bold">SKU: <?= htmlspecialchars($rfq['sku']) ?></div>
                             </td>
                             <td class="p-6 text-center">
-                                <span class="font-black text-slate-800 dark:text-white"><?= $rfq['jumlah_kebutuhan'] ?></span>
+                                <span class="font-black text-slate-800 dark:text-white"><?= number_format($rfq['jumlah_kebutuhan']) ?></span>
                             </td>
                             <td class="p-6 text-center">
-                                <span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black whitespace-nowrap inline-block"><?= $rfq['total_vendor'] ?> Vendor</span>
+                                <span class="bg-blue-50 text-blue-600 border border-blue-200 px-3 py-1 rounded-full text-[10px] font-black whitespace-nowrap inline-block shadow-sm"><i class="fa-solid fa-users mr-1"></i> <?= $rfq['total_vendor'] ?></span>
                             </td>
                             <td class="p-6 text-center">
-                                <span class="bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full text-[10px] font-black whitespace-nowrap inline-block"><?= $rfq['total_sph'] ?> SPH</span>
+                                <span class="bg-indigo-50 text-indigo-600 border border-indigo-200 px-3 py-1 rounded-full text-[10px] font-black whitespace-nowrap inline-block shadow-sm"><i class="fa-solid fa-file-invoice mr-1"></i> <?= $rfq['total_sph'] ?></span>
                             </td>
                             <td class="p-6 text-center">
                                 <?php if(!empty($rfq['deadline'])): ?>
                                 <div class="text-xs font-bold <?= $is_expired ? 'text-red-500' : 'text-slate-600 dark:text-slate-300' ?>">
                                     <?= date('d M Y', strtotime($rfq['deadline'])) ?>
                                 </div>
-                                <div class="text-[10px] text-slate-400 dark:text-slate-500"><?= date('H:i', strtotime($rfq['deadline'])) ?></div>
+                                <div class="text-[10px] text-slate-400 font-bold"><i class="fa-regular fa-clock mr-1"></i> <?= date('H:i', strtotime($rfq['deadline'])) ?></div>
                                 <?php else: ?>
                                 <span class="text-slate-300">-</span>
                                 <?php endif; ?>
                             </td>
                             <td class="p-6 text-center">
                                 <?php if($is_expired): ?>
-                                <span class="px-3 py-1 border rounded-lg text-[9px] font-black uppercase bg-amber-50 text-amber-600 border-amber-200 whitespace-nowrap inline-block">Expired</span>
+                                <span class="px-3 py-1 border rounded-lg text-[9px] font-black uppercase bg-amber-50 text-amber-600 border-amber-200 whitespace-nowrap inline-block shadow-sm">Expired</span>
                                 <?php else: ?>
-                                <span class="px-3 py-1 border rounded-lg text-[9px] font-black uppercase <?= $sc ?> whitespace-nowrap inline-block"><?= htmlspecialchars($rfq['status']) ?></span>
+                                <span class="px-3 py-1 border rounded-lg text-[9px] font-black uppercase <?= $sc ?> whitespace-nowrap inline-block shadow-sm"><?= htmlspecialchars($rfq['status']) ?></span>
                                 <?php endif; ?>
                             </td>
                             <td class="p-6 text-right">
-                                <a href="print_rfq.php?id=<?= $rfq['id'] ?>" target="_blank" class="px-3 py-1.5 bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-blue-600 hover:border-blue-200 rounded-lg text-[9px] font-black uppercase transition shadow-sm whitespace-nowrap inline-flex items-center justify-center gap-1" title="Cetak RFQ">
-                                    <i class="fa-solid fa-print"></i> Print
+                                <a href="print_rfq.php?id=<?= $rfq['id'] ?>" target="_blank" class="px-3 py-2 bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-red-600 hover:border-red-200 rounded-lg text-[10px] font-black uppercase transition shadow-sm whitespace-nowrap inline-flex items-center justify-center gap-1" title="Cetak RFQ PDF">
+                                    <i class="fa-solid fa-file-pdf"></i> PDF
                                 </a>
                             </td>
                         </tr>
@@ -109,14 +120,23 @@ include 'header_meta.php';
             </div>
             <?php else: ?>
             <div class="bg-white dark:bg-[#1e293b] p-16 rounded-[2.5rem] border shadow-sm text-center">
-                <i class="fa-solid fa-folder-open text-7xl text-slate-100 mb-6 block"></i>
+                <i class="fa-solid fa-folder-open text-7xl text-slate-200 dark:text-slate-700 mb-6 block"></i>
                 <h3 class="font-black text-slate-800 dark:text-white text-xl mb-2">Belum Ada Data RFQ</h3>
-                <p class="text-slate-400 dark:text-slate-500 text-sm">RFQ yang sudah pernah dibuat akan muncul di sini.</p>
+                <p class="text-slate-400 text-sm">RFQ yang sudah pernah dibuat akan muncul di sini.</p>
             </div>
             <?php endif; ?>
         </main>
     </div>
 
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        function searchTable() {
+            const input = document.getElementById("searchInput").value.toLowerCase();
+            const rows = document.querySelectorAll("#dataTable tr");
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(input) ? "" : "none";
+            });
+        }
+    </script>
 </body>
 </html>

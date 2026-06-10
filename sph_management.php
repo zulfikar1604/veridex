@@ -39,14 +39,14 @@ include 'header_meta.php';
             <div class="bg-white dark:bg-[#1e293b] rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
                 <div class="overflow-x-auto w-full">
 <table class="w-full text-left">
-                    <thead class="bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800">
-                        <tr class="text-[10px] font-black text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                    <thead class="bg-slate-900">
+                        <tr class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                             <th class="p-6">Date Received</th>
                             <th class="p-6">Vendor Name</th>
                             <th class="p-6">Item Subject</th>
                             <th class="p-6 text-center">TBE (Tech)</th>
                             <th class="p-6 text-center">CBE (Comm)</th>
-                            <th class="p-6 text-right">Status</th>
+                            <th class="p-6 text-center">Status & Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-50">
@@ -76,7 +76,7 @@ include 'header_meta.php';
                                     <span class="text-slate-300 text-xs">-</span>
                                 <?php endif; ?>
                             </td>
-                            <td class="p-6 text-right">
+                            <td class="p-6 text-center">
                                 <?php
                                 $status_colors = [
                                     'Pending Review' => 'bg-slate-100 text-slate-500 dark:text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-700',
@@ -88,12 +88,14 @@ include 'header_meta.php';
                                 ];
                                 $color = $status_colors[$row['status']] ?? 'bg-yellow-50 text-yellow-600 border-yellow-100';
                                 ?>
-                                <span class="px-3 py-1 border rounded-lg text-[9px] font-black uppercase <?= $color ?> mr-2">
-                                    <?= htmlspecialchars($row['status']) ?>
-                                </span>
-                                <a href="print_sph.php?rfq=<?= $row['rfq_id'] ?>&vendor=<?= $row['vendor_id'] ?>" target="_blank" class="px-2 py-1 bg-white dark:bg-[#1e293b] text-slate-500 dark:text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700 rounded hover:text-blue-600 hover:border-blue-200 transition" title="Print SPH">
-                                    <i class="fa-solid fa-print"></i>
-                                </a>
+                                <div class="flex items-center justify-center gap-2">
+                                    <span class="px-3 py-1 border rounded-lg text-[9px] font-black uppercase shadow-sm <?= $color ?>">
+                                        <?= htmlspecialchars($row['status']) ?>
+                                    </span>
+                                    <a href="print_sph.php?rfq=<?= $row['rfq_id'] ?>&vendor=<?= $row['vendor_id'] ?>" target="_blank" class="px-3 py-1.5 bg-white dark:bg-[#1e293b] text-slate-500 border border-slate-200 dark:border-slate-700 rounded-lg hover:text-blue-600 hover:border-blue-200 transition shadow-sm inline-flex items-center justify-center gap-1 text-[10px] font-black uppercase" title="Print SPH">
+                                        <i class="fa-solid fa-print"></i> Print
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                         <?php endwhile; ?>
@@ -113,7 +115,7 @@ include 'header_meta.php';
                         <h4 class="text-sm font-bold uppercase">Data dari SPH ini akan otomatis diproses di halaman Strategic Procurement</h4>
                     </div>
                 </div>
-                <a href="strategic_procurement.php" class="bg-white dark:bg-[#1e293b]/10 hover:bg-white dark:bg-[#1e293b]/20 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition border border-white/10">
+                <a href="strategic_procurement.php" class="bg-white dark:bg-[#1e293b] text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-[#0f172a] px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition shadow-sm">
                     Go to Strategic Analysis <i class="fa-solid fa-arrow-right ml-2"></i>
                 </a>
             </div>
