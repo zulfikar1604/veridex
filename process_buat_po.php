@@ -35,7 +35,7 @@ try {
     // Ambil SPH data untuk RFQ dan vendor terpilih ini
     $sph_data = null;
     if ($rfq_id > 0) {
-        $stmt = mysqli_prepare($conn, "SELECT payment_term, biaya_pengiriman FROM sph_submissions WHERE rfq_id = ? AND vendor_id = ? AND status = 'Selected' LIMIT 1");
+        $stmt = mysqli_prepare($conn, "SELECT payment_term, biaya_pengiriman, diskon_jenis, diskon_nilai FROM sph_submissions WHERE rfq_id = ? AND vendor_id = ? AND status = 'Selected' LIMIT 1");
         if ($stmt) {
             mysqli_stmt_bind_param($stmt, "ii", $rfq_id, $vendor_id);
             mysqli_stmt_execute($stmt);
@@ -47,7 +47,7 @@ try {
         }
     } else {
         // Fallback jika rfq_id tidak dikirim
-        $stmt = mysqli_prepare($conn, "SELECT rfq_id, payment_term, biaya_pengiriman FROM sph_submissions WHERE inventory_id = ? AND vendor_id = ? AND status = 'Selected' ORDER BY id DESC LIMIT 1");
+        $stmt = mysqli_prepare($conn, "SELECT rfq_id, payment_term, biaya_pengiriman, diskon_jenis, diskon_nilai FROM sph_submissions WHERE inventory_id = ? AND vendor_id = ? AND status = 'Selected' ORDER BY id DESC LIMIT 1");
         if ($stmt) {
             mysqli_stmt_bind_param($stmt, "ii", $inventory_id, $vendor_id);
             mysqli_stmt_execute($stmt);
@@ -62,7 +62,19 @@ try {
 
     $payment_term = $sph_data['payment_term'] ?? 'Net 30';
     $biaya_pengiriman = floatval($sph_data['biaya_pengiriman'] ?? 0);
-    $total_harga = ($jumlah_pesan * $harga_satuan) + $biaya_pengiriman;
+    
+    $subtotal = $jumlah_pesan * $harga_satuan;
+    $diskon = 0;
+    $diskon_jenis = $sph_data['diskon_jenis'] ?? 'Nominal';
+    $diskon_nilai = floatval($sph_data['diskon_nilai'] ?? 0);
+    
+    if ($diskon_jenis === 'Persentase') {
+        $diskon = ($diskon_nilai / 100) * $subtotal;
+    } else {
+        $diskon = $diskon_nilai;
+    }
+    
+    $total_harga = $subtotal - $diskon + $biaya_pengiriman;
 
     // Cek apakah sudah ada PO untuk RFQ dan vendor ini
     $stmt_check = mysqli_prepare($conn, "SELECT id FROM purchase_orders WHERE rfq_id = ? AND vendor_id = ?");
@@ -80,21 +92,30 @@ try {
         throw new Exception("Gagal memeriksa data Purchase Order.");
     }
 
-    // Generate PO number
-    $stmt_vq = mysqli_prepare($conn, "SELECT rank_position FROM vendor_quotas WHERE inventory_id = ? AND vendor_id = ?");
-    if ($stmt_vq) {
-        mysqli_stmt_bind_param($stmt_vq, "ii", $inventory_id, $vendor_id);
-        mysqli_stmt_execute($stmt_vq);
-        $result_vq = mysqli_stmt_get_result($stmt_vq);
-        $vq = mysqli_fetch_assoc($result_vq);
-        mysqli_stmt_close($stmt_vq);
+    // Generate PO number dengan daily auto-increment (anti duplikat)
+    $today = date('Ymd');
+    $prefix = 'PO-' . $today . '-';
+    
+    // Cari nomor urut tertinggi hari ini
+    $stmt_seq = mysqli_prepare($conn, "SELECT po_number FROM purchase_orders WHERE po_number LIKE CONCAT(?, '%') ORDER BY po_number DESC LIMIT 1 FOR UPDATE");
+    if ($stmt_seq) {
+        mysqli_stmt_bind_param($stmt_seq, "s", $prefix);
+        mysqli_stmt_execute($stmt_seq);
+        $result_seq = mysqli_stmt_get_result($stmt_seq);
+        $last_po = mysqli_fetch_assoc($result_seq);
+        mysqli_stmt_close($stmt_seq);
     } else {
-        throw new Exception("Gagal memproses kuota vendor.");
+        throw new Exception("Gagal menghitung sequence PO.");
     }
 
-    $rank = $vq['rank_position'] ?? 1;
-    $rank_letter = ($rank == 1) ? 'A' : (($rank == 2) ? 'B' : 'C');
-    $po_number = 'PO-' . date('Ymd') . '-' . str_pad($inventory_id, 3, '0', STR_PAD_LEFT) . '-' . $rank_letter;
+    $next_seq = 1;
+    if ($last_po) {
+        // Ambil angka setelah prefix terakhir, misal PO-20260611-003 → 3
+        $last_num = intval(substr($last_po['po_number'], strlen($prefix)));
+        $next_seq = $last_num + 1;
+    }
+    
+    $po_number = $prefix . str_pad($next_seq, 3, '0', STR_PAD_LEFT);
 
     $procurement_id = $_SESSION['user_id'];
 

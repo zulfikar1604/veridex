@@ -28,7 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mysqli_stmt_close($stmt);
 
             if ($success) {
-                $_SESSION['success'] = "Pendaftaran berhasil! Tim kami akan meninjau profil Anda dalam waktu 1x24 jam sebelum Anda dapat login.";
+                if (isset($_SESSION['role'])) {
+                    $_SESSION['success'] = "Vendor berhasil ditambahkan dan masuk ke status Pending. Anda bisa melakukan Approve di Master Vendor.";
+                } else {
+                    $_SESSION['success'] = "Pendaftaran berhasil! Tim kami akan meninjau profil Anda dalam waktu 1x24 jam sebelum Anda dapat login.";
+                }
                 header("Location: register_vendor.php");
                 exit;
             } else {

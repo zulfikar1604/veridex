@@ -170,9 +170,10 @@ try {
             }
 
             // Sync invoice number ke purchase_orders agar 3-Way Matching Finance tidak 'WAITING'
-            $stmt_sync_po = mysqli_prepare($conn, "UPDATE purchase_orders SET invoice_number = ?, invoice_submitted_at = NOW() WHERE id = ?");
+            $invoice_file_path = 'print_auto_invoice.php?po_id=' . $po_id;
+            $stmt_sync_po = mysqli_prepare($conn, "UPDATE purchase_orders SET invoice_number = ?, invoice_file = ?, invoice_submitted_at = NOW() WHERE id = ?");
             if ($stmt_sync_po) {
-                mysqli_stmt_bind_param($stmt_sync_po, "si", $inv_number, $po_id);
+                mysqli_stmt_bind_param($stmt_sync_po, "ssi", $inv_number, $invoice_file_path, $po_id);
                 mysqli_stmt_execute($stmt_sync_po);
                 mysqli_stmt_close($stmt_sync_po);
             } else {

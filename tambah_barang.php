@@ -1,5 +1,7 @@
 <?php
 session_start();
+require 'database.php';
+
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Gudang') {
     header("Location: login.php");
     exit;

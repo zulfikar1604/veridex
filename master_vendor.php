@@ -16,6 +16,21 @@ $query_vendors = mysqli_query($conn, "
     ORDER BY nama_perusahaan ASC
 ") or die(mysqli_error($conn));
 
+// Hitung jumlah vendor per status untuk badge filter
+$vendors_all = [];
+$count_status = ['Semua' => 0, 'Aktif' => 0, 'Pending' => 0, 'Non-Aktif' => 0];
+while($v = mysqli_fetch_assoc($query_vendors)) {
+    $vendors_all[] = $v;
+    $count_status['Semua']++;
+    if($v['status'] === 'Aktif' || $v['status'] === 'Approved') {
+        $count_status['Aktif']++;
+    } elseif($v['status'] === 'Pending') {
+        $count_status['Pending']++;
+    } else {
+        $count_status['Non-Aktif']++;
+    }
+}
+
 ?>
 
 <?php
@@ -35,6 +50,8 @@ include 'header_meta.php';
         <main class="flex-1 overflow-y-auto p-6 md:p-8" x-data="{ 
             detailModal: false, 
             vendor: {},
+            filterStatus: 'Semua',
+            searchQuery: '',
             openDetail(v) {
                 this.vendor = v;
                 this.detailModal = true;
@@ -47,6 +64,13 @@ include 'header_meta.php';
                 fetch('process_vendor_status.php', { method: 'POST', body: fd })
                 .then(r => r.json())
                 .then(d => { alert(d.message); if(d.success) location.reload(); });
+            },
+            matchFilter(status) {
+                if(this.filterStatus === 'Semua') return true;
+                if(this.filterStatus === 'Aktif') return (status === 'Aktif' || status === 'Approved');
+                if(this.filterStatus === 'Pending') return status === 'Pending';
+                if(this.filterStatus === 'Non-Aktif') return (status === 'Rejected' || status === 'Non-Aktif' || status === 'Blacklist');
+                return true;
             }
         }">
             <?php if(isset($_GET['pesan']) && $_GET['pesan'] == 'sukses'): ?>
@@ -56,60 +80,53 @@ include 'header_meta.php';
                 </div>
             <?php endif; ?>
 
+            <!-- Filter Bar -->
+            <div class="bg-white dark:bg-[#1e293b] rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-4 mb-6 flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+                <!-- Status Pills -->
+                <div class="flex flex-wrap gap-2">
+                    <?php 
+                    $filters = [
+                        'Semua'     => ['icon' => 'fa-layer-group',    'color' => 'slate'],
+                        'Aktif'     => ['icon' => 'fa-check-circle',   'color' => 'green'],
+                        'Pending'   => ['icon' => 'fa-clock',          'color' => 'amber'],
+                        'Non-Aktif' => ['icon' => 'fa-ban',            'color' => 'red'],
+                    ];
+                    foreach($filters as $label => $cfg):
+                        $count = $count_status[$label];
+                        $c = $cfg['color'];
+                    ?>
+                    <button @click="filterStatus = '<?= $label ?>'" 
+                        :class="filterStatus === '<?= $label ?>' 
+                            ? 'bg-<?= $c ?>-600 text-white shadow-lg shadow-<?= $c ?>-500/30 ring-2 ring-<?= $c ?>-400 ring-offset-1' 
+                            : 'bg-<?= $c ?>-50 dark:bg-<?= $c ?>-900/20 text-<?= $c ?>-600 dark:text-<?= $c ?>-400 border border-<?= $c ?>-200 dark:border-<?= $c ?>-800 hover:bg-<?= $c ?>-100 dark:hover:bg-<?= $c ?>-900/30'"
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all duration-200 cursor-pointer">
+                        <i class="fa-solid <?= $cfg['icon'] ?>"></i>
+                        <?= $label ?>
+                        <span class="inline-flex items-center justify-center min-w-[20px] h-5 rounded-full text-[10px] font-black px-1.5"
+                              :class="filterStatus === '<?= $label ?>' ? 'bg-white/25 text-white' : 'bg-<?= $c ?>-200 dark:bg-<?= $c ?>-800 text-<?= $c ?>-700 dark:text-<?= $c ?>-300'">
+                            <?= $count ?>
+                        </span>
+                    </button>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Search -->
+                <div class="relative w-full md:w-72">
+                    <i class="fa-solid fa-search text-slate-400" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); pointer-events:none;"></i>
+                    <input type="text" x-model="searchQuery" placeholder="Cari vendor..." 
+                        style="padding-left:42px;"
+                        class="w-full pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition text-slate-800 dark:text-white placeholder-slate-400">
+                </div>
+            </div>
+
             <div class="bg-white dark:bg-[#1e293b] rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden mb-8">
                 <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
                     <h3 class="font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest text-sm">Daftar Vendor Terdaftar</h3>
                     
-                    <div x-data="{ open: false }">
-                        <button @click="open = true" class="bg-slate-800 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition shadow-md">
-                            <i class="fa-solid fa-building-circle-check mr-2"></i> Input Manual Vendor
-                        </button>
-                        
-                        <div x-show="open" x-cloak class="fixed inset-0 z-50 flex justify-end">
-                            <div x-show="open" x-transition.opacity class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" @click="open = false"></div>
-                            
-                            <div x-show="open" 
-                                 x-transition:enter="transition ease-out duration-300 transform"
-                                 x-transition:enter-start="translate-x-full"
-                                 x-transition:enter-end="translate-x-0"
-                                 x-transition:leave="transition ease-in duration-200 transform"
-                                 x-transition:leave-start="translate-x-0"
-                                 x-transition:leave-end="translate-x-full"
-                                 class="relative w-full max-w-md h-full bg-white dark:bg-[#1e293b] shadow-2xl flex flex-col z-50 border-l border-slate-100 dark:border-slate-800">
-                                 
-                                <div class="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50 dark:bg-slate-900/50 shrink-0">
-                                    <div>
-                                        <h3 class="text-base font-black text-slate-800 dark:text-white uppercase tracking-tight">Registrasi Vendor</h3>
-                                        <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest mt-1">Input Manual</p>
-                                    </div>
-                                    <button type="button" @click="open = false" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:text-red-500 hover:border-red-200 dark:hover:border-red-900 transition-colors"><i class="fa-solid fa-xmark"></i></button>
-                                </div>
-                                
-                                <div class="flex-1 overflow-y-auto p-6">
-                                    <form action="proses_tambah_vendor.php" method="POST" class="space-y-4">
-                                        <div>
-                                            <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Nama Perusahaan (PT/CV)</label>
-                                            <input type="text" name="nama_perusahaan" required placeholder="Contoh: PT. Logistik Indonesia" class="w-full">
-                                        </div>
-                                        <div>
-                                            <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Kategori Spesialisasi</label>
-                                            <input type="text" name="spesialisasi" required placeholder="Contoh: IT, Sparepart, Alat Tulis" class="w-full">
-                                        </div>
-                                        <div>
-                                            <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Status Kemitraan</label>
-                                            <select name="status" class="w-full">
-                                                <option value="Aktif">Aktif (Approved)</option>
-                                                <option value="Non-Aktif">Non-Aktif</option>
-                                            </select>
-                                        </div>
-                                        
-                                        <div class="pt-4 border-t border-slate-100 dark:border-slate-800 mt-6">
-                                            <button type="submit" class="w-full bg-red-600 text-white font-black py-3.5 rounded-xl uppercase text-xs tracking-widest hover:bg-red-700 transition shadow-lg shadow-red-500/30">Simpan Vendor</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+                    <div>
+                        <a href="register_vendor.php" class="inline-flex items-center bg-slate-800 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition shadow-md">
+                            <i class="fa-solid fa-building-circle-check mr-2"></i> Registrasi Vendor Baru
+                        </a>
                     </div>
                 </div>
 
@@ -126,12 +143,16 @@ include 'header_meta.php';
                             </tr>
                         </thead>
                         <tbody class="text-sm">
-                            <?php while($row = mysqli_fetch_assoc($query_vendors)): ?>
-                                <tr class="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:bg-slate-900 transition-colors">
+                            <?php foreach($vendors_all as $row): ?>
+                                <tr class="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
+                                    x-show="matchFilter('<?= addslashes($row['status']) ?>') && (searchQuery === '' || '<?= strtolower(addslashes($row['nama_perusahaan'])) ?> <?= strtolower(addslashes($row['spesialisasi'] ?? '')) ?>'.includes(searchQuery.toLowerCase()))"
+                                    x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="opacity-0"
+                                    x-transition:enter-end="opacity-100">
                                     <td class="py-4 px-6 font-bold text-slate-400 dark:text-slate-500">VND-<?= str_pad($row['id'], 4, '0', STR_PAD_LEFT) ?></td>
                                     <td class="py-4 px-6 font-bold text-slate-800 dark:text-white">
                                         <div class="flex items-center gap-3">
-                                            <div class="w-8 h-8 rounded bg-slate-200 flex items-center justify-center text-slate-500 dark:text-slate-400 dark:text-slate-500 font-black text-xs">
+                                            <div class="w-8 h-8 rounded bg-slate-200 flex items-center justify-center text-slate-500 dark:text-slate-400 font-black text-xs">
                                                 <i class="fa-solid fa-industry"></i>
                                             </div>
                                             <?= htmlspecialchars($row['nama_perusahaan']) ?>
@@ -163,9 +184,9 @@ include 'header_meta.php';
                                         <button @click="openDetail(<?= htmlspecialchars(json_encode($row)) ?>)" class="text-blue-500 hover:text-blue-700 font-bold text-xs uppercase tracking-widest">Detail <i class="fa-solid fa-chevron-right ml-1"></i></button>
                                     </td>
                                 </tr>
-                            <?php endwhile; ?>
+                            <?php endforeach; ?>
                             
-                            <?php if(mysqli_num_rows($query_vendors) == 0): ?>
+                            <?php if(count($vendors_all) == 0): ?>
                                 <tr>
                                     <td colspan="5" class="py-16 text-center">
                                         <i class="fa-solid fa-building-circle-xmark text-5xl text-slate-200 mb-4 block"></i>

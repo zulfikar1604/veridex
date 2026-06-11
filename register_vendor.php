@@ -31,9 +31,25 @@ session_start();
                     <p class="text-[10px] text-red-500 font-bold tracking-widest uppercase">Vendor Portal</p>
                 </div>
             </div>
-            <a href="login.php" class="text-white text-sm font-bold border border-slate-700 hover:border-red-500 hover:bg-red-600 px-5 py-2.5 rounded-xl transition-all duration-300 flex items-center">
-                <i class="fa-solid fa-arrow-left mr-2"></i> KEMBALI KE LOGIN
-            </a>
+            <?php if (isset($_SESSION['role'])): ?>
+                <?php
+                // Tentukan link kembali berdasarkan role yang sedang login
+                $back_link = 'index.php'; // Default fallback
+                $back_text = 'KEMBALI KE DASHBOARD';
+                
+                if (in_array($_SESSION['role'], ['Manager Procurement', 'Procurement'])) {
+                    $back_link = 'master_vendor.php';
+                    $back_text = 'KEMBALI KE MASTER VENDOR';
+                }
+                ?>
+                <a href="<?= $back_link ?>" class="text-white text-sm font-bold border border-slate-700 hover:border-red-500 hover:bg-red-600 px-5 py-2.5 rounded-xl transition-all duration-300 flex items-center">
+                    <i class="fa-solid fa-arrow-left mr-2"></i> <?= $back_text ?>
+                </a>
+            <?php else: ?>
+                <a href="login.php" class="text-white text-sm font-bold border border-slate-700 hover:border-red-500 hover:bg-red-600 px-5 py-2.5 rounded-xl transition-all duration-300 flex items-center">
+                    <i class="fa-solid fa-arrow-left mr-2"></i> KEMBALI KE LOGIN
+                </a>
+            <?php endif; ?>
         </div>
     </header>
     
@@ -89,14 +105,14 @@ session_start();
                     <div>
                         <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Nama Perusahaan (PT/CV)</label>
                         <input type="text" name="nama_perusahaan" required 
-                               class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition-all font-medium text-slate-700 dark:text-slate-200" 
+                               class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:focus:bg-slate-800 transition-all font-medium text-slate-700 dark:text-slate-200" 
                                placeholder="Contoh: PT. Solusi Maju Bersama">
                     </div>
 
                     <div class="relative">
                         <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Spesialisasi Pengadaan</label>
                         <select name="spesialisasi" required 
-                               class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition-all font-medium text-slate-700 dark:text-slate-200 appearance-none">
+                               class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:focus:bg-slate-800 transition-all font-medium text-slate-700 dark:text-slate-200 appearance-none">
                             <option value="" disabled selected>-- Pilih Kategori Spesialisasi --</option>
                             <option value="Alat Tulis Kantor (ATK)">Alat Tulis Kantor (ATK)</option>
                             <option value="Perangkat IT & Komputer">Perangkat IT & Komputer</option>
@@ -115,7 +131,7 @@ session_start();
                     <div>
                         <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Alamat Lengkap</label>
                         <textarea name="alamat" required rows="3"
-                               class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition-all font-medium text-slate-700 dark:text-slate-200" 
+                               class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:focus:bg-slate-800 transition-all font-medium text-slate-700 dark:text-slate-200" 
                                placeholder="Contoh: Jl. Sudirman No. 123, Jakarta"></textarea>
                     </div>
 
@@ -123,13 +139,13 @@ session_start();
                         <div>
                             <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Email Perusahaan (Username Login)</label>
                             <input type="email" name="email" required 
-                                   class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition-all font-medium text-slate-700 dark:text-slate-200" 
+                                   class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:focus:bg-slate-800 transition-all font-medium text-slate-700 dark:text-slate-200" 
                                    placeholder="Contoh: info@perusahaan.com">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Password Akun Baru</label>
                             <input type="password" name="password" required 
-                                   class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition-all font-medium text-slate-700 dark:text-slate-200" 
+                                   class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:focus:bg-slate-800 transition-all font-medium text-slate-700 dark:text-slate-200" 
                                    placeholder="Masukkan password...">
                         </div>
                     </div>
@@ -138,13 +154,13 @@ session_start();
                         <div>
                             <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Nama PIC</label>
                             <input type="text" name="pic_nama" required 
-                                   class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition-all font-medium text-slate-700 dark:text-slate-200" 
+                                   class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:focus:bg-slate-800 transition-all font-medium text-slate-700 dark:text-slate-200" 
                                    placeholder="Contoh: Budi Santoso">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Nomor Kontak PIC (WA/Telp)</label>
                             <input type="text" name="pic_kontak" required 
-                                   class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition-all font-medium text-slate-700 dark:text-slate-200" 
+                                   class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:focus:bg-slate-800 transition-all font-medium text-slate-700 dark:text-slate-200" 
                                    placeholder="Contoh: 081234567890">
                         </div>
                     </div>
@@ -153,13 +169,13 @@ session_start();
                         <div>
                             <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Nomor Induk Berusaha (NIB)</label>
                             <input type="text" name="nib" required 
-                                   class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition-all font-medium text-slate-700 dark:text-slate-200" 
+                                   class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:focus:bg-slate-800 transition-all font-medium text-slate-700 dark:text-slate-200" 
                                    placeholder="Contoh: 1234567890123">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">NPWP Perusahaan</label>
                             <input type="text" name="npwp" required 
-                                   class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition-all font-medium text-slate-700 dark:text-slate-200" 
+                                   class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl outline-none focus:border-red-500 focus:bg-white dark:focus:bg-slate-800 transition-all font-medium text-slate-700 dark:text-slate-200" 
                                    placeholder="Contoh: 12.345.678.9-012.000">
                         </div>
                     </div>

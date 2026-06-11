@@ -31,6 +31,7 @@ $query_po = mysqli_query($conn, "
 // Query: SPH yang sudah Selected tapi belum ada PO-nya
 $query_ready = mysqli_query($conn, "
     SELECT s.inventory_id, s.vendor_id, s.rfq_id, s.harga_penawaran, 
+           s.diskon_jenis, s.diskon_nilai, s.biaya_pengiriman,
            i.nama_barang, v.nama_perusahaan,
            rq.jumlah_kebutuhan, vq.quota_percentage
     FROM sph_submissions s
@@ -58,8 +59,12 @@ include 'header_meta.php';
 
         <main class="flex-1 overflow-y-auto p-6 md:p-8" x-data="{ 
             showModal: false, 
-            form: { inventory_id: 0, vendor_id: 0, rfq_id: 0, vendor_name: '', item_name: '', jumlah_pesan: 0, harga_satuan: 0 },
-            get totalHarga() { return this.form.jumlah_pesan * this.form.harga_satuan; },
+            form: { inventory_id: 0, vendor_id: 0, rfq_id: 0, vendor_name: '', item_name: '', jumlah_pesan: 0, harga_satuan: 0, diskon_jenis: 'Nominal', diskon_nilai: 0, biaya_pengiriman: 0 },
+            get totalHarga() { 
+                let subtotal = this.form.jumlah_pesan * this.form.harga_satuan;
+                let diskon = this.form.diskon_jenis === 'Persentase' ? (this.form.diskon_nilai / 100) * subtotal : parseFloat(this.form.diskon_nilai) || 0;
+                return (subtotal - diskon) + (parseFloat(this.form.biaya_pengiriman) || 0);
+            },
             openModal(item) {
                 this.form.inventory_id = item.inventory_id;
                 this.form.vendor_id = item.vendor_id;
@@ -73,6 +78,9 @@ include 'header_meta.php';
                 
                 // Harga penawaran adalah Harga Satuan
                 this.form.harga_satuan = parseFloat(item.harga_penawaran) || 0;
+                this.form.diskon_jenis = item.diskon_jenis || 'Nominal';
+                this.form.diskon_nilai = parseFloat(item.diskon_nilai) || 0;
+                this.form.biaya_pengiriman = parseFloat(item.biaya_pengiriman) || 0;
                 
                 this.showModal = true;
             },
@@ -242,9 +250,12 @@ include 'header_meta.php';
                     </div>
 
                     <!-- Footer -->
-                    <div class="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 dark:bg-slate-900/50 shrink-0">
-                        <button @click="submitPO" class="w-full bg-red-600 text-white rounded-xl py-3.5 font-black uppercase tracking-widest text-xs hover:bg-red-700 transition shadow-lg shadow-red-600/20">
-                            Generate & Kirim ke Manager
+                    <div class="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 shrink-0 flex gap-4">
+                        <button @click="showModal = false" class="w-1/3 bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl py-3.5 font-black uppercase tracking-widest text-xs hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                            Batal
+                        </button>
+                        <button @click="submitPO" class="w-2/3 bg-red-600 text-white rounded-xl py-3.5 font-black uppercase tracking-widest text-xs hover:bg-red-700 transition shadow-lg shadow-red-600/20">
+                            Generate & Kirim
                         </button>
                     </div>
                 </div>

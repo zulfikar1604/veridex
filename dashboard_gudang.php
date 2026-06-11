@@ -136,7 +136,7 @@ include 'header_meta.php';
                                 <tr class="<?= $row_bg ?> transition-colors">
                                     <td class="py-5 px-6">
                                         <div class="bg-white dark:bg-[#1e293b] p-2 border rounded inline-block">
-                                            <img src="https://barcode.tec-it.com/barcode.ashx?data=<?= $row['sku'] ?>&code=Code128" alt="<?= $row['sku'] ?>" class="h-10">
+                                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=50x50&data=<?= urlencode($row['sku']) ?>" alt="<?= $row['sku'] ?>" class="h-10 w-10">
                                         </div>
                                         <div class="flex items-center gap-2 mt-2">
                                             <div class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest"><?= $row['sku'] ?></div>

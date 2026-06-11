@@ -10,13 +10,21 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Finance') {
 date_default_timezone_set('Asia/Jakarta');
 $hari_ini = date('l, d F Y');
 
-// Auto-heal: Sinkronisasi invoice_number dari tabel invoices ke purchase_orders untuk PO lama yang tersangkut
+// Auto-heal #1: Sinkronisasi invoice_number dari tabel invoices ke purchase_orders untuk PO lama yang tersangkut
 mysqli_query($conn, "
     UPDATE purchase_orders p 
     JOIN invoices i ON p.id = i.po_id 
     SET p.invoice_number = i.invoice_number, 
         p.invoice_submitted_at = i.created_at 
     WHERE (p.invoice_number IS NULL OR p.invoice_number = '')
+");
+
+// Auto-heal #2: Sinkronisasi status invoice ke 'Paid' jika PO sudah 'Payment Completed' (perbaikan desync)
+mysqli_query($conn, "
+    UPDATE invoices inv
+    JOIN purchase_orders p ON inv.po_id = p.id
+    SET inv.status = 'Paid', inv.paid_at = NOW()
+    WHERE p.status = 'Payment Completed' AND inv.status = 'Unpaid'
 ");
 
 // PO yang siap di-match (Invoice sudah masuk)

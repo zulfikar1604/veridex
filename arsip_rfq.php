@@ -20,6 +20,19 @@ $query_rfq = mysqli_query($conn, "
     ORDER BY r.created_at DESC
 ") or handle_db_error($conn);
 
+// Query daftar vendor yang diundang per RFQ (untuk referensi login testing)
+$vendor_per_rfq = [];
+$query_rv = mysqli_query($conn, "
+    SELECT rv.rfq_id, v.id as vendor_id, v.nama_perusahaan, u.username as vendor_username
+    FROM rfq_vendors rv
+    JOIN vendors v ON rv.vendor_id = v.id
+    LEFT JOIN users u ON u.vendor_id = v.id
+    ORDER BY rv.rfq_id, v.nama_perusahaan
+") or handle_db_error($conn);
+while($rv = mysqli_fetch_assoc($query_rv)) {
+    $vendor_per_rfq[$rv['rfq_id']][] = $rv;
+}
+
 include 'header_meta.php';
 ?>
 <body class="bg-slate-50 dark:bg-[#0f172a] flex flex-col h-screen overflow-hidden text-slate-800 dark:text-white">
@@ -55,7 +68,7 @@ include 'header_meta.php';
                             <th class="p-6">RFQ Number</th>
                             <th class="p-6">Item Kebutuhan</th>
                             <th class="p-6 text-center">Qty</th>
-                            <th class="p-6 text-center">Undangan</th>
+                            <th class="p-6">Vendor Diundang</th>
                             <th class="p-6 text-center">SPH Masuk</th>
                             <th class="p-6 text-center">Deadline</th>
                             <th class="p-6 text-center">Status</th>
@@ -84,8 +97,27 @@ include 'header_meta.php';
                             <td class="p-6 text-center">
                                 <span class="font-black text-slate-800 dark:text-white"><?= number_format($rfq['jumlah_kebutuhan']) ?></span>
                             </td>
-                            <td class="p-6 text-center">
-                                <span class="bg-blue-50 text-blue-600 border border-blue-200 px-3 py-1 rounded-full text-[10px] font-black whitespace-nowrap inline-block shadow-sm"><i class="fa-solid fa-users mr-1"></i> <?= $rfq['total_vendor'] ?></span>
+                            <td class="p-6">
+                                <div class="flex flex-wrap gap-1.5 items-center">
+                                    <?php 
+                                    $vendors_list = $vendor_per_rfq[$rfq['id']] ?? [];
+                                    if(!empty($vendors_list)):
+                                        foreach($vendors_list as $vr): 
+                                    ?>
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800 whitespace-nowrap" title="Login: <?= htmlspecialchars($vr['vendor_username'] ?? '-') ?>">
+                                        <i class="fa-solid fa-building text-[8px] opacity-60"></i>
+                                        <?= htmlspecialchars($vr['nama_perusahaan']) ?>
+                                        <?php if(!empty($vr['vendor_username'])): ?>
+                                        <span class="text-[9px] text-blue-400 dark:text-blue-500 font-mono">@<?= htmlspecialchars($vr['vendor_username']) ?></span>
+                                        <?php endif; ?>
+                                    </span>
+                                    <?php 
+                                        endforeach;
+                                    else: 
+                                    ?>
+                                    <span class="text-slate-400 dark:text-slate-500 italic text-[10px]">Belum ada</span>
+                                    <?php endif; ?>
+                                </div>
                             </td>
                             <td class="p-6 text-center">
                                 <span class="bg-indigo-50 text-indigo-600 border border-indigo-200 px-3 py-1 rounded-full text-[10px] font-black whitespace-nowrap inline-block shadow-sm"><i class="fa-solid fa-file-invoice mr-1"></i> <?= $rfq['total_sph'] ?></span>

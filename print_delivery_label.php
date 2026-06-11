@@ -39,8 +39,19 @@ if (!$po) {
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <style>
         @media print {
-            body { background: white; margin: 0; padding: 0; }
+            body { background: white; margin: 0; padding: 0; display: block; }
             .no-print { display: none; }
+            .print-container {
+                width: 100% !important;
+                border: none !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 15px !important;
+            }
+            @page {
+                size: 100mm 150mm; /* Standar label pengiriman A6 */
+                margin: 0;
+            }
         }
     </style>
 </head>
@@ -51,10 +62,10 @@ if (!$po) {
             <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
             Print PDF
         </button>
-        <button onclick="window.close()" class="bg-slate-200 text-slate-700 dark:text-slate-200 px-6 py-2 rounded-lg font-bold shadow hover:bg-slate-300">Tutup</button>
+        <button onclick="window.close()" class="bg-slate-200 text-slate-700 px-6 py-2 rounded-lg font-bold shadow hover:bg-slate-300">Tutup</button>
     </div>
 
-    <div class="bg-white dark:bg-[#1e293b] p-8 w-[10cm] border border-gray-300 shadow-lg relative mt-16">
+    <div class="bg-white p-6 w-[10cm] min-h-[15cm] border border-gray-300 shadow-lg relative mt-16 print-container flex flex-col">
         <!-- Pengirim -->
         <div class="border-b-2 border-black pb-4 mb-4">
             <h2 class="font-black text-xl uppercase"><?= htmlspecialchars($po['nama_perusahaan']) ?></h2>
@@ -69,7 +80,7 @@ if (!$po) {
         </div>
 
         <!-- Detail Barang -->
-        <div class="bg-gray-50 p-4 border border-gray-200 mb-6">
+        <div class="bg-gray-50 p-4 border border-gray-200 mb-6 flex-1">
             <div class="flex justify-between items-center mb-2">
                 <span class="text-xs font-bold text-gray-500 uppercase">Item:</span>
                 <span class="font-black text-sm"><?= htmlspecialchars($po['sku']) ?></span>
@@ -82,22 +93,12 @@ if (!$po) {
             </div>
         </div>
 
-        <div class="text-center">
-            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Scan Barcode untuk Inbound Gudang</p>
-            <svg id="barcode"></svg>
+        <div class="text-center pt-2">
+            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Scan QR untuk Inbound Gudang</p>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= urlencode($po['po_number']) ?>" alt="QR Code <?= $po['po_number'] ?>" class="mx-auto w-32 h-32">
+            <p class="text-sm font-black mt-2 tracking-widest"><?= htmlspecialchars($po['po_number']) ?></p>
         </div>
     </div>
 
-    <script>
-        JsBarcode("#barcode", "<?= $po['po_number'] ?>", {
-            format: "CODE128",
-            lineColor: "#000",
-            width: 2,
-            height: 60,
-            displayValue: true,
-            fontSize: 14,
-            fontWeight: "bold"
-        });
-    </script>
 </body>
 </html>

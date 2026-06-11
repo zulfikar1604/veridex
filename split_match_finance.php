@@ -58,8 +58,14 @@ include 'header_meta.php';
                 </div>
             </div>
             <div class="flex-1 bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 rounded-b-xl overflow-hidden shadow-inner relative">
-                <?php if(!empty($po['invoice_file'])): ?>
-                    <iframe src="<?= htmlspecialchars($po['invoice_file']) ?>" class="w-full h-full border-0"></iframe>
+                <?php 
+                $file_to_show = $po['invoice_file'];
+                if (empty($file_to_show) && !empty($po['invoice_number'])) {
+                    $file_to_show = 'print_auto_invoice.php?po_id=' . $po['id'];
+                }
+                ?>
+                <?php if(!empty($file_to_show)): ?>
+                    <iframe src="<?= htmlspecialchars($file_to_show) ?>" class="w-full h-full border-0"></iframe>
                 <?php else: ?>
                     <div class="absolute inset-0 flex flex-col items-center justify-center text-slate-400">
                         <i class="fa-solid fa-file-circle-xmark text-6xl mb-4 text-slate-200"></i>

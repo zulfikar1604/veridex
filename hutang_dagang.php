@@ -10,9 +10,18 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Finance') {
 date_default_timezone_set('Asia/Jakarta');
 $hari_ini = date('l, d F Y');
 
-// Ambil data invoice (Account Payable)
+// Auto-heal: Sinkronisasi invoice yang masih 'Unpaid' padahal PO sudah 'Payment Completed'
+mysqli_query($conn, "
+    UPDATE invoices inv
+    JOIN purchase_orders p ON inv.po_id = p.id
+    SET inv.status = 'Paid', inv.paid_at = NOW()
+    WHERE p.status = 'Payment Completed' AND inv.status = 'Unpaid'
+");
+
+// Ambil data invoice (Account Payable) — dengan cross-check status PO
 $query_ap = mysqli_query($conn, "
-    SELECT inv.*, p.po_number, i.nama_barang, v.nama_perusahaan 
+    SELECT inv.*, p.po_number, p.status AS po_status, p.total_harga AS po_total_harga,
+           i.nama_barang, v.nama_perusahaan 
     FROM invoices inv
     JOIN purchase_orders p ON inv.po_id = p.id
     JOIN inventory i ON inv.inventory_id = i.id

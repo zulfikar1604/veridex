@@ -45,10 +45,36 @@ $page_title = "Barcode Inbound";
 $page_subtitle = "Penerimaan Barang Cepat via Barcode Scanner";
 include 'header_meta.php';
 ?>
-<!-- QR Code Generator -->
+<!-- QR Code Generator & Scanner -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+<style>
+    /* Merapikan tampilan default dari library kamera */
+    #reader { border: none !important; border-radius: 1rem; overflow: hidden; width: 100%; }
+    #reader button { background: #e2e8f0; color: #1e293b; padding: 12px 24px; border-radius: 8px; font-weight: bold; margin: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; transition: 0.3s; }
+    #reader button:hover { background: #cbd5e1; }
+    #reader select { padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 15px; width: 80%; max-width: 300px; }
+    #reader a { display: none; } /* Sembunyikan link credit library */
+</style>
 
 <body class="bg-slate-50 dark:bg-[#0f172a] flex flex-col h-screen overflow-hidden">
+
+    <!-- Modal Kamera Scanner -->
+    <div id="cameraModal" class="fixed inset-0 z-[100] hidden bg-black/90 flex flex-col items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-[#1e293b] w-full max-w-2xl rounded-3xl overflow-hidden flex flex-col relative shadow-2xl">
+            <div class="p-5 bg-slate-100 dark:bg-slate-800 flex justify-between items-center border-b border-slate-200 dark:border-slate-700">
+                <h3 class="font-black text-slate-800 dark:text-white uppercase tracking-widest text-lg"><i class="fa-solid fa-camera mr-2 text-rose-500"></i> Kamera Scanner Inbound</h3>
+                <button type="button" onclick="closeCameraModal()" class="w-10 h-10 bg-rose-100 text-rose-600 rounded-full hover:bg-rose-200 hover:text-rose-700 flex items-center justify-center font-bold transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6 bg-slate-50 dark:bg-slate-900 flex-1 flex flex-col items-center justify-center min-h-[60vh] max-h-[75vh]">
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mb-4 text-center">Arahkan QR Code PO atau Barcode ke area kamera</p>
+                <div id="reader" class="w-full mx-auto rounded-2xl overflow-hidden shadow-inner border-2 border-dashed border-slate-300 dark:border-slate-600 bg-black flex-1 flex items-center justify-center"></div>
+            </div>
+        </div>
+    </div>
 
     <?php
     $page_title = "Barcode Inbound";
@@ -71,14 +97,19 @@ include 'header_meta.php';
             <?php endif; ?>
 
             <div class="max-w-4xl mx-auto">
-                <div class="flex items-center justify-between mb-6">
+                <div class="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
                     <h3 class="text-lg font-black text-slate-800 dark:text-white uppercase tracking-widest">
                         <i class="fa-solid fa-truck-fast text-red-500 mr-2"></i> Daftar Pengiriman Tiba
                     </h3>
-                    <form action="konfirmasi_inbound.php" method="GET" class="flex gap-2">
-                        <input type="text" name="po" id="scan_input_inbound" autofocus placeholder="Input No PO Manual..." class="border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1 text-xs focus:outline-red-500" required>
-                        <button type="submit" class="bg-slate-800 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-slate-700 transition">Cari</button>
-                    </form>
+                    <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+                        <button type="button" onclick="openCameraModal()" class="bg-rose-600 text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-rose-700 transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-camera text-sm"></i> Scan Barcode
+                        </button>
+                        <form action="konfirmasi_inbound.php" method="GET" class="flex gap-2" id="inbound_form">
+                            <input type="text" name="po" id="scan_input_inbound" autofocus placeholder="Input No PO Manual..." class="border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1 text-xs focus:outline-red-500" required>
+                            <button type="submit" class="bg-slate-800 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-slate-700 transition">Cari</button>
+                        </form>
+                    </div>
                 </div>
                 
                 <?php if(mysqli_num_rows($query_pending) > 0): ?>
@@ -139,6 +170,66 @@ include 'header_meta.php';
                 correctLevel : QRCode.CorrectLevel.H
             });
         });
+
+        // Script untuk Scanner Kamera Pop Up
+        let html5QrcodeScanner = null;
+
+        function openCameraModal() {
+            document.getElementById('cameraModal').classList.remove('hidden');
+            
+            if (!html5QrcodeScanner) {
+                let qrboxSize = 250;
+                if (window.innerWidth < 600) {
+                    qrboxSize = 200;
+                }
+
+                html5QrcodeScanner = new Html5QrcodeScanner(
+                    "reader",
+                    { 
+                        fps: 10, 
+                        qrbox: { width: qrboxSize, height: qrboxSize },
+                        aspectRatio: 1.0
+                    },
+                    /* verbose= */ false
+                );
+                html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            }
+        }
+
+        function closeCameraModal() {
+            document.getElementById('cameraModal').classList.add('hidden');
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear().then(() => {
+                    html5QrcodeScanner = null;
+                }).catch(error => {
+                    console.log("Failed to clear scanner: ", error);
+                });
+            }
+        }
+
+        function onScanSuccess(decodedText, decodedResult) {
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear().then(() => {
+                    html5QrcodeScanner = null;
+                    document.getElementById('cameraModal').classList.add('hidden');
+                    
+                    // Cek apakah hasil scan berupa URL (mengandung http atau https)
+                    if (decodedText.startsWith('http://') || decodedText.startsWith('https://')) {
+                        window.location.href = decodedText;
+                    } else {
+                        // Jika bukan URL, asumsikan itu adalah nomor PO atau SKU
+                        document.getElementById('scan_input_inbound').value = decodedText;
+                        document.getElementById('inbound_form').submit();
+                    }
+                }).catch(err => {
+                    console.error("Failed to clear scanner", err);
+                });
+            }
+        }
+
+        function onScanFailure(error) {
+            // Abaikan error saat proses mencari
+        }
     </script>
 
     <!-- SCRIPT UX GUDANG: AUTO-FOCUS & COLOR FEEDBACK -->

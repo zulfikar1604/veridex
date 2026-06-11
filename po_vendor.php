@@ -41,7 +41,11 @@ include 'header_meta.php';
     <div class="flex-1 flex overflow-hidden">
         <?php include 'sidebar_vendor.php'; ?>
 
-        <main class="flex-1 overflow-y-auto p-6 md:p-8 space-y-6">
+        <main class="flex-1 overflow-y-auto p-6 md:p-8 space-y-6" x-data="{
+            openInvoiceModal(id, number) {
+                this.$dispatch('open-invoice-modal', { id: id, number: number });
+            }
+        }">
             <!-- PO Menunggu Konfirmasi -->
             <?php if(mysqli_num_rows($query_pending) > 0): ?>
             <div>
@@ -135,6 +139,11 @@ include 'header_meta.php';
                                 <td class="p-4 text-right">
                                     <div class="flex justify-end items-center gap-2">
                                         <span class="px-3 py-1 border rounded-lg text-[9px] font-black uppercase <?= $color ?>"><?= $po['status'] ?></span>
+                                        <?php if($po['status'] === 'Goods Received'): ?>
+                                            <button @click="openInvoiceModal(<?= $po['id'] ?>, '<?= htmlspecialchars($po['po_number']) ?>')" class="bg-indigo-600 text-white px-3 py-1 rounded-lg text-[10px] font-black uppercase hover:bg-indigo-700 transition">
+                                                <i class="fa-solid fa-upload"></i> Upload Invoice
+                                            </button>
+                                        <?php endif; ?>
                                         <a href="print_po.php?id=<?= $po['id'] ?>" target="_blank" class="text-slate-400 dark:text-slate-500 hover:text-red-500 transition"><i class="fa-solid fa-print"></i></a>
                                     </div>
                                 </td>
@@ -153,6 +162,72 @@ include 'header_meta.php';
                 <?php endif; ?>
             </div>
         </main>
+
+        <!-- Modal Upload Invoice -->
+        <div x-data="{ 
+            showInvoiceModal: false, 
+            poId: 0, 
+            poNumber: '', 
+            invoiceNumber: '', 
+            submitting: false,
+            openInvoiceModal(id, number) {
+                this.poId = id;
+                this.poNumber = number;
+                this.invoiceNumber = '';
+                this.showInvoiceModal = true;
+            },
+            submitInvoice(e) {
+                this.submitting = true;
+                let fd = new FormData(e.target);
+                fd.append('po_id', this.poId);
+                fetch('process_vendor_invoice.php', {
+                    method: 'POST',
+                    body: fd
+                })
+                .then(r => r.json())
+                .then(d => {
+                    alert(d.message);
+                    if (d.success) location.reload();
+                    else this.submitting = false;
+                })
+                .catch(err => {
+                    alert('Gagal mengupload invoice');
+                    this.submitting = false;
+                });
+            }
+        }" @open-invoice-modal.window="openInvoiceModal($event.detail.id, $event.detail.number)">
+            
+            <div x-show="showInvoiceModal" x-cloak class="fixed inset-0 z-50 flex justify-center items-center bg-slate-900/50 backdrop-blur-sm p-4">
+                <div @click.away="if(!submitting) showInvoiceModal = false" class="bg-white dark:bg-[#1e293b] w-full max-w-md rounded-2xl shadow-xl overflow-hidden animate-fade-in-up">
+                    <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                        <h3 class="font-black text-slate-800 dark:text-white uppercase tracking-widest text-sm"><i class="fa-solid fa-file-invoice-dollar text-indigo-500 mr-2"></i> Upload E-Invoice</h3>
+                        <button @click="if(!submitting) showInvoiceModal = false" class="text-slate-400 hover:text-red-500 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+                    </div>
+                    <form @submit.prevent="submitInvoice" class="p-6 space-y-4">
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Untuk PO Number</label>
+                            <input type="text" x-model="poNumber" disabled class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 rounded-xl font-bold text-sm text-slate-500 cursor-not-allowed">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Nomor Invoice Anda</label>
+                            <input type="text" name="invoice_number" x-model="invoiceNumber" required placeholder="INV-2026/001" class="w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0f172a] p-3 rounded-xl font-bold text-sm focus:border-indigo-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">File E-Invoice (PDF/JPG/PNG max 5MB)</label>
+                            <input type="file" name="invoice_file" accept=".pdf,.jpg,.jpeg,.png" required class="w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0f172a] p-2.5 rounded-xl text-sm focus:border-indigo-500 outline-none text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                        </div>
+                        
+                        <div class="pt-4 border-t border-slate-100 dark:border-slate-800">
+                            <button type="submit" :disabled="submitting" class="w-full bg-indigo-600 text-white rounded-xl py-3.5 font-black uppercase tracking-widest text-xs hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/20 disabled:opacity-50 flex items-center justify-center gap-2">
+                                <span x-show="!submitting"><i class="fa-solid fa-cloud-arrow-up"></i> Upload & Submit Invoice</span>
+                                <span x-show="submitting"><i class="fa-solid fa-spinner fa-spin"></i> Mengupload...</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>

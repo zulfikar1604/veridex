@@ -115,7 +115,21 @@ include 'header_meta.php';
                         $days_left = floor($time_left / 86400);
                         $hours_left = floor(($time_left % 86400) / 3600);
                     ?>
-                    <div class="bg-white dark:bg-[#1e293b] rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden" x-data="{ open: false, submitting: false }">
+                    <div class="bg-white dark:bg-[#1e293b] rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden" x-data="{ 
+                        open: false, 
+                        submitting: false,
+                        hp: 0,
+                        bp: 0,
+                        dj: 'Nominal',
+                        dn: 0,
+                        get totalHarga() {
+                            let h = parseFloat(this.hp) || 0;
+                            let b = parseFloat(this.bp) || 0;
+                            let d = parseFloat(this.dn) || 0;
+                            let disc = this.dj === 'Persentase' ? (h * d / 100) : d;
+                            return (h - disc) + b;
+                        }
+                    }">
                         <!-- Header RFQ -->
                         <div class="p-6">
                             <div class="flex justify-between items-start mb-4">
@@ -183,22 +197,22 @@ include 'header_meta.php';
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase mb-1 block">Harga Penawaran (Per Satuan) *</label>
-                                        <input type="number" name="harga_penawaran" required min="1" placeholder="5000000" class="w-full border border-slate-200 dark:border-slate-700 p-3 rounded-xl outline-none focus:border-red-500 bg-white dark:bg-[#1e293b] font-bold text-sm">
+                                        <input type="number" name="harga_penawaran" x-model="hp" required min="1" placeholder="5000000" class="w-full border border-slate-200 dark:border-slate-700 p-3 rounded-xl outline-none focus:border-red-500 bg-white dark:bg-[#1e293b] font-bold text-sm">
                                     </div>
                                     <div>
                                         <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase mb-1 block">Biaya Pengiriman</label>
-                                        <input type="number" name="biaya_pengiriman" min="0" placeholder="0" class="w-full border border-slate-200 dark:border-slate-700 p-3 rounded-xl outline-none focus:border-red-500 bg-white dark:bg-[#1e293b] font-bold text-sm">
+                                        <input type="number" name="biaya_pengiriman" x-model="bp" min="0" placeholder="0" class="w-full border border-slate-200 dark:border-slate-700 p-3 rounded-xl outline-none focus:border-red-500 bg-white dark:bg-[#1e293b] font-bold text-sm">
                                     </div>
                                     <div>
                                         <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase mb-1 block">Jenis Diskon</label>
-                                        <select name="diskon_jenis" class="w-full border border-slate-200 dark:border-slate-700 p-3 rounded-xl outline-none focus:border-red-500 bg-white dark:bg-[#1e293b] font-bold text-sm">
+                                        <select name="diskon_jenis" x-model="dj" class="w-full border border-slate-200 dark:border-slate-700 p-3 rounded-xl outline-none focus:border-red-500 bg-white dark:bg-[#1e293b] font-bold text-sm">
                                             <option value="Nominal">Nominal (Rp)</option>
                                             <option value="Persentase">Persentase (%)</option>
                                         </select>
                                     </div>
                                     <div>
                                         <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase mb-1 block">Nilai Diskon</label>
-                                        <input type="number" name="diskon_nilai" min="0" step="0.01" placeholder="0" class="w-full border border-slate-200 dark:border-slate-700 p-3 rounded-xl outline-none focus:border-red-500 bg-white dark:bg-[#1e293b] font-bold text-sm">
+                                        <input type="number" name="diskon_nilai" x-model="dn" min="0" step="0.01" placeholder="0" class="w-full border border-slate-200 dark:border-slate-700 p-3 rounded-xl outline-none focus:border-red-500 bg-white dark:bg-[#1e293b] font-bold text-sm">
                                     </div>
                                     <div>
                                         <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase mb-1 block">Incoterm</label>
@@ -212,6 +226,10 @@ include 'header_meta.php';
                                 <div>
                                     <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase mb-1 block">Keterangan / Catatan Tambahan</label>
                                     <textarea name="keterangan" rows="3" placeholder="Syarat dan ketentuan lainnya..." class="w-full border border-slate-200 dark:border-slate-700 p-3 rounded-xl outline-none focus:border-red-500 bg-white dark:bg-[#1e293b] font-bold text-sm"></textarea>
+                                </div>
+                                <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-xl border border-red-100 dark:border-red-900/30">
+                                    <label class="block text-[10px] font-black text-red-500 uppercase tracking-widest mb-1">Total Harga Setelah Diskon & Pengiriman</label>
+                                    <div class="text-xl font-black text-red-700 dark:text-red-400">Rp <span x-text="new Intl.NumberFormat('id-ID').format(totalHarga)"></span></div>
                                 </div>
                                 <button type="submit" :disabled="submitting" class="w-full bg-red-600 text-white py-4 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-red-700 transition disabled:opacity-50 shadow-lg shadow-red-600/20">
                                     <span x-show="!submitting"><i class="fa-solid fa-paper-plane mr-2"></i> Kirim Penawaran otomatis</span>
@@ -241,7 +259,27 @@ include 'header_meta.php';
             <?php endif; ?>
 
             <!-- Riwayat Penawaran -->
-            <div>
+            <div x-data="{ 
+                editModalOpen: false, 
+                submittingEdit: false,
+                editData: { 
+                    rfq_id: 0, 
+                    harga_penawaran: 0, 
+                    biaya_pengiriman: 0, 
+                    diskon_jenis: 'Nominal', 
+                    diskon_nilai: 0, 
+                    incoterm: '', 
+                    payment_term: '', 
+                    keterangan: '' 
+                },
+                get totalEdit() {
+                    let h = parseFloat(this.editData.harga_penawaran) || 0;
+                    let b = parseFloat(this.editData.biaya_pengiriman) || 0;
+                    let d = parseFloat(this.editData.diskon_nilai) || 0;
+                    let disc = this.editData.diskon_jenis === 'Persentase' ? (h * d / 100) : d;
+                    return (h - disc) + b;
+                }
+            }">
                 <h3 class="text-xs font-black text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                     <i class="fa-solid fa-clock-rotate-left"></i> Riwayat Penawaran Anda
                 </h3>
@@ -364,6 +402,10 @@ include 'header_meta.php';
                                 <div>
                                     <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Keterangan / Catatan Tambahan</label>
                                     <textarea name="keterangan" rows="3" x-model="editData.keterangan" class="w-full"></textarea>
+                                </div>
+                                <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl border border-blue-100 dark:border-blue-900/30">
+                                    <label class="block text-[10px] font-black text-blue-500 uppercase tracking-widest mb-1">Total Harga Setelah Diskon & Pengiriman</label>
+                                    <div class="text-xl font-black text-blue-700 dark:text-blue-400">Rp <span x-text="new Intl.NumberFormat('id-ID').format(totalEdit)"></span></div>
                                 </div>
                                 <div class="pt-4 border-t border-slate-100 dark:border-slate-800 mt-6">
                                     <button type="submit" :disabled="submittingEdit" class="w-full bg-blue-600 text-white py-3.5 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-blue-700 transition shadow-lg shadow-blue-600/20 disabled:opacity-50">

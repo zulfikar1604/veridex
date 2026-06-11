@@ -17,9 +17,15 @@ $user = mysqli_fetch_assoc($query_user);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $new_username = mysqli_real_escape_string($conn, trim($_POST['username']));
-    $new_password = mysqli_real_escape_string($conn, $_POST['password']);
-    $confirm_password = mysqli_real_escape_string($conn, $_POST['confirm_password']);
+    $new_password = isset($_POST['password']) ? mysqli_real_escape_string($conn, $_POST['password']) : '';
+    $confirm_password = isset($_POST['confirm_password']) ? mysqli_real_escape_string($conn, $_POST['confirm_password']) : '';
     $photo_path = $user['profile_photo']; // Default to existing photo
+
+    // Pastikan folder upload ada
+    $upload_dir = "uploads/profiles/";
+    if (!is_dir($upload_dir)) {
+        mkdir($upload_dir, 0777, true);
+    }
 
     // Handle Remove Photo
     if (isset($_POST['remove_photo']) && $_POST['remove_photo'] === '1') {
@@ -86,9 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($error_message)) {
         if (empty($new_username)) {
             $error_message = "Username tidak boleh kosong.";
-        } elseif (empty($new_password)) {
-            $error_message = "Password tidak boleh kosong.";
-        } elseif ($new_password !== $confirm_password) {
+        } elseif (!empty($new_password) && $new_password !== $confirm_password) {
             $error_message = "Konfirmasi password baru tidak cocok.";
         } else {
             // Cek apakah username sudah dipakai oleh user lain
@@ -96,8 +100,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (mysqli_num_rows($check_user) > 0) {
                 $error_message = "Username sudah digunakan oleh akun lain.";
             } else {
-                // Update data
-                $update = mysqli_query($conn, "UPDATE users SET username = '$new_username', password = '$new_password', profile_photo = '$photo_path' WHERE id = '$user_id'");
+                if (!empty($new_password)) {
+                    // Update data dengan password yang sudah di-hash
+                    $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+                    $update = mysqli_query($conn, "UPDATE users SET username = '$new_username', password = '$hashed_password', profile_photo = '$photo_path' WHERE id = '$user_id'");
+                } else {
+                    // Jika password kosong, jangan update password
+                    $update = mysqli_query($conn, "UPDATE users SET username = '$new_username', profile_photo = '$photo_path' WHERE id = '$user_id'");
+                }
+                
                 if ($update) {
                     $_SESSION['username'] = $new_username;
                     $_SESSION['profile_photo'] = $photo_path;
@@ -105,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     // Refresh data lokal
                     $user['username'] = $new_username;
-                    $user['password'] = $new_password;
+                    if (!empty($new_password)) $user['password'] = $hashed_password;
                     $user['profile_photo'] = $photo_path;
                 } else {
                     $error_message = "Terjadi kesalahan sistem saat memperbarui profil.";
@@ -234,7 +245,7 @@ $role = $_SESSION['role'] ?? '';
                     <div class="bg-white dark:bg-[#1e293b] rounded-[2rem] p-6 md:p-8 border border-slate-100 dark:border-slate-800 shadow-sm md:col-span-2 space-y-6">
                         <div>
                             <h3 class="text-lg font-black text-slate-800 dark:text-white uppercase tracking-tight">Informasi Profil & Keamanan</h3>
-                            <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Perbarui username dan password Anda untuk menjaga keamanan akses akun.</p>
+                            <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Perbarui username Anda. Biarkan kolom password kosong jika tidak ingin mengubah password.</p>
                         </div>
 
                         <form action="profile.php" method="POST" enctype="multipart/form-data" class="space-y-5">
@@ -245,6 +256,7 @@ $role = $_SESSION['role'] ?? '';
                                 <div class="relative">
                                     <input type="hidden" name="cropped_image" id="cropped_image_input">
                                     <input type="file" 
+                                           name="profile_photo"
                                            id="profile_photo_input"
                                            accept="image/*"
                                            @change="handleFileSelect"
@@ -300,8 +312,7 @@ $role = $_SESSION['role'] ?? '';
                                     </span>
                                     <input type="password" 
                                            name="password" 
-                                           value="<?= htmlspecialchars($user['password'], ENT_QUOTES, 'UTF-8') ?>" 
-                                           required 
+                                           placeholder="Kosongkan jika tidak ingin ganti password" 
                                            style="padding-left: 3rem;"
                                            class="w-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 pr-4 py-3.5 rounded-xl font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition">
                                 </div>
@@ -316,8 +327,7 @@ $role = $_SESSION['role'] ?? '';
                                     </span>
                                     <input type="password" 
                                            name="confirm_password" 
-                                           value="<?= htmlspecialchars($user['password'], ENT_QUOTES, 'UTF-8') ?>" 
-                                           required 
+                                           placeholder="Kosongkan jika tidak ingin ganti password" 
                                            style="padding-left: 3rem;"
                                            class="w-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 pr-4 py-3.5 rounded-xl font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-red-500 focus:bg-white dark:bg-[#1e293b] transition">
                                 </div>

@@ -58,12 +58,30 @@ include 'header_meta.php';
 
 <style>
     /* Merapikan tampilan default dari library kamera */
-    #reader { border: none !important; border-radius: 1rem; overflow: hidden; }
-    #reader button { background: #e2e8f0; padding: 8px 16px; border-radius: 8px; font-weight: bold; margin: 5px; cursor: pointer; }
+    #reader { border: none !important; border-radius: 1rem; overflow: hidden; width: 100%; }
+    #reader button { background: #e2e8f0; color: #1e293b; padding: 12px 24px; border-radius: 8px; font-weight: bold; margin: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; transition: 0.3s; }
+    #reader button:hover { background: #cbd5e1; }
+    #reader select { padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 15px; width: 80%; max-width: 300px; }
     #reader a { display: none; } /* Sembunyikan link credit library */
 </style>
 
 <body class="bg-slate-50 dark:bg-[#0f172a] flex flex-col h-screen overflow-hidden">
+
+    <!-- Modal Kamera Scanner -->
+    <div id="cameraModal" class="fixed inset-0 z-[100] hidden bg-black/90 flex flex-col items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-[#1e293b] w-full max-w-2xl rounded-3xl overflow-hidden flex flex-col relative shadow-2xl">
+            <div class="p-5 bg-slate-100 dark:bg-slate-800 flex justify-between items-center border-b border-slate-200 dark:border-slate-700">
+                <h3 class="font-black text-slate-800 dark:text-white uppercase tracking-widest text-lg"><i class="fa-solid fa-camera mr-2 text-rose-500"></i> Kamera Scanner Outbound</h3>
+                <button type="button" onclick="closeCameraModal()" class="w-10 h-10 bg-rose-100 text-rose-600 rounded-full hover:bg-rose-200 hover:text-rose-700 flex items-center justify-center font-bold transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6 bg-slate-50 dark:bg-slate-900 flex-1 flex flex-col items-center justify-center min-h-[60vh] max-h-[75vh]">
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mb-4 text-center">Arahkan barcode / SKU barang ke area kamera</p>
+                <div id="reader" class="w-full mx-auto rounded-2xl overflow-hidden shadow-inner border-2 border-dashed border-slate-300 dark:border-slate-600 bg-black flex-1 flex items-center justify-center"></div>
+            </div>
+        </div>
+    </div>
 
     <?php
     $page_title = "Barcode Outbound";
@@ -172,9 +190,11 @@ include 'header_meta.php';
                         <!-- Mode Scanner -->
                         <div class="border-2 border-dashed border-slate-300 rounded-3xl p-8 bg-slate-50 dark:bg-slate-900 relative flex flex-col items-center justify-center text-center">
                             <h4 class="text-sm font-black text-slate-800 dark:text-white uppercase tracking-widest mb-2"><i class="fa-solid fa-camera text-red-500 mr-2"></i> Mode Kamera</h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-6 font-medium">Arahkan barcode fisik barang ke kamera perangkat Anda.</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-6 font-medium">Gunakan kamera perangkat Anda untuk scan barcode secara langsung.</p>
                             
-                            <div id="reader" class="mx-auto w-full max-w-[280px] bg-white dark:bg-[#1e293b] rounded-2xl min-h-[250px] flex items-center justify-center overflow-hidden border border-slate-200 dark:border-slate-700 shadow-inner"></div>
+                            <button type="button" onclick="openCameraModal()" class="bg-rose-600 text-white px-6 py-4 w-full rounded-xl font-black uppercase tracking-widest text-sm hover:bg-rose-700 transition shadow-lg shadow-rose-500/30 flex items-center justify-center gap-3">
+                                <i class="fa-solid fa-qrcode text-2xl"></i> Buka Kamera Scanner
+                            </button>
 
                             <form id="scan_form" method="POST" class="hidden">
                                 <input type="text" name="sku_scan" id="sku_input">
@@ -189,34 +209,79 @@ include 'header_meta.php';
     </div>
 
     <script>
-        // Hanya jalankan kamera jika form pencarian barang (scanner box) sedang tampil
-        if (document.getElementById('reader')) {
-            
-            // Fungsi ketika kamera berhasil membaca Barcode
-            function onScanSuccess(decodedText, decodedResult) {
-                // Hentikan kamera agar tidak scan berkali-kali
-                html5QrcodeScanner.clear();
-                
-                // Masukkan teks barcode ke form tersembunyi
-                document.getElementById('sku_input').value = decodedText;
-                
-                // Tekan tombol submit secara otomatis
-                document.getElementById('scan_form').submit();
-            }
+        let html5QrcodeScanner = null;
 
-            function onScanFailure(error) {
-                // Abaikan error saat proses mencari
-            }
-
-            // Setting Kamera
-            let html5QrcodeScanner = new Html5QrcodeScanner(
-                "reader",
-                { fps: 10, qrbox: {width: 250, height: 100} },
-                /* verbose= */ false
-            );
+        function openCameraModal() {
+            document.getElementById('cameraModal').classList.remove('hidden');
             
-            // Mulai nyalakan kamera
-            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            if (!html5QrcodeScanner) {
+                // Determine responsive qrbox size
+                let qrboxSize = 250;
+                if (window.innerWidth < 600) {
+                    qrboxSize = 200; // Smaller box on mobile
+                }
+
+                html5QrcodeScanner = new Html5QrcodeScanner(
+                    "reader",
+                    { 
+                        fps: 10, 
+                        qrbox: { width: qrboxSize, height: qrboxSize },
+                        aspectRatio: 1.0
+                    },
+                    /* verbose= */ false
+                );
+                html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            }
+        }
+
+        function closeCameraModal() {
+            document.getElementById('cameraModal').classList.add('hidden');
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear().then(() => {
+                    html5QrcodeScanner = null;
+                }).catch(error => {
+                    console.log("Failed to clear scanner: ", error);
+                });
+            }
+        }
+
+        // Fungsi ketika kamera berhasil membaca Barcode
+        function onScanSuccess(decodedText, decodedResult) {
+            // Hentikan kamera agar tidak scan berkali-kali
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear().then(() => {
+                    html5QrcodeScanner = null;
+                    document.getElementById('cameraModal').classList.add('hidden');
+                    
+                    // Masukkan teks barcode ke form tersembunyi
+                    document.getElementById('sku_input').value = decodedText;
+                    
+                    // Tekan tombol submit secara otomatis
+                    document.getElementById('scan_form').submit();
+                }).catch(err => {
+                    console.error("Failed to clear scanner", err);
+                });
+            }
+        }
+
+        function onScanFailure(error) {
+            // Abaikan error saat proses mencari
+        }
+
+        function toggleDeptLainnya() {
+            const select = document.getElementById('deptSelect');
+            const input = document.getElementById('deptLainnyaInput');
+            if (select.value === 'Lainnya') {
+                input.classList.remove('hidden');
+                input.disabled = false;
+                input.required = true;
+                input.focus();
+            } else {
+                input.classList.add('hidden');
+                input.disabled = true;
+                input.required = false;
+                input.value = '';
+            }
         }
 
         // SCRIPT UX GUDANG: AUTO-FOCUS & COLOR FEEDBACK

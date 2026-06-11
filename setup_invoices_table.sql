@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS invoices (
     inventory_id INT NOT NULL,
     jumlah_barang INT NOT NULL DEFAULT 0,
     total_tagihan DECIMAL(15,2) NOT NULL DEFAULT 0,
+    payment_term VARCHAR(50) NULL DEFAULT 'Net 30',
     tanggal_terima_gudang DATETIME NOT NULL,
     tanggal_jatuh_tempo DATE NOT NULL,
     status ENUM('Unpaid', 'Paid') DEFAULT 'Unpaid',

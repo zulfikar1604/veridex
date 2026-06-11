@@ -99,7 +99,7 @@ $nama = isset($_GET['nama']) ? htmlspecialchars($_GET['nama']) : '';
 </head>
 <body onload="window.print()">
     <div class="print-container">
-        <img src="https://barcode.tec-it.com/barcode.ashx?data=<?= urlencode($sku) ?>&code=Code128" alt="Barcode <?= $sku ?>">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=<?= urlencode($sku) ?>" alt="QR Code <?= $sku ?>">
         <div class="sku"><?= $sku ?></div>
         <div class="nama"><?= $nama ?></div>
         <button class="btn-print" onclick="window.print()">Cetak Ulang</button>
